@@ -1,9 +1,19 @@
 <resources>
     <string name="app_name">weTravel</string>
 
-    <!-- Bottom navigation bar name -->
+    <!-- Bottom navigation bar names -->
     <string name="home_navigation">Home</string>
     <string name="trip_navigation">Trips</string>
     <string name="message_centre_navigation">Inbox</string>
     <string name="notification_centre_navigation">Notifications</string>
+    
+    <!-- Dropdown menu names -->
+    <string name="view_profile">View Profile</string>
+    <string name="edit_settings">Edit Settings</string>
+    <string name="tutorial">Tutorial</string>
+    
+    <!-- Drawer Strings -->
+    <string name="nav_drawer_open">Open Navigation Drawer</string>
+    <string name="nav_drawer_close">Close Navigation Drawer</string>
+
 </resources>
