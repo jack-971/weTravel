@@ -13,6 +13,7 @@ public class InboxFragment extends Fragment {
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+        MainActivity.showNavBar();
         return inflater.inflate(R.layout.fragment_inbox, container, false);
     }
 }

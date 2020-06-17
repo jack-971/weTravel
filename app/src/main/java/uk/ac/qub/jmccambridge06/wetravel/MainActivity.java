@@ -7,17 +7,34 @@ import androidx.appcompat.widget.Toolbar;
 import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
 
+import android.content.Context;
 import android.os.Bundle;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.Toast;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.navigation.NavigationView;
 
+/**
+ * Class contains all UI activity for the main menu.
+ */
 public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
 
-    private DrawerLayout drawer;
+    /**
+     * Reference to the bottom navigation bar on the menu
+     */
+    private static BottomNavigationView bottomNav;
+
+    private static FragmentManager fragmentManager;
+
+    private static DrawerLayout drawer;
+
+    private static ActionBarDrawerToggle navToggle;
+
+    private static NavigationView secondaryMenuView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -30,21 +47,22 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
         // Load and prepare the drawer
         drawer = findViewById(R.id.secondary_menu_drawer);
-        NavigationView navigationView = findViewById(R.id.secondary_view);
-        navigationView.setNavigationItemSelectedListener(this);
-        ActionBarDrawerToggle navToggle = new ActionBarDrawerToggle(this, drawer, toolbar,
+        secondaryMenuView = findViewById(R.id.secondary_view);
+        secondaryMenuView.setNavigationItemSelectedListener(this);
+
+        // Add drawer toggle on burger bar
+        navToggle = new ActionBarDrawerToggle(this, drawer, toolbar,
                 R.string.nav_drawer_open, R.string.nav_drawer_close);
         drawer.addDrawerListener(navToggle);
         navToggle.syncState();
 
-
-
         // Load the main menu fragment for bottom navigation
-        BottomNavigationView navigationBar = findViewById(R.id.main_navigation);
-        navigationBar.setOnNavigationItemSelectedListener(navListener);
-        getSupportFragmentManager().beginTransaction().replace(R.id.main_screen_container,
-                new NewsfeedFragment()).commit();
-
+        bottomNav = findViewById(R.id.main_navigation);
+        bottomNav.setOnNavigationItemSelectedListener(navListener);
+        if (savedInstanceState == null) {
+            fragmentManager = getSupportFragmentManager();
+            loadHome();
+        }
 
     }
 
@@ -52,11 +70,11 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     public boolean onNavigationItemSelected(@NonNull MenuItem menuItem) {
         switch(menuItem.getItemId()) {
             case R.id.view_own_profile:
-                getSupportFragmentManager().beginTransaction().replace(R.id.main_screen_container,
+                fragmentManager.beginTransaction().replace(R.id.main_screen_container,
                         new ProfileFragment()).commit();
                 break;
             case R.id.edit_settings:
-                getSupportFragmentManager().beginTransaction().replace(R.id.main_screen_container,
+                fragmentManager.beginTransaction().replace(R.id.main_screen_container,
                         new SettingsFragment()).commit();
                 break;
             case R.id.tutorial:
@@ -92,7 +110,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                             selectedFragment = new NotificationsFragment();
                             break;
                     }
-                    getSupportFragmentManager().beginTransaction().replace(R.id.main_screen_container,
+                    fragmentManager.beginTransaction().replace(R.id.main_screen_container,
                             selectedFragment).commit();
                     return true;
                 }
@@ -106,8 +124,40 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         if (drawer.isDrawerOpen(GravityCompat.START)) {
             drawer.closeDrawer(GravityCompat.START);
         } else {
-            super.onBackPressed();
+            if (fragmentManager.findFragmentById(R.id.main_screen_container) instanceof NewsfeedFragment) {
+                super.onBackPressed(); //close the app
+            } else {
+                bottomNav.setSelectedItemId(R.id.menu_home);
+            }
+
         }
+    }
+
+    /**
+     * Removes the navbar
+     */
+    public static void removeNavBar() {
+        bottomNav.setVisibility(View.GONE);
+    }
+
+    /**
+     * Shows the navbar
+     */
+    public static void showNavBar() {
+        bottomNav.setVisibility(View.VISIBLE);
+    }
+
+    /**
+     * Loads the homes screen.
+     */
+    private static void loadHome() {
+        fragmentManager.beginTransaction().replace(R.id.main_screen_container,
+                new NewsfeedFragment()).commit();
 
     }
+
+    private static void setDrawer() {
+
+    }
+
 }

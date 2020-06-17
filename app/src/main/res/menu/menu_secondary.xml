@@ -3,15 +3,20 @@
     xmlns:tools="http://schemas.android.com/tools"
     tools:showIn="navigation_view">
 
-    <group android:checkableBehavior="single">
-        <item android:id="@+id/view_own_profile"
-            android:title="@string/view_profile"/>
+    <item
+        android:id="@+id/view_own_profile"
+        android:icon="@drawable/ic_account_circle_black_24dp"
+        android:title="@string/view_profile" />
 
-        <item android:id="@+id/edit_settings"
-            android:title="@string/edit_settings"/>
+    <item
+        android:id="@+id/edit_settings"
+        android:icon="@drawable/ic_settings_black_24dp"
+        android:title="@string/edit_settings" />
 
-        <item android:id="@+id/tutorial"
-            android:title="@string/tutorial"/>
-    </group>
+
+    <item
+        android:id="@+id/tutorial"
+        android:icon="@drawable/ic_help_black_24dp"
+        android:title="@string/tutorial" />
 
 </menu>
