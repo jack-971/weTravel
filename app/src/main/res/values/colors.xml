@@ -3,4 +3,9 @@
     <color name="colorPrimary">#F57C00</color>
     <color name="colorPrimaryDark">#E65100</color>
     <color name="colorAccent">#FFD180</color>
+
+    <!-- Text -->
+    <color name="minor_text">@android:color/darker_gray</color>
+    <color name="button_text">@android:color/black</color>
+    <color name="tag_color">@android:color/white</color>
 </resources>

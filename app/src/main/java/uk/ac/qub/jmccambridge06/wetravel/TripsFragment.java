@@ -13,7 +13,7 @@ public class TripsFragment extends Fragment {
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        MainActivity.showNavBar();
+        MainMenuActivity.showNavBar();
         return inflater.inflate(R.layout.fragment_trips, container, false);
     }
 }

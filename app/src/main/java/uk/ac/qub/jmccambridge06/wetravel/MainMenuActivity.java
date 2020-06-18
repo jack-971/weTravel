@@ -9,10 +9,15 @@ import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 
+import android.app.SearchManager;
+import android.content.ComponentName;
 import android.content.Context;
 import android.os.Bundle;
+import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.SearchView;
 import android.widget.Toast;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
@@ -21,7 +26,7 @@ import com.google.android.material.navigation.NavigationView;
 /**
  * Class contains all UI activity for the main menu.
  */
-public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
+public class MainMenuActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
 
     /**
      * Reference to the bottom navigation bar on the menu
@@ -64,6 +69,22 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             loadHome();
         }
 
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.search_menu, menu);
+
+        // Associate searchable configuration with the SearchView
+        SearchManager searchManager =
+                (SearchManager) getSystemService(Context.SEARCH_SERVICE);
+        SearchView searchView =
+                (SearchView) menu.findItem(R.id.user_search).getActionView();
+        searchView.setSearchableInfo(
+                searchManager.getSearchableInfo(new ComponentName(this, UserSearchResultsActivity.class)));
+
+        return true;
     }
 
     @Override
@@ -156,8 +177,9 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
     }
 
-    private static void setDrawer() {
-
+    public static void loadUserSearchFragment() {
+        fragmentManager.beginTransaction().replace(R.id.main_screen_container,
+                new UserSearchFragment()).commit();
     }
 
 }

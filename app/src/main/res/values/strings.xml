@@ -16,4 +16,9 @@
     <string name="nav_drawer_open">Open Navigation Drawer</string>
     <string name="nav_drawer_close">Close Navigation Drawer</string>
 
+    <!--User Search bar -->
+    <string name="user_search_bar">User Search Bar</string>
+    <string name="user_search_hint">Search for someone...</string>
+
+
 </resources>

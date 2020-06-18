@@ -9,11 +9,12 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
-public class InboxFragment extends Fragment {
+public class UserSearchFragment extends Fragment {
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        MainMenuActivity.showNavBar();
-        return inflater.inflate(R.layout.fragment_inbox, container, false);
+        MainMenuActivity.removeNavBar();
+        return inflater.inflate(R.layout.fragment_user_search, container, false);
+
     }
 }
