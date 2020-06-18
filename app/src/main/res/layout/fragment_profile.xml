@@ -23,8 +23,8 @@
         android:layout_marginTop="@dimen/_30sdp"
         android:src="@drawable/marty_byrd"
         app:civ_border_width="@dimen/_2sdp"
-        app:civ_border_color="@android:color/black"
-        android:clickable="true"/>
+        app:civ_border_color="@color/border_color"
+        android:clickable="false"/>
 
     <TextView
         android:layout_width="wrap_content"
@@ -57,7 +57,8 @@
         android:background="@drawable/button"
         android:textSize="@dimen/button_text"
         android:visibility="gone"
-        android:inputType="textCapSentences"/>
+        android:inputType="textCapSentences"
+        />
 
     <Button
         android:layout_width="@dimen/button_width"
@@ -69,7 +70,7 @@
         android:text="Friends"
         android:inputType="textCapSentences"
         android:visibility="gone"
-        android:textColor="@android:color/white"/>
+        android:textColor="@color/tag_color"/>
 
         <Button
             android:layout_width="@dimen/button_width"
@@ -81,7 +82,7 @@
             android:text="Requested"
             android:inputType="textCapSentences"
             android:visibility="gone"
-            android:textColor="@android:color/white"/>
+            android:textColor="@color/tag_color"/>
 
         <Button
             android:layout_width="@dimen/button_width"
@@ -91,7 +92,8 @@
             android:background="@drawable/button"
             android:textSize="@dimen/button_text"
             android:visibility="gone"
-            android:inputType="textCapSentences"/>
+            android:inputType="textCapSentences"
+            android:textColor="@color/button_text"/>
 
         <Button
             android:layout_width="@dimen/button_width"
@@ -100,6 +102,7 @@
             android:id="@+id/profile_edit"
             android:background="@drawable/button"
             android:textSize="@dimen/button_text"
+            android:textColor="@color/button_text"
             android:visibility="visible"
             android:inputType="textCapSentences"/>
 
@@ -111,7 +114,8 @@
             android:background="@drawable/button"
             android:textSize="@dimen/button_text"
             android:visibility="gone"
-            android:inputType="textCapSentences"/>
+            android:inputType="textCapSentences"
+            android:textColor="@color/button_text"/>
 
     </RelativeLayout>
 

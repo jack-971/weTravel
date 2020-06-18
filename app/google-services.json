@@ -1,0 +1,69 @@
+{
+  "project_info": {
+    "project_number": "362604991661",
+    "firebase_url": "https://travel-with-4cd49.firebaseio.com",
+    "project_id": "travel-with-4cd49",
+    "storage_bucket": "travel-with-4cd49.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:362604991661:android:995a1171c19b8da2396224",
+        "android_client_info": {
+          "package_name": "k.ac.qub.jmccambridge06.wetravel"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "362604991661-ngpvri21jffioq7jipn3c3qirh3tt13g.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyC2nmZs6chQtInblWTrRQGxeEqWZptQwxw"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "362604991661-ngpvri21jffioq7jipn3c3qirh3tt13g.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:362604991661:android:f028c4a7f9fa863e396224",
+        "android_client_info": {
+          "package_name": "uk.ac.qub.jmccambridge06.wetravel"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "362604991661-ngpvri21jffioq7jipn3c3qirh3tt13g.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyC2nmZs6chQtInblWTrRQGxeEqWZptQwxw"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "362604991661-ngpvri21jffioq7jipn3c3qirh3tt13g.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
