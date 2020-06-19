@@ -21,9 +21,8 @@
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         android:layout_marginTop="@dimen/_30sdp"
-        android:src="@drawable/marty_byrd"
+        android:src="@drawable/profile_placeholder_icon"
         app:civ_border_width="@dimen/_2sdp"
-        app:civ_border_color="@color/border_color"
         android:clickable="false"/>
 
     <TextView
@@ -103,8 +102,9 @@
             android:background="@drawable/button"
             android:textSize="@dimen/button_text"
             android:textColor="@color/button_text"
-            android:visibility="visible"
-            android:inputType="textCapSentences"/>
+            android:visibility="gone"
+            android:inputType="textCapSentences"
+            android:onClick="onClickEdit"/>
 
         <Button
             android:layout_width="@dimen/button_width"

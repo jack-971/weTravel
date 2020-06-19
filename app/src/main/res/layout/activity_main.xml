@@ -6,13 +6,13 @@
     android:layout_height="match_parent"
     android:id="@+id/secondary_menu_drawer"
     android:fitsSystemWindows="true"
-    tools:context=".MainMenuActivity"
+    tools:context=".ui.MainMenuActivity"
     >
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        tools:context=".MainMenuActivity">
+        tools:context=".ui.MainMenuActivity">
 
         <LinearLayout
             android:id="@+id/linearLayout"

@@ -1,4 +1,4 @@
-package uk.ac.qub.jmccambridge06.wetravel;
+package uk.ac.qub.jmccambridge06.wetravel.ui;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBarDrawerToggle;
@@ -23,6 +23,9 @@ import android.widget.Toast;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.navigation.NavigationView;
 
+import uk.ac.qub.jmccambridge06.wetravel.R;
+import uk.ac.qub.jmccambridge06.wetravel.UserSearchResultsActivity;
+
 /**
  * Class contains all UI activity for the main menu.
  */
@@ -40,6 +43,7 @@ public class MainMenuActivity extends AppCompatActivity implements NavigationVie
     private static ActionBarDrawerToggle navToggle;
 
     private static NavigationView secondaryMenuView;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -91,8 +95,9 @@ public class MainMenuActivity extends AppCompatActivity implements NavigationVie
     public boolean onNavigationItemSelected(@NonNull MenuItem menuItem) {
         switch(menuItem.getItemId()) {
             case R.id.view_own_profile:
+                Fragment userProfileFragment = new ProfileFragment();
                 fragmentManager.beginTransaction().replace(R.id.main_screen_container,
-                        new ProfileFragment()).commit();
+                        userProfileFragment).commit();
                 break;
             case R.id.edit_settings:
                 fragmentManager.beginTransaction().replace(R.id.main_screen_container,
@@ -181,5 +186,7 @@ public class MainMenuActivity extends AppCompatActivity implements NavigationVie
         fragmentManager.beginTransaction().replace(R.id.main_screen_container,
                 new UserSearchFragment()).commit();
     }
+
+
 
 }
