@@ -52,7 +52,7 @@
                 android:layout_height="@dimen/button_height"
                 android:background="@drawable/button"
                 android:inputType="textCapSentences"
-                android:text="Add Friend"
+                android:text="@string/add_friend"
                 android:textSize="@dimen/button_text"
                 android:visibility="gone" />
 
@@ -63,7 +63,7 @@
                 android:background="@drawable/tag"
                 android:clickable="false"
                 android:inputType="textCapSentences"
-                android:text="Friends"
+                android:text="@string/friends_tag"
                 android:textColor="@color/tag_color"
                 android:textSize="@dimen/button_text"
                 android:visibility="gone" />
@@ -75,7 +75,7 @@
                 android:background="@drawable/tag"
                 android:clickable="false"
                 android:inputType="textCapSentences"
-                android:text="Requested"
+                android:text="@string/requested"
                 android:textColor="@color/tag_color"
                 android:textSize="@dimen/button_text"
                 android:visibility="gone" />
@@ -86,7 +86,7 @@
                 android:layout_height="@dimen/button_height"
                 android:background="@drawable/button"
                 android:inputType="textCapSentences"
-                android:text="Accept"
+                android:text="@string/accept"
                 android:textColor="@color/button_text"
                 android:textSize="@dimen/button_text"
                 android:visibility="gone" />
@@ -98,7 +98,7 @@
                 android:background="@drawable/button"
                 android:inputType="textCapSentences"
                 android:onClick="onClickEdit"
-                android:text="Edit Profile"
+                android:text="@string/edit_profile"
                 android:textColor="@color/button_text"
                 android:textSize="@dimen/button_text"
                 android:visibility="gone" />
@@ -109,7 +109,7 @@
                 android:layout_height="@dimen/button_height"
                 android:background="@drawable/button"
                 android:inputType="textCapSentences"
-                android:text="Save Changes"
+                android:text="@string/save_changes"
                 android:textColor="@color/button_text"
                 android:textSize="@dimen/button_text"
                 android:visibility="gone" />
@@ -144,7 +144,7 @@
                     android:layout_marginBottom="@dimen/_4sdp"
                     android:background="@drawable/button"
                     android:inputType="textCapSentences"
-                    android:text="Friends"
+                    android:text="@string/friends_button"
                     android:textColor="@color/button_text"
                     android:textSize="@dimen/button_text" />
 
@@ -157,7 +157,7 @@
                     android:layout_marginBottom="@dimen/_4sdp"
                     android:background="@drawable/button"
                     android:inputType="textCapSentences"
-                    android:text="Map"
+                    android:text="@string/map"
                     android:textColor="@color/button_text"
                     android:textSize="@dimen/button_text" />
 
@@ -169,7 +169,7 @@
                     android:layout_alignParentRight="true"
                     android:background="@drawable/button"
                     android:inputType="textCapSentences"
-                    android:text="Trips"
+                    android:text="@string/trips"
                     android:textColor="@color/button_text"
                     android:textSize="@dimen/button_text" />
 

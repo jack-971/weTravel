@@ -170,7 +170,7 @@ public class ProfileFragment extends DisplayFragment {
         profileImage.setImageBitmap(profile.getProfilePictureImage());
         profileName.setText(profile.getName());
         profileNameEdit.setText(profile.getName());
-        //profileAge.setText(profile.getAge());
+        profileAge.setText(String.valueOf(profile.getAge()) + getString(R.string.years_old));
         profileCurrentTrip.setText("Vietnam Tour - Hanoi, Vietnam");
         profileHomeLocation.setText(profile.getHomeLocation());
         profileHomeLocationEdit.setText(profile.getHomeLocation());

@@ -13,6 +13,7 @@ import android.app.SearchManager;
 import android.content.ComponentName;
 import android.content.Context;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -20,18 +21,21 @@ import android.view.View;
 import android.widget.SearchView;
 import android.widget.Toast;
 
+import com.android.volley.VolleyError;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.navigation.NavigationView;
 
-import java.util.Calendar;
-import java.util.Date;
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import uk.ac.qub.jmccambridge06.wetravel.Profile;
 import uk.ac.qub.jmccambridge06.wetravel.R;
 import uk.ac.qub.jmccambridge06.wetravel.UserAccount;
 import uk.ac.qub.jmccambridge06.wetravel.UserSearchResultsActivity;
-
-import static java.util.Calendar.*;
+import uk.ac.qub.jmccambridge06.wetravel.network.NetworkResultCallback;
+import uk.ac.qub.jmccambridge06.wetravel.network.JsonFetcher;
+import uk.ac.qub.jmccambridge06.wetravel.network.routes;
 
 /**
  * Class contains all UI activity for the main menu.
@@ -39,6 +43,10 @@ import static java.util.Calendar.*;
 public class MainMenuActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
 
     private UserAccount userAccount;
+
+    NetworkResultCallback networkResultCallback = null;
+
+    JsonFetcher jsonFetcher;
 
     /**
      * Reference to the bottom navigation bar on the menu
@@ -59,10 +67,14 @@ public class MainMenuActivity extends AppCompatActivity implements NavigationVie
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        // create an async task which will be used to load the data.
+        // execute the async task.
         // create the user account
         setUserAccount(new UserAccount(1));
-        userAccount.setProfile(new Profile("Jack McCambridge", "jack_123", new Date(), "Belfast, Northern Ireland",
-                "Hanoi, Vietnam", "IMG-20191103-WA0006.jpg", "I am a 28 year old..."));
+        String username = "jack_123"; // this will have been passed by the login activity.
+        loadProfileCallback();
+        jsonFetcher = new JsonFetcher(networkResultCallback,this);
+        jsonFetcher.getData(routes.getUserAccountData(getUserAccount().getUserId()));
 
         // Load the custom toolbar
         Toolbar toolbar = findViewById(R.id.toolbar);
@@ -89,6 +101,41 @@ public class MainMenuActivity extends AppCompatActivity implements NavigationVie
 
     }
 
+    /**
+     * Loads callbacks for when the user profile data is loaded. This will be mapped to a new profile class.
+     */
+    void loadProfileCallback(){
+        networkResultCallback = new NetworkResultCallback() {
+            @Override
+            public void notifySuccess(JSONObject response) {
+                Log.d("tagged", "Volley JSON post" + response);
+                try {
+                    JSONArray jsonArray = response.getJSONArray("data");
+                    JSONObject user = null;
+                    user = jsonArray.getJSONObject(0);
+                    userAccount.setProfile(new Profile(user.getString("Name"),
+                            "jack123",
+                            user.getString("Dob"),
+                            user.getString("HomeLocation"),
+                            user.getString("CurrentLocation"),
+                            user.getString("ProfilePicture"),
+                            user.getString("Description")));
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+            }
+            @Override
+            public void notifyError(VolleyError error) {
+                Log.d("tagged", "Volley JSON post" + "That didn't work!");
+            }
+        };
+    }
+
+    /**
+     * Add the search bar and functionality
+     * @param menu
+     * @return
+     */
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         MenuInflater inflater = getMenuInflater();
@@ -105,6 +152,11 @@ public class MainMenuActivity extends AppCompatActivity implements NavigationVie
         return true;
     }
 
+    /**
+     * Link the menu choices to each fragment
+     * @param menuItem
+     * @return
+     */
     @Override
     public boolean onNavigationItemSelected(@NonNull MenuItem menuItem) {
         switch(menuItem.getItemId()) {
@@ -169,7 +221,6 @@ public class MainMenuActivity extends AppCompatActivity implements NavigationVie
             } else {
                 bottomNav.setSelectedItemId(R.id.menu_home);
             }
-
         }
     }
 

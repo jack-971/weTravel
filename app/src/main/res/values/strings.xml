@@ -20,5 +20,17 @@
     <string name="user_search_bar">User Search Bar</string>
     <string name="user_search_hint">Search for someone...</string>
 
+    <!--profile-->
+    <string name="years_old">years old</string>
+    <string name="edit_profile">Edit Profile</string>
+    <string name="save_changes">Save Changes</string>
+    <string name="friends_button">Friends</string>
+    <string name="friends_tag">Friends</string>
+    <string name="map">Map</string>
+    <string name="trips">Trips</string>
+    <string name="add_friend">Add Friend</string>
+    <string name="requested">Requested</string>
+    <string name="accept">Accept</string>
+
 
 </resources>
