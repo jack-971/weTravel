@@ -23,13 +23,22 @@ import android.widget.Toast;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.navigation.NavigationView;
 
+import java.util.Calendar;
+import java.util.Date;
+
+import uk.ac.qub.jmccambridge06.wetravel.Profile;
 import uk.ac.qub.jmccambridge06.wetravel.R;
+import uk.ac.qub.jmccambridge06.wetravel.UserAccount;
 import uk.ac.qub.jmccambridge06.wetravel.UserSearchResultsActivity;
+
+import static java.util.Calendar.*;
 
 /**
  * Class contains all UI activity for the main menu.
  */
 public class MainMenuActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
+
+    private UserAccount userAccount;
 
     /**
      * Reference to the bottom navigation bar on the menu
@@ -49,6 +58,11 @@ public class MainMenuActivity extends AppCompatActivity implements NavigationVie
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        // create the user account
+        setUserAccount(new UserAccount(1));
+        userAccount.setProfile(new Profile("Jack McCambridge", "jack_123", new Date(), "Belfast, Northern Ireland",
+                "Hanoi, Vietnam", "IMG-20191103-WA0006.jpg", "I am a 28 year old..."));
 
         // Load the custom toolbar
         Toolbar toolbar = findViewById(R.id.toolbar);
@@ -187,6 +201,12 @@ public class MainMenuActivity extends AppCompatActivity implements NavigationVie
                 new UserSearchFragment()).commit();
     }
 
+    public UserAccount getUserAccount() {
+        return userAccount;
+    }
 
+    public void setUserAccount(UserAccount userAccount) {
+        this.userAccount = userAccount;
+    }
 
 }

@@ -1,6 +1,5 @@
 package uk.ac.qub.jmccambridge06.wetravel.utilities;
 
-import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
@@ -10,7 +9,7 @@ import androidx.annotation.Nullable;
 
 import java.io.IOException;
 
-import uk.ac.qub.jmccambridge06.wetravel.ui.ProfileFragment;
+import uk.ac.qub.jmccambridge06.wetravel.ui.DisplayFragment;
 
 public class ImageUtility {
 
@@ -35,12 +34,11 @@ public class ImageUtility {
      * @return
      * @throws IOException
      */
-    public static Bitmap storeImageAsBitmap(int requestCode, int resultCode, @Nullable Intent data, Context context) throws IOException {
+    public static void storeImageAsBitmap(int requestCode, int resultCode, @Nullable Intent data, Context context, DisplayFragment fragment) throws IOException {
         Uri imageUri = data.getData();
-        ProfileFragment.setImageUri(imageUri);
+        fragment.setImageUri(imageUri);
         Bitmap bitmapImage = MediaStore.Images.Media.getBitmap(context.getContentResolver(), imageUri);
-
-        return bitmapImage;
+        fragment.setMainImage(bitmapImage);
     }
 
 }

@@ -9,6 +9,7 @@ import android.util.Log;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
+import androidx.fragment.app.Fragment;
 
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -43,7 +44,7 @@ public class FirebaseLink {
      * @param imagePath
      * @return
      */
-    private static StorageReference getProfilePictureFolder(String imagePath) {
+    public static StorageReference getProfilePictureFolder(String imagePath) {
         String path = profilePicturePath + imagePath;
         Log.i("Firebase Link", "profile link is: "+path);
         StorageReference profilePicture = FirebaseStorage.getInstance().getReference().child(path);
@@ -55,12 +56,11 @@ public class FirebaseLink {
      * @param imagePath
      * @throws IOException
      */
-    public static void retrieveImageFirebase(String imagePath) throws IOException {
+    public static File retrieveImageFirebase(String imagePath) throws IOException {
         Log.i("tag", "just into retrieve");
-        StorageReference storageReference = getProfilePictureFolder(imagePath);
-
-        final File localFile = File.createTempFile("profilepic", "jpg");
-
+        final File localFile = File.createTempFile("pic", "jpg");
+        return localFile;
+/*
         storageReference.getFile(localFile).addOnSuccessListener(new OnSuccessListener<FileDownloadTask.TaskSnapshot>() {
             @Override
             public void onSuccess(FileDownloadTask.TaskSnapshot taskSnapshot) {
@@ -71,8 +71,7 @@ public class FirebaseLink {
                 Log.i("tag", "setting profile image");
                 // can add code to determine if its profile or something else.
             }
-        });
-
+        });*/
     }
 
     /**
