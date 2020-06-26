@@ -6,18 +6,25 @@ import android.graphics.Bitmap;
 import android.graphics.drawable.BitmapDrawable;
 import android.net.Uri;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
+import com.android.volley.VolleyError;
+
+import org.json.JSONObject;
+
 import java.io.IOException;
+import java.util.UUID;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -25,12 +32,19 @@ import de.hdodenhof.circleimageview.CircleImageView;
 import uk.ac.qub.jmccambridge06.wetravel.Profile;
 import uk.ac.qub.jmccambridge06.wetravel.ProfileTypes;
 import uk.ac.qub.jmccambridge06.wetravel.network.FirebaseLink;
+import uk.ac.qub.jmccambridge06.wetravel.network.JsonFetcher;
+import uk.ac.qub.jmccambridge06.wetravel.network.NetworkResultCallback;
+import uk.ac.qub.jmccambridge06.wetravel.network.routes;
 import uk.ac.qub.jmccambridge06.wetravel.utilities.ImageUtility;
 import uk.ac.qub.jmccambridge06.wetravel.R;
 
 public class ProfileFragment extends DisplayFragment {
 
+    private final String logTag = "Profile";
+
     private Profile profile;
+
+    NetworkResultCallback patchProfileCallback = null;
 
     /**
      * Indicates the profile type of the fragment. Is of class profiletype.
@@ -126,17 +140,21 @@ public class ProfileFragment extends DisplayFragment {
                     profile.setDescription(profileDescriptionEdit.getText().toString());
                     if (getMainImage() != null) {
                         profile.setProfilePictureImage(getMainImage());
-                        FirebaseLink.saveInFirebase(getImageUri(), getContext());
+                        profile.setProfilePicture(FirebaseLink.profilePicturePrefix + UUID.randomUUID().toString());
+                        FirebaseLink.saveInFirebase(getImageUri(), getContext(), profile.getProfilePicture());
                     }
-
+                    updateProfileCallback();
+                    JsonFetcher jsonFetcher = new JsonFetcher(patchProfileCallback, getActivity());
+                    jsonFetcher.addParam(R.params.profile_name, profileNameEdit.getText().toString());
+                    jsonFetcher.addParam(R.params.profile_home_location, profileHomeLocationEdit.getText().toString());
+                    jsonFetcher.addParam(R.params.profile_picture, profile.getProfilePicture());
+                    jsonFetcher.addParam(R.params.profile_description, profileDescriptionEdit.getText().toString());
+                    jsonFetcher.patchData((routes.getUserAccountData(((MainMenuActivity) getActivity()).getUserAccount().getUserId())));
                     // upload text and profile image to database and save prof pic to user profile.
                     for (int loop = 0; loop<savedViews.length; loop++) {
-
                         editViews[loop].setVisibility(View.GONE);
                         savedViews[loop].setVisibility(View.VISIBLE);
                         profileImage.setClickable(false);
-
-
                     }
                     loadViews(); // reload views incase of changes.
                 }
@@ -169,8 +187,9 @@ public class ProfileFragment extends DisplayFragment {
         // create a load views method
         profileImage.setImageBitmap(profile.getProfilePictureImage());
         profileName.setText(profile.getName());
+        profileUsername.setText(profile.getUsername());
         profileNameEdit.setText(profile.getName());
-        profileAge.setText(String.valueOf(profile.getAge()) + getString(R.string.years_old));
+        profileAge.setText(String.valueOf(profile.getAge()) +" " + R.string.years_old);
         profileCurrentTrip.setText("Vietnam Tour - Hanoi, Vietnam");
         profileHomeLocation.setText(profile.getHomeLocation());
         profileHomeLocationEdit.setText(profile.getHomeLocation());
@@ -180,5 +199,24 @@ public class ProfileFragment extends DisplayFragment {
 
     public void setProfile(Profile profile) {
         this.profile = profile;
+    }
+
+    /**
+     * Loads callbacks for when the user profile data is updated. Toast message will confirm this has been completed.
+     */
+    void updateProfileCallback(){
+        patchProfileCallback = new NetworkResultCallback() {
+            @Override
+            public void notifySuccess(JSONObject response) {
+
+                Toast.makeText(getActivity().getApplicationContext(), R.string.profile_change_saved, Toast.LENGTH_SHORT).show();
+            }
+            @Override
+            public void notifyError(VolleyError error) {
+                Log.d(logTag, "Error patching profile data");
+                error.printStackTrace();
+
+            }
+        };
     }
 }

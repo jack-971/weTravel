@@ -42,10 +42,11 @@ import uk.ac.qub.jmccambridge06.wetravel.network.routes;
  */
 public class MainMenuActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
 
+    private static final String logTag = "MainMenuActivity";
+
     private UserAccount userAccount;
 
-    NetworkResultCallback networkResultCallback = null;
-
+    NetworkResultCallback getProfileCallback = null;
     JsonFetcher jsonFetcher;
 
     /**
@@ -73,7 +74,7 @@ public class MainMenuActivity extends AppCompatActivity implements NavigationVie
         setUserAccount(new UserAccount(1));
         String username = "jack_123"; // this will have been passed by the login activity.
         loadProfileCallback();
-        jsonFetcher = new JsonFetcher(networkResultCallback,this);
+        jsonFetcher = new JsonFetcher(getProfileCallback,this);
         jsonFetcher.getData(routes.getUserAccountData(getUserAccount().getUserId()));
 
         // Load the custom toolbar
@@ -99,36 +100,6 @@ public class MainMenuActivity extends AppCompatActivity implements NavigationVie
             loadHome();
         }
 
-    }
-
-    /**
-     * Loads callbacks for when the user profile data is loaded. This will be mapped to a new profile class.
-     */
-    void loadProfileCallback(){
-        networkResultCallback = new NetworkResultCallback() {
-            @Override
-            public void notifySuccess(JSONObject response) {
-                Log.d("tagged", "Volley JSON post" + response);
-                try {
-                    JSONArray jsonArray = response.getJSONArray("data");
-                    JSONObject user = null;
-                    user = jsonArray.getJSONObject(0);
-                    userAccount.setProfile(new Profile(user.getString("Name"),
-                            "jack123",
-                            user.getString("Dob"),
-                            user.getString("HomeLocation"),
-                            user.getString("CurrentLocation"),
-                            user.getString("ProfilePicture"),
-                            user.getString("Description")));
-                } catch (JSONException e) {
-                    e.printStackTrace();
-                }
-            }
-            @Override
-            public void notifyError(VolleyError error) {
-                Log.d("tagged", "Volley JSON post" + "That didn't work!");
-            }
-        };
     }
 
     /**
@@ -170,7 +141,7 @@ public class MainMenuActivity extends AppCompatActivity implements NavigationVie
                         new SettingsFragment()).commit();
                 break;
             case R.id.tutorial:
-                Toast.makeText(this, "Tutorial Started", Toast.LENGTH_SHORT).show();
+                Toast.makeText(this, R.string.tutorial_started, Toast.LENGTH_SHORT).show();
                 break;
         }
 
@@ -259,5 +230,32 @@ public class MainMenuActivity extends AppCompatActivity implements NavigationVie
     public void setUserAccount(UserAccount userAccount) {
         this.userAccount = userAccount;
     }
+
+
+    /**
+     * Loads callbacks for when the user profile data is loaded. This will be mapped to a new profile class.
+     */
+    void loadProfileCallback(){
+        getProfileCallback = new NetworkResultCallback() {
+            @Override
+            public void notifySuccess(JSONObject response) {
+                Log.i(logTag, "Successful JSON profile request:" + response);
+                try {
+                    JSONArray jsonArray = response.getJSONArray("data");
+                    JSONObject user = jsonArray.getJSONObject(0);
+                    userAccount.setProfile(new Profile(user));
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+            }
+            @Override
+            public void notifyError(VolleyError error) {
+                Log.d(logTag, "Error on JSON callback for profile");
+                error.printStackTrace();
+            }
+        };
+    }
+
+
 
 }

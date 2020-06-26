@@ -35,7 +35,7 @@ public class FirebaseLink {
     /**
      * Prefix for saving profile pictures in firebase.
      */
-    private static String profilePicturePrefix = "profile_";
+    public static String profilePicturePrefix = "profile_";
 
     private static StorageReference TripPictureFolder;
 
@@ -60,18 +60,6 @@ public class FirebaseLink {
         Log.i("tag", "just into retrieve");
         final File localFile = File.createTempFile("pic", "jpg");
         return localFile;
-/*
-        storageReference.getFile(localFile).addOnSuccessListener(new OnSuccessListener<FileDownloadTask.TaskSnapshot>() {
-            @Override
-            public void onSuccess(FileDownloadTask.TaskSnapshot taskSnapshot) {
-                Log.i("tag", "In on success");
-                Bitmap bitmap = BitmapFactory.decodeFile(localFile.getAbsolutePath());
-                Log.i("tag", "Have decoded file");
-                ProfileFragment.setProfileImage(bitmap);
-                Log.i("tag", "setting profile image");
-                // can add code to determine if its profile or something else.
-            }
-        });*/
     }
 
     /**
@@ -79,13 +67,13 @@ public class FirebaseLink {
      * @param imageUri
      * @param context
      */
-    public static void saveInFirebase(Uri imageUri, final Context context) {
+    public static void saveInFirebase(Uri imageUri, final Context context, String saveName) {
 
         if (imageUri != null) {
             final ProgressDialog progressDialog = new ProgressDialog(context);
             progressDialog.setTitle("Please wait...");
             progressDialog.show();
-            String path = profilePicturePath+ profilePicturePrefix + UUID.randomUUID().toString();
+            String path = profilePicturePath+ saveName;
             StorageReference reference = FirebaseStorage.getInstance().getReference().child(path);
             Log.i("tagger", "the path now is: "+path);
             try {
