@@ -5,23 +5,31 @@
     android:gravity="bottom"
     android:padding="16dp"
     android:theme="@style/AppTheme"
+    android:id="@+id/drawer_header"
     android:layout_height="@dimen/_176sdp">
 
-    <ImageView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:src="@mipmap/ic_launcher"/>
+    <de.hdodenhof.circleimageview.CircleImageView
+        android:id="@+id/drawer_picture"
+        android:layout_width="@dimen/_72sdp"
+        android:layout_height="@dimen/_72sdp"
+        android:clickable="false"
+        android:src="@drawable/profile_placeholder_icon"
+    />
     
     <TextView
+        android:id="@+id/drawer_name"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:paddingTop="@dimen/_8sdp"
+        android:layout_marginLeft="@dimen/_16sdp"
         android:text="Name"
         android:textAppearance="@style/TextAppearance.AppCompat.Body1"/>
 
     <TextView
+        android:id="@+id/drawer_username"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginLeft="@dimen/_16sdp"
         android:text="Username"/>
 
 

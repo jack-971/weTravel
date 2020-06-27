@@ -41,18 +41,7 @@ import uk.ac.qub.jmccambridge06.wetravel.R;
 public class ProfileFragment extends DisplayFragment {
 
     private final String logTag = "Profile";
-
-    private Profile profile;
-
     NetworkResultCallback patchProfileCallback = null;
-
-    /**
-     * Indicates the profile type of the fragment. Is of class profiletype.
-     */
-    private int profileType = ProfileTypes.PROFILE_ADMIN;
-
-    private boolean editing = false;
-
     @BindView(R.id.profile_picture) CircleImageView profileImage;
     @BindView(R.id.profile_name) TextView profileName;
     @BindView((R.id.profile_edit_name)) EditText profileNameEdit;
@@ -65,6 +54,13 @@ public class ProfileFragment extends DisplayFragment {
     @BindView((R.id.profile_description_edit)) EditText profileDescriptionEdit;
     @BindView(R.id.profile_save) Button saveButton;
     @BindView(R.id.profile_edit) Button editButton;
+    @BindView(R.id.profile_friends_button) Button friendsButton;
+    private Profile profile;
+
+    /**
+     * Indicates the profile type of the fragment. Is of class profiletype.
+     */
+    private int profileType = ProfileTypes.PROFILE_ADMIN;
 
     // Arrays containing views to be shown or hidden in display or edit phase.
     private View[] savedViews;
@@ -145,10 +141,10 @@ public class ProfileFragment extends DisplayFragment {
                     }
                     updateProfileCallback();
                     JsonFetcher jsonFetcher = new JsonFetcher(patchProfileCallback, getActivity());
-                    jsonFetcher.addParam(R.params.profile_name, profileNameEdit.getText().toString());
-                    jsonFetcher.addParam(R.params.profile_home_location, profileHomeLocationEdit.getText().toString());
-                    jsonFetcher.addParam(R.params.profile_picture, profile.getProfilePicture());
-                    jsonFetcher.addParam(R.params.profile_description, profileDescriptionEdit.getText().toString());
+                    jsonFetcher.addParam("name", profileNameEdit.getText().toString());
+                    jsonFetcher.addParam("home", profileHomeLocationEdit.getText().toString());
+                    jsonFetcher.addParam("image", profile.getProfilePicture());
+                    jsonFetcher.addParam("description", profileDescriptionEdit.getText().toString());
                     jsonFetcher.patchData((routes.getUserAccountData(((MainMenuActivity) getActivity()).getUserAccount().getUserId())));
                     // upload text and profile image to database and save prof pic to user profile.
                     for (int loop = 0; loop<savedViews.length; loop++) {
@@ -197,10 +193,6 @@ public class ProfileFragment extends DisplayFragment {
         profileDescriptionEdit.setText(profile.getDescription());
     }
 
-    public void setProfile(Profile profile) {
-        this.profile = profile;
-    }
-
     /**
      * Loads callbacks for when the user profile data is updated. Toast message will confirm this has been completed.
      */
@@ -208,7 +200,6 @@ public class ProfileFragment extends DisplayFragment {
         patchProfileCallback = new NetworkResultCallback() {
             @Override
             public void notifySuccess(JSONObject response) {
-
                 Toast.makeText(getActivity().getApplicationContext(), R.string.profile_change_saved, Toast.LENGTH_SHORT).show();
             }
             @Override
@@ -218,5 +209,9 @@ public class ProfileFragment extends DisplayFragment {
 
             }
         };
+    }
+
+    public void setProfile(Profile profile) {
+        this.profile = profile;
     }
 }

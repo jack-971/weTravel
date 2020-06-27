@@ -13,12 +13,14 @@ import android.app.SearchManager;
 import android.content.ComponentName;
 import android.content.Context;
 import android.os.Bundle;
+import android.transition.CircularPropagation;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.SearchView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.android.volley.VolleyError;
@@ -28,7 +30,11 @@ import com.google.android.material.navigation.NavigationView;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.w3c.dom.Text;
 
+import butterknife.BindView;
+import butterknife.ButterKnife;
+import de.hdodenhof.circleimageview.CircleImageView;
 import uk.ac.qub.jmccambridge06.wetravel.Profile;
 import uk.ac.qub.jmccambridge06.wetravel.R;
 import uk.ac.qub.jmccambridge06.wetravel.UserAccount;
@@ -47,6 +53,8 @@ public class MainMenuActivity extends AppCompatActivity implements NavigationVie
     private UserAccount userAccount;
 
     NetworkResultCallback getProfileCallback = null;
+    NetworkResultCallback getDrawerCallback = null;
+
     JsonFetcher jsonFetcher;
 
     /**
@@ -62,14 +70,11 @@ public class MainMenuActivity extends AppCompatActivity implements NavigationVie
 
     private static NavigationView secondaryMenuView;
 
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        // create an async task which will be used to load the data.
-        // execute the async task.
         // create the user account
         setUserAccount(new UserAccount(1));
         String username = "jack_123"; // this will have been passed by the login activity.
@@ -85,6 +90,7 @@ public class MainMenuActivity extends AppCompatActivity implements NavigationVie
         drawer = findViewById(R.id.secondary_menu_drawer);
         secondaryMenuView = findViewById(R.id.secondary_view);
         secondaryMenuView.setNavigationItemSelectedListener(this);
+
 
         // Add drawer toggle on burger bar
         navToggle = new ActionBarDrawerToggle(this, drawer, toolbar,
@@ -223,17 +229,8 @@ public class MainMenuActivity extends AppCompatActivity implements NavigationVie
                 new UserSearchFragment()).commit();
     }
 
-    public UserAccount getUserAccount() {
-        return userAccount;
-    }
-
-    public void setUserAccount(UserAccount userAccount) {
-        this.userAccount = userAccount;
-    }
-
-
     /**
-     * Loads callbacks for when the user profile data is loaded. This will be mapped to a new profile class.
+     * Callbacks for loading user profile and mapping to a user class and then the drawer views.
      */
     void loadProfileCallback(){
         getProfileCallback = new NetworkResultCallback() {
@@ -243,7 +240,9 @@ public class MainMenuActivity extends AppCompatActivity implements NavigationVie
                 try {
                     JSONArray jsonArray = response.getJSONArray("data");
                     JSONObject user = jsonArray.getJSONObject(0);
-                    userAccount.setProfile(new Profile(user));
+                    userAccount.setProfile(new Profile(user, getDrawerCallback));
+
+                    Log.i(logTag, "Loaded the drawer");
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
@@ -254,8 +253,40 @@ public class MainMenuActivity extends AppCompatActivity implements NavigationVie
                 error.printStackTrace();
             }
         };
+
+        getDrawerCallback = new NetworkResultCallback() {
+            @Override
+            public void notifySuccess(JSONObject response) {
+                loadDrawer();
+            }
+
+            @Override
+            public void notifyError(VolleyError error) {
+                Log.d(logTag, "Error loading drawer");
+                error.printStackTrace();
+            }
+        };
     }
 
+    /**
+     * Loads the drawer views with the user profile information for the user account.
+     */
+   public void loadDrawer() {
+       View header = secondaryMenuView.getHeaderView(0);
+       CircleImageView drawerPicture = header.findViewById(R.id.drawer_picture);
+       TextView drawerName = header.findViewById(R.id.drawer_name);
+       TextView drawerUsername = header.findViewById(R.id.drawer_username);
+       drawerName.setText(userAccount.getProfile().getName());
+       drawerUsername.setText(userAccount.getProfile().getUsername());
+       drawerPicture.setImageBitmap(userAccount.getProfile().getProfilePictureImage());
+    }
 
+    public UserAccount getUserAccount() {
+        return userAccount;
+    }
+
+    public void setUserAccount(UserAccount userAccount) {
+        this.userAccount = userAccount;
+    }
 
 }
