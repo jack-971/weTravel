@@ -28,6 +28,7 @@ import java.util.UUID;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import butterknife.OnClick;
 import de.hdodenhof.circleimageview.CircleImageView;
 import uk.ac.qub.jmccambridge06.wetravel.Profile;
 import uk.ac.qub.jmccambridge06.wetravel.ProfileTypes;
@@ -92,7 +93,6 @@ public class ProfileFragment extends DisplayFragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         ButterKnife.bind(this, view);
-
         loadProfile();
     }
 
@@ -107,6 +107,7 @@ public class ProfileFragment extends DisplayFragment {
             savedViews = new View[]{profileName, profileHomeLocation, profileDescription, editButton};
             editViews = new View[]{profileNameEdit, profileHomeLocationEdit, profileDescriptionEdit, saveButton};
             editButton.setVisibility(View.VISIBLE);
+
 
             // Add the on click listener that will enable editing when clicked.
             editButton.setOnClickListener(new View.OnClickListener() {
@@ -181,11 +182,13 @@ public class ProfileFragment extends DisplayFragment {
 
     private void loadViews() {
         // create a load views method
-        profileImage.setImageBitmap(profile.getProfilePictureImage());
+        if (profile.getProfilePictureImage() != null) {
+            profileImage.setImageBitmap(profile.getProfilePictureImage());
+        }
         profileName.setText(profile.getName());
         profileUsername.setText(profile.getUsername());
         profileNameEdit.setText(profile.getName());
-        profileAge.setText(String.valueOf(profile.getAge()) +" " + R.string.years_old);
+        profileAge.setText(String.valueOf(profile.getAge()) +" " + getContext().getResources().getString(R.string.years_old));
         profileCurrentTrip.setText("Vietnam Tour - Hanoi, Vietnam");
         profileHomeLocation.setText(profile.getHomeLocation());
         profileHomeLocationEdit.setText(profile.getHomeLocation());
@@ -214,4 +217,11 @@ public class ProfileFragment extends DisplayFragment {
     public void setProfile(Profile profile) {
         this.profile = profile;
     }
+
+    @OnClick(R.id.profile_friends_button)
+    public void friends( Button button) {
+        MainMenuActivity.fragmentManager.beginTransaction().replace(R.id.main_screen_container,
+                new FriendListFragment()).addToBackStack(null).commit();
+    }
+
 }

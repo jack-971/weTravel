@@ -62,7 +62,7 @@ public class MainMenuActivity extends AppCompatActivity implements NavigationVie
      */
     private static BottomNavigationView bottomNav;
 
-    private static FragmentManager fragmentManager;
+    public static FragmentManager fragmentManager;
 
     private static DrawerLayout drawer;
 
@@ -70,14 +70,15 @@ public class MainMenuActivity extends AppCompatActivity implements NavigationVie
 
     private static NavigationView secondaryMenuView;
 
+    private static ProfileFragment profileFragment = null;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
         // create the user account
-        setUserAccount(new UserAccount(1));
-        String username = "jack_123"; // this will have been passed by the login activity.
+        setUserAccount(new UserAccount(2));
         loadProfileCallback();
         jsonFetcher = new JsonFetcher(getProfileCallback,this);
         jsonFetcher.getData(routes.getUserAccountData(getUserAccount().getUserId()));
@@ -138,13 +139,15 @@ public class MainMenuActivity extends AppCompatActivity implements NavigationVie
     public boolean onNavigationItemSelected(@NonNull MenuItem menuItem) {
         switch(menuItem.getItemId()) {
             case R.id.view_own_profile:
-                Fragment userProfileFragment = new ProfileFragment();
+                if (profileFragment == null) {
+                    profileFragment = new ProfileFragment();
+                }
                 fragmentManager.beginTransaction().replace(R.id.main_screen_container,
-                        userProfileFragment).commit();
+                        profileFragment).addToBackStack(null).commit();
                 break;
             case R.id.edit_settings:
                 fragmentManager.beginTransaction().replace(R.id.main_screen_container,
-                        new SettingsFragment()).commit();
+                        new SettingsFragment()).addToBackStack(null).commit();
                 break;
             case R.id.tutorial:
                 Toast.makeText(this, R.string.tutorial_started, Toast.LENGTH_SHORT).show();
@@ -192,17 +195,12 @@ public class MainMenuActivity extends AppCompatActivity implements NavigationVie
     public void onBackPressed() {
         if (drawer.isDrawerOpen(GravityCompat.START)) {
             drawer.closeDrawer(GravityCompat.START);
-        } else {
-            if (fragmentManager.findFragmentById(R.id.main_screen_container) instanceof NewsfeedFragment) {
-                super.onBackPressed(); //close the app
-            } else {
-                bottomNav.setSelectedItemId(R.id.menu_home);
-            }
-        }
+        } else
+        super.onBackPressed();
     }
 
     /**
-     * Removes the navbar
+     * Removes the navbar.
      */
     public static void removeNavBar() {
         bottomNav.setVisibility(View.GONE);

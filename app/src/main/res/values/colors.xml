@@ -9,15 +9,15 @@
     <color name="colorPrimaryDark">#c30000</color>
     <color name="colorAccent">#ff7539</color>-->
 
-    <!--
+
     <color name="colorPrimary">#039BE5</color>
     <color name="colorPrimaryDark">#01579B</color>
     <color name="colorAccent">#80D8FF</color>-->
-
-       <color name="colorPrimary">#f57f17</color>
-    <color name="colorPrimaryDark">#bc5100</color>
-    <color name="colorAccent">#ffb04c</color>
--->
+    <!--
+           <color name="colorPrimary">#f57f17</color>
+        <color name="colorPrimaryDark">#bc5100</color>
+        <color name="colorAccent">#ffb04c</color>
+    -->
     <color name="border_color">@color/colorPrimary</color>
 
 
@@ -25,4 +25,8 @@
     <color name="minor_text">@android:color/darker_gray</color>
     <color name="button_text">@android:color/white</color>
     <color name="tag_color">@android:color/black</color>
+
+    <!--Cards-->
+    <color name="card_major_text">@android:color/black</color>
+    <color name="card_minor_text">@android:color/darker_gray</color>
 </resources>
