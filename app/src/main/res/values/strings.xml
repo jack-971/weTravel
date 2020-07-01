@@ -26,7 +26,7 @@
     <!--profile-->
     <string name="years_old">years old</string>
     <string name="edit_profile">Edit Profile</string>
-    <string name="save_changes">Save Changes</string>
+    <string name="save_changes">Save</string>
     <string name="friends_button">Friends</string>
     <string name="friends_tag">Friends</string>
     <string name="map">Map</string>

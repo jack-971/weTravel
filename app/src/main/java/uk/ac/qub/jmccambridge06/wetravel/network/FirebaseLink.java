@@ -40,52 +40,43 @@ public class FirebaseLink {
     private static StorageReference TripPictureFolder;
 
     /**
-     * Takes an image path for an image existing in the profile picture folder in firebase storage and gets the location.
-     * @param imagePath
-     * @return
-     */
-    public static StorageReference getProfilePictureFolder(String imagePath) {
-        String path = profilePicturePath + imagePath;
-        Log.i("Firebase Link", "profile link is: "+path);
-        StorageReference profilePicture = FirebaseStorage.getInstance().getReference().child(path);
-        return profilePicture;
-    }
-
-    /**
-     * Takes an image path and retrieves it from Firebase saving locally before sending back to a fragment.
-     * @param imagePath
-     * @throws IOException
-     */
-    public static File retrieveImageFirebase(String imagePath) throws IOException {
-        Log.i("tag", "just into retrieve");
-        final File localFile = File.createTempFile("pic", "jpg");
-        return localFile;
-    }
-
-    /**
      * For a given image, saves the file into firebase storage.
      * @param imageUri
      * @param context
      */
-    public static void saveInFirebase(Uri imageUri, final Context context, String saveName) {
+    public static void saveInFirebase(Uri imageUri, final Context context, FirebaseCallback callback) {
 
         if (imageUri != null) {
             final ProgressDialog progressDialog = new ProgressDialog(context);
             progressDialog.setTitle("Please wait...");
             progressDialog.show();
-            String path = profilePicturePath+ saveName;
+            String path = profilePicturePath+ profilePicturePrefix + UUID.randomUUID().toString();
             StorageReference reference = FirebaseStorage.getInstance().getReference().child(path);
-            Log.i("tagger", "the path now is: "+path);
             try {
                 reference.putFile(imageUri).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
                     @Override
                     public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
                         progressDialog.dismiss();
+                        reference.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
+                            @Override
+                            public void onSuccess(Uri uri) {
+                                String downloadUrl = uri.toString();
+                                if(callback != null)
+                                    callback.notifySuccess(downloadUrl);
+                            }}).addOnFailureListener(new OnFailureListener() {
+                                @Override
+                                public void onFailure(@NonNull Exception exception) {
+                                    if(callback != null)
+                                        callback.notifyError(exception);
+                                    exception.printStackTrace();
+                                }
+                            });
                         Toast.makeText(context, "Saved successfully", Toast.LENGTH_SHORT).show();
                     }
                 }).addOnFailureListener(new OnFailureListener() {
                     @Override
                     public void onFailure(@NonNull Exception e) {
+                        e.printStackTrace();
                         Toast.makeText(context, "Error occured, please try again!", Toast.LENGTH_SHORT).show();
                     }
                 }).addOnProgressListener(new OnProgressListener<UploadTask.TaskSnapshot>() {

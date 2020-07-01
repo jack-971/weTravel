@@ -19,7 +19,8 @@
             android:layout_marginTop="@dimen/_30sdp"
             android:clickable="false"
             android:src="@drawable/profile_placeholder_icon"
-            app:civ_border_width="@dimen/_2sdp"
+            app:civ_border_width="@dimen/_1sdp"
+            app:civ_border_color="@color/border_color"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toRightOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
@@ -53,6 +54,7 @@
                 android:background="@drawable/button"
                 android:inputType="textCapSentences"
                 android:text="@string/add_friend"
+                android:textColor="@color/button_text"
                 android:textSize="@dimen/button_text"
                 android:visibility="gone" />
 
@@ -119,13 +121,14 @@
         <!-- Invisible boxes for editing or viewing other peoples profiles-->
 
         <!-- Main body-->
-
         <RelativeLayout
             android:id="@+id/profile_info_section"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_margin="@dimen/box_margins"
             android:background="@drawable/standard_border"
+            android:layout_margin="@dimen/box_margins"
+            android:padding="@dimen/_15sdp"
+            android:layout_marginTop="@dimen/_25sdp"
             app:layout_constraintTop_toBottomOf="@id/profile_changeable">
 
             <!-- Buttons layout-->
@@ -270,8 +273,11 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_margin="@dimen/box_margins"
-            android:layout_marginBottom="@dimen/_10sdp"
+            android:layout_marginTop="@dimen/_25sdp"
+            android:padding="@dimen/_15sdp"
             android:background="@drawable/standard_border"
+            android:layout_marginBottom="@dimen/_10sdp"
+
             app:layout_constraintTop_toBottomOf="@id/profile_info_section">
 
             <TextView

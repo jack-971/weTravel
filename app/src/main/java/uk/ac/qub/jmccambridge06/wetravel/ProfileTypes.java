@@ -21,6 +21,7 @@ public abstract class ProfileTypes {
         public static final int PROFILE_USER = 2;
         public static final int PROFILE_REQUEST_SENT = 3;
         public static final int PROFILE_REQUEST_RECEIVED = 4;
+    public static final int PROFILE_UNDEFINED = 5;
 
 
     @ProfileType

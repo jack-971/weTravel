@@ -8,12 +8,12 @@ import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.FragmentTransaction;
 
 import android.app.SearchManager;
-import android.content.ComponentName;
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
-import android.transition.CircularPropagation;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -24,21 +24,18 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.android.volley.VolleyError;
+import com.bumptech.glide.Glide;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.navigation.NavigationView;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
-import org.w3c.dom.Text;
 
-import butterknife.BindView;
-import butterknife.ButterKnife;
 import de.hdodenhof.circleimageview.CircleImageView;
 import uk.ac.qub.jmccambridge06.wetravel.Profile;
 import uk.ac.qub.jmccambridge06.wetravel.R;
 import uk.ac.qub.jmccambridge06.wetravel.UserAccount;
-import uk.ac.qub.jmccambridge06.wetravel.UserSearchResultsActivity;
 import uk.ac.qub.jmccambridge06.wetravel.network.NetworkResultCallback;
 import uk.ac.qub.jmccambridge06.wetravel.network.JsonFetcher;
 import uk.ac.qub.jmccambridge06.wetravel.network.routes;
@@ -46,14 +43,14 @@ import uk.ac.qub.jmccambridge06.wetravel.network.routes;
 /**
  * Class contains all UI activity for the main menu.
  */
-public class MainMenuActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
+public class MainMenuActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener{
 
     private static final String logTag = "MainMenuActivity";
 
     private UserAccount userAccount;
 
     NetworkResultCallback getProfileCallback = null;
-    NetworkResultCallback getDrawerCallback = null;
+    NetworkResultCallback getFriendsCallback = null;
 
     JsonFetcher jsonFetcher;
 
@@ -70,7 +67,15 @@ public class MainMenuActivity extends AppCompatActivity implements NavigationVie
 
     private static NavigationView secondaryMenuView;
 
-    private static ProfileFragment profileFragment = null;
+    public NewsfeedFragment newsfeedFragment;
+    public TripsFragment tripsFragment;
+    public InboxFragment inboxFragment;
+    public NotificationsFragment notificationsFragment;
+    public ProfileFragment profileFragment;
+    public SettingsFragment settingsFragment;
+    public FriendListFragment searchFragment;
+    public FriendListFragment adminFriendList;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -79,6 +84,8 @@ public class MainMenuActivity extends AppCompatActivity implements NavigationVie
 
         // create the user account
         setUserAccount(new UserAccount(2));
+
+        // load the user profile
         loadProfileCallback();
         jsonFetcher = new JsonFetcher(getProfileCallback,this);
         jsonFetcher.getData(routes.getUserAccountData(getUserAccount().getUserId()));
@@ -92,7 +99,6 @@ public class MainMenuActivity extends AppCompatActivity implements NavigationVie
         secondaryMenuView = findViewById(R.id.secondary_view);
         secondaryMenuView.setNavigationItemSelectedListener(this);
 
-
         // Add drawer toggle on burger bar
         navToggle = new ActionBarDrawerToggle(this, drawer, toolbar,
                 R.string.nav_drawer_open, R.string.nav_drawer_close);
@@ -102,11 +108,23 @@ public class MainMenuActivity extends AppCompatActivity implements NavigationVie
         // Load the main menu fragment for bottom navigation
         bottomNav = findViewById(R.id.main_navigation);
         bottomNav.setOnNavigationItemSelectedListener(navListener);
-        if (savedInstanceState == null) {
-            fragmentManager = getSupportFragmentManager();
-            loadHome();
-        }
+        fragmentManager = getSupportFragmentManager();
 
+        if (savedInstanceState == null) {
+            newsfeedFragment = new NewsfeedFragment();
+            tripsFragment = new TripsFragment();
+            inboxFragment = new InboxFragment();
+            notificationsFragment = new NotificationsFragment();
+            profileFragment = new ProfileFragment();
+            settingsFragment = new SettingsFragment();
+            searchFragment = new FriendListFragment();
+            FragmentTransaction transaction = fragmentManager.beginTransaction();
+            transaction.add(R.id.main_screen_container, newsfeedFragment, "newsfeed");
+            transaction.add(R.id.main_screen_container, tripsFragment, "trips").hide(tripsFragment);
+            transaction.add(R.id.main_screen_container, inboxFragment, "inbox").hide(inboxFragment);
+            transaction.add(R.id.main_screen_container, notificationsFragment, "notifications").hide(notificationsFragment);
+            transaction.commit();
+        }
     }
 
     /**
@@ -118,16 +136,27 @@ public class MainMenuActivity extends AppCompatActivity implements NavigationVie
     public boolean onCreateOptionsMenu(Menu menu) {
         MenuInflater inflater = getMenuInflater();
         inflater.inflate(R.menu.search_menu, menu);
-
         // Associate searchable configuration with the SearchView
-        SearchManager searchManager =
-                (SearchManager) getSystemService(Context.SEARCH_SERVICE);
-        SearchView searchView =
-                (SearchView) menu.findItem(R.id.user_search).getActionView();
-        searchView.setSearchableInfo(
-                searchManager.getSearchableInfo(new ComponentName(this, UserSearchResultsActivity.class)));
-
+        SearchManager searchManager = (SearchManager) getSystemService(Context.SEARCH_SERVICE);
+        SearchView searchView = (SearchView) menu.findItem(R.id.user_search).getActionView();
+        searchView.setSearchableInfo(searchManager.getSearchableInfo(getComponentName()));
         return true;
+    }
+
+    @Override
+    protected void onNewIntent(Intent intent) {
+        super.onNewIntent(intent);
+        setIntent(intent);
+        handleIntent(intent);
+    }
+
+    private void handleIntent(Intent intent) {
+        if (Intent.ACTION_SEARCH.equals(intent.getAction())) {
+            String query = intent.getStringExtra(SearchManager.QUERY);
+            Log.i("searching", "have received the search: "+query);
+            searchFragment.setQuery(query);
+            setFragment(searchFragment, "search", true);
+        }
     }
 
     /**
@@ -139,15 +168,10 @@ public class MainMenuActivity extends AppCompatActivity implements NavigationVie
     public boolean onNavigationItemSelected(@NonNull MenuItem menuItem) {
         switch(menuItem.getItemId()) {
             case R.id.view_own_profile:
-                if (profileFragment == null) {
-                    profileFragment = new ProfileFragment();
-                }
-                fragmentManager.beginTransaction().replace(R.id.main_screen_container,
-                        profileFragment).addToBackStack(null).commit();
+                setFragment(profileFragment, "admin_profile", true);
                 break;
             case R.id.edit_settings:
-                fragmentManager.beginTransaction().replace(R.id.main_screen_container,
-                        new SettingsFragment()).addToBackStack(null).commit();
+                setFragment(settingsFragment, "settings", true);
                 break;
             case R.id.tutorial:
                 Toast.makeText(this, R.string.tutorial_started, Toast.LENGTH_SHORT).show();
@@ -167,23 +191,28 @@ public class MainMenuActivity extends AppCompatActivity implements NavigationVie
             new BottomNavigationView.OnNavigationItemSelectedListener() {
                 @Override
                 public boolean onNavigationItemSelected(@NonNull MenuItem menuItem) {
+                    fragmentManager.beginTransaction().hide(newsfeedFragment).hide(tripsFragment).hide(inboxFragment).hide(notificationsFragment).commit();
                     Fragment selectedFragment = null;
+                    String tag = "";
                     switch(menuItem.getItemId()) {
                         case R.id.menu_home:
-                            selectedFragment = new NewsfeedFragment();
+                            selectedFragment = newsfeedFragment;
+                            tag = "newsfeed";
                             break;
                         case R.id.menu_trips:
-                            selectedFragment = new TripsFragment();
+                            selectedFragment = tripsFragment;
+                            tag = "trips";
                             break;
                         case R.id.menu_inbox:
-                            selectedFragment = new InboxFragment();
+                            selectedFragment = inboxFragment;
+                            tag = "inbox";
                             break;
                         case R.id.menu_notifications:
-                            selectedFragment = new NotificationsFragment();
+                            selectedFragment = notificationsFragment;
+                            tag = "notifications";
                             break;
                     }
-                    fragmentManager.beginTransaction().replace(R.id.main_screen_container,
-                            selectedFragment).commit();
+                    setFragment(selectedFragment, tag, false);
                     return true;
                 }
             };
@@ -195,8 +224,9 @@ public class MainMenuActivity extends AppCompatActivity implements NavigationVie
     public void onBackPressed() {
         if (drawer.isDrawerOpen(GravityCompat.START)) {
             drawer.closeDrawer(GravityCompat.START);
-        } else
-        super.onBackPressed();
+        } else {
+                super.onBackPressed();
+        }
     }
 
     /**
@@ -213,18 +243,14 @@ public class MainMenuActivity extends AppCompatActivity implements NavigationVie
         bottomNav.setVisibility(View.VISIBLE);
     }
 
-    /**
-     * Loads the homes screen.
-     */
-    private static void loadHome() {
-        fragmentManager.beginTransaction().replace(R.id.main_screen_container,
-                new NewsfeedFragment()).commit();
-
-    }
-
-    public static void loadUserSearchFragment() {
-        fragmentManager.beginTransaction().replace(R.id.main_screen_container,
-                new UserSearchFragment()).commit();
+    public void setFragment(Fragment fragment, String tag, boolean backstack) {
+        if (backstack == true) {
+            fragmentManager.beginTransaction().replace(R.id.main_screen_container,
+                    fragment, tag).addToBackStack(null).commit();
+        } else {
+            FragmentTransaction transaction = fragmentManager.beginTransaction();
+            transaction.hide(fragmentManager.findFragmentById(R.id.main_screen_container)).show(fragment).commit();
+        }
     }
 
     /**
@@ -238,9 +264,13 @@ public class MainMenuActivity extends AppCompatActivity implements NavigationVie
                 try {
                     JSONArray jsonArray = response.getJSONArray("data");
                     JSONObject user = jsonArray.getJSONObject(0);
-                    userAccount.setProfile(new Profile(user, getDrawerCallback));
-
+                    userAccount.setProfile(new Profile(user, 0));
+                    profileFragment.setProfile(userAccount.getProfile());// 0 is admin profile type
+                    loadDrawer();
                     Log.i(logTag, "Loaded the drawer");
+                    loadFriendsCallback();
+                    jsonFetcher = new JsonFetcher(getFriendsCallback,getApplicationContext());
+                    jsonFetcher.getData(routes.getUserFriendList(getUserAccount().getUserId()));
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
@@ -251,16 +281,26 @@ public class MainMenuActivity extends AppCompatActivity implements NavigationVie
                 error.printStackTrace();
             }
         };
+    }
 
-        getDrawerCallback = new NetworkResultCallback() {
+    /**
+     * Callbacks for loading user profile and mapping to a user class and then the drawer views.
+     */
+    void loadFriendsCallback(){
+        getFriendsCallback = new NetworkResultCallback() {
             @Override
             public void notifySuccess(JSONObject response) {
-                loadDrawer();
+                Log.i(logTag, "Successful JSON Friend request:" + response);
+                try {
+                    JSONArray jsonArray = response.getJSONArray("data");
+                    userAccount.setFriendsList(jsonArray);
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
             }
-
             @Override
             public void notifyError(VolleyError error) {
-                Log.d(logTag, "Error loading drawer");
+                Log.d(logTag, "Error on JSON callback for Friends");
                 error.printStackTrace();
             }
         };
@@ -276,7 +316,9 @@ public class MainMenuActivity extends AppCompatActivity implements NavigationVie
        TextView drawerUsername = header.findViewById(R.id.drawer_username);
        drawerName.setText(userAccount.getProfile().getName());
        drawerUsername.setText(userAccount.getProfile().getUsername());
-       drawerPicture.setImageBitmap(userAccount.getProfile().getProfilePictureImage());
+       Glide.with(this)
+               .load(userAccount.getProfile().getProfilePicture())
+               .into(drawerPicture);
     }
 
     public UserAccount getUserAccount() {
