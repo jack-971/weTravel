@@ -35,6 +35,25 @@
     <string name="requested">Requested</string>
     <string name="accept">Accept</string>
     <string name="profile_change_saved">Profile changes saved!</string>
+    <string name="friend_requested">Friend request sent!</string>
+    <string name="friend_accepted">Friend request Accepted!</string>
+    <string name="profile_private">This users profile is set to private so only friends have access to their profile. Send a friend requet
+    to this user if you would like view thier profile!</string>
+
+    <!--Settings-->
+    <string name="set_private">Set Private Profile</string>
+    <string name="private_description">Profile content and trips only visible to friends.</string>
+    <string name="enable_location">Enable Location Services</string>
+    <string name="allow_notifications">Allow Notifications</string>
+    <string name="change_password">Change Password</string>
+    <string name="enter_current_password">Current Password</string>
+    <string name="enter_password">Enter New Password</string>
+    <string name="confirm_password">Confirm Password</string>
+    <string name="password_changed">Password Changed!</string>
+
+    <string name="submit">Submit</string>
+    <string name="cancel">Cancel</string>
+
 
 
 </resources>

@@ -2,9 +2,6 @@ package uk.ac.qub.jmccambridge06.wetravel.ui;
 
 import android.app.Activity;
 import android.content.Intent;
-import android.graphics.Bitmap;
-import android.graphics.drawable.BitmapDrawable;
-import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -12,31 +9,25 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.fragment.app.Fragment;
 
 import com.android.volley.VolleyError;
 import com.bumptech.glide.Glide;
-import com.google.firebase.storage.FirebaseStorage;
-import com.google.firebase.storage.StorageReference;
+import com.bumptech.glide.request.RequestOptions;
 
 import org.json.JSONObject;
 
 import java.io.IOException;
-import java.util.UUID;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
-import butterknife.OnClick;
 import de.hdodenhof.circleimageview.CircleImageView;
 import uk.ac.qub.jmccambridge06.wetravel.Profile;
-import uk.ac.qub.jmccambridge06.wetravel.ProfileTypes;
-import uk.ac.qub.jmccambridge06.wetravel.UserListAdapter;
+import uk.ac.qub.jmccambridge06.wetravel.utilities.ProfileTypes;
 import uk.ac.qub.jmccambridge06.wetravel.network.FirebaseCallback;
 import uk.ac.qub.jmccambridge06.wetravel.network.FirebaseLink;
 import uk.ac.qub.jmccambridge06.wetravel.network.JsonFetcher;
@@ -49,7 +40,10 @@ public class ProfileFragment extends DisplayFragment {
 
     private final String logTag = "Profile";
     NetworkResultCallback patchProfileCallback = null;
+    NetworkResultCallback requestFriendCallback = null;
+    NetworkResultCallback acceptFriendCallback = null;
     FirebaseCallback uploadProfilePictureCallback = null;
+
     private boolean profilePictureChanged;
     @BindView(R.id.profile_picture) CircleImageView profileImage;
     @BindView(R.id.profile_name) TextView profileName;
@@ -68,6 +62,8 @@ public class ProfileFragment extends DisplayFragment {
     @BindView(R.id.add_friend_button) Button addFriendButton;
     @BindView(R.id.profile_friends_requested) Button friendRequestedTag;
     @BindView(R.id.friend_accept) Button acceptFriendButton;
+    @BindView(R.id.profile_body) View profileBody;
+    @BindView(R.id.profile_private) View profilePrivateText;
     private Profile profile;
 
     // Arrays containing views to be shown or hidden in display or edit phase.
@@ -90,8 +86,6 @@ public class ProfileFragment extends DisplayFragment {
         return view;
     }
 
-
-
     /**
      * When view is created it will determine is it a user or friend profile and show the appropriate boxes.
      * Will pull the appropriate data.
@@ -112,11 +106,40 @@ public class ProfileFragment extends DisplayFragment {
      * Loads text views with profile data.
      */
     private void loadProfile() {
-        if (profile.getProfileType() == ProfileTypes.PROFILE_ADMIN) {
+        if (profile.getProfileType() == ProfileTypes.PROFILE_USER) {
+            addFriendButton.setVisibility(View.VISIBLE);
+            addFriendButton.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    requestFriend();
+                    JsonFetcher jsonFetcher = new JsonFetcher(requestFriendCallback, getContext());
+                    jsonFetcher.addParam("requestee", String.valueOf(profile.getUserId()));
+                    String url = routes.getUsersRoute(((MainMenuActivity) getActivity()).getUserAccount().getUserId());
+                    Log.i(logTag, url);
+                    jsonFetcher.postDataVolley(url);
+                }
+            });
+        } else if (profile.getProfileType() == ProfileTypes.PROFILE_REQUEST_SENT) {
+            friendRequestedTag.setVisibility(View.VISIBLE);
+        } else if (profile.getProfileType() == ProfileTypes.PROFILE_REQUEST_RECEIVED) {
+            acceptFriendButton.setVisibility(View.VISIBLE);
+            acceptFriendButton.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    acceptFriend();
+                    JsonFetcher jsonFetcher = new JsonFetcher(acceptFriendCallback, getContext());
+                    jsonFetcher.addParam("requestor", String.valueOf(profile.getUserId()));
+                    String url = routes.getUsersRoute(((MainMenuActivity) getActivity()).getUserAccount().getUserId());
+                    Log.i(logTag, url);
+                    jsonFetcher.patchData(url);
+                }
+            });
+        } else if (profile.getProfileType() == ProfileTypes.PROFILE_FRIEND) {
+            friendsTag.setVisibility(View.VISIBLE);
+        } else {
             savedViews = new View[]{profileName, profileHomeLocation, profileDescription, editButton};
             editViews = new View[]{profileNameEdit, profileHomeLocationEdit, profileDescriptionEdit, saveButton};
             editButton.setVisibility(View.VISIBLE);
-
 
             // Add the on click listener that will enable editing when clicked.
             editButton.setOnClickListener(new View.OnClickListener() {
@@ -169,42 +192,30 @@ public class ProfileFragment extends DisplayFragment {
             friendsButton.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    ((MainMenuActivity)getActivity()).adminFriendList = new FriendListFragment();
+                    ((MainMenuActivity)getActivity()).adminFriendList = new UserListFragment();
                     ((MainMenuActivity)getActivity()).adminFriendList.setProfile(profile);
                     ((MainMenuActivity)getActivity()).setFragment(((MainMenuActivity)getActivity()).adminFriendList, "admin_friends", true);
                 }
             });
 
-        } else {
+        }
             friendsButton.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-
-                }
-            });
-            if (profile.getProfileType() == ProfileTypes.PROFILE_FRIEND) {
-                friendsTag.setVisibility(View.VISIBLE);
-            } else if (profile.getProfileType() == ProfileTypes.PROFILE_REQUEST_SENT) {
-                friendRequestedTag.setVisibility(View.VISIBLE);
-            } else if (profile.getProfileType() == ProfileTypes.PROFILE_REQUEST_RECEIVED) {
-                acceptFriendButton.setVisibility(View.VISIBLE);
-            } else {
-                addFriendButton.setVisibility(View.VISIBLE);
-            }
-
-            friendsButton.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    FriendListFragment friendListFragment = new FriendListFragment();
+                    UserListFragment friendListFragment = new UserListFragment();
                     friendListFragment.setProfile(profile);
                     // some code to set type or else user different lists
                     MainMenuActivity.fragmentManager.beginTransaction().replace(R.id.main_screen_container,
                             friendListFragment).addToBackStack(null).commit();
                 }
             });
-        }
 
         loadViews();
+
+        if (profile.isPrivateProfile() && (profile.getProfileType() != ProfileTypes.PROFILE_ADMIN && profile.getProfileType() != ProfileTypes.PROFILE_FRIEND)) {
+            profilePrivateText.setVisibility(View.VISIBLE);
+            profileBody.setVisibility(View.GONE);
+        }
     }
 
     /**
@@ -229,6 +240,8 @@ public class ProfileFragment extends DisplayFragment {
 
     private void loadViews() {
         Glide.with(this)
+                .applyDefaultRequestOptions(new RequestOptions()
+                        .error(R.drawable.profile_placeholder_icon))
                 .load(profile.getProfilePicture())
                 .into(profileImage);
         profileName.setText(profile.getName());
@@ -257,8 +270,6 @@ public class ProfileFragment extends DisplayFragment {
         };
     }
 
-
-
     /**
      * Loads callbacks for when the user profile data is updated. Toast message will confirm this has been completed.
      */
@@ -277,6 +288,45 @@ public class ProfileFragment extends DisplayFragment {
         };
     }
 
+    void requestFriend() {
+        requestFriendCallback = new NetworkResultCallback() {
+            @Override
+            public void notifySuccess(JSONObject response) {
+                Log.i(logTag, "successful friend request");
+                profile.setProfileType(ProfileTypes.PROFILE_REQUEST_SENT);
+                ((MainMenuActivity)getActivity()).getUserAccount().addFriend(profile);
+                addFriendButton.setVisibility(View.GONE);
+                friendRequestedTag.setVisibility(View.VISIBLE);
+                Toast.makeText(getActivity().getApplicationContext(), R.string.friend_requested, Toast.LENGTH_SHORT).show();
+            }
+            @Override
+            public void notifyError(VolleyError error) {
+                Log.e(logTag, "Error with friend request: ");
+                error.printStackTrace();
+            }
+        };
+    }
+
+    void acceptFriend() {
+        acceptFriendCallback = new NetworkResultCallback() {
+            @Override
+            public void notifySuccess(JSONObject response) {
+                Log.i(logTag, "Friend accepted");
+                profile.setProfileType(ProfileTypes.PROFILE_FRIEND);
+                ((MainMenuActivity)getActivity()).getUserAccount().addFriend(profile);
+                acceptFriendButton.setVisibility(View.GONE);
+                friendsTag.setVisibility(View.VISIBLE);
+                Toast.makeText(getActivity().getApplicationContext(), R.string.friend_accepted, Toast.LENGTH_SHORT).show();
+            }
+
+            @Override
+            public void notifyError(VolleyError error) {
+                Log.e(logTag, "Error with friend accept: ");
+                error.printStackTrace();
+            }
+        };
+    }
+
     public void setProfile(Profile profile) {
         this.profile = profile;
     }
@@ -287,7 +337,6 @@ public class ProfileFragment extends DisplayFragment {
      */
     private void updateData(String downloadUrl) {
         updateProfileCallback();
-        Log.i(logTag, downloadUrl);
         JsonFetcher jsonFetcher = new JsonFetcher(patchProfileCallback, getActivity());
         jsonFetcher.addParam("name", profileNameEdit.getText().toString());
         jsonFetcher.addParam("home", profileHomeLocationEdit.getText().toString());

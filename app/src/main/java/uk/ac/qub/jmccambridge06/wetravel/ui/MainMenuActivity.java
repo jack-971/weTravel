@@ -73,8 +73,8 @@ public class MainMenuActivity extends AppCompatActivity implements NavigationVie
     public NotificationsFragment notificationsFragment;
     public ProfileFragment profileFragment;
     public SettingsFragment settingsFragment;
-    public FriendListFragment searchFragment;
-    public FriendListFragment adminFriendList;
+    public UserListFragment searchFragment;
+    public UserListFragment adminFriendList;
 
 
     @Override
@@ -83,12 +83,15 @@ public class MainMenuActivity extends AppCompatActivity implements NavigationVie
         setContentView(R.layout.activity_main);
 
         // create the user account
-        setUserAccount(new UserAccount(2));
+        setUserAccount(new UserAccount(1));
 
         // load the user profile
         loadProfileCallback();
         jsonFetcher = new JsonFetcher(getProfileCallback,this);
-        jsonFetcher.getData(routes.getUserAccountData(getUserAccount().getUserId()));
+        jsonFetcher.getData(routes.getAdminAccountData(getUserAccount().getUserId()));
+        loadFriendsCallback();
+        jsonFetcher = new JsonFetcher(getFriendsCallback,getApplicationContext());
+        jsonFetcher.getData(routes.getUsersRoute(getUserAccount().getUserId()));
 
         // Load the custom toolbar
         Toolbar toolbar = findViewById(R.id.toolbar);
@@ -117,7 +120,7 @@ public class MainMenuActivity extends AppCompatActivity implements NavigationVie
             notificationsFragment = new NotificationsFragment();
             profileFragment = new ProfileFragment();
             settingsFragment = new SettingsFragment();
-            searchFragment = new FriendListFragment();
+            searchFragment = new UserListFragment();
             FragmentTransaction transaction = fragmentManager.beginTransaction();
             transaction.add(R.id.main_screen_container, newsfeedFragment, "newsfeed");
             transaction.add(R.id.main_screen_container, tripsFragment, "trips").hide(tripsFragment);
@@ -266,11 +269,9 @@ public class MainMenuActivity extends AppCompatActivity implements NavigationVie
                     JSONObject user = jsonArray.getJSONObject(0);
                     userAccount.setProfile(new Profile(user, 0));
                     profileFragment.setProfile(userAccount.getProfile());// 0 is admin profile type
+                    userAccount.createSettings(user);
                     loadDrawer();
                     Log.i(logTag, "Loaded the drawer");
-                    loadFriendsCallback();
-                    jsonFetcher = new JsonFetcher(getFriendsCallback,getApplicationContext());
-                    jsonFetcher.getData(routes.getUserFriendList(getUserAccount().getUserId()));
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
@@ -293,6 +294,7 @@ public class MainMenuActivity extends AppCompatActivity implements NavigationVie
                 Log.i(logTag, "Successful JSON Friend request:" + response);
                 try {
                     JSONArray jsonArray = response.getJSONArray("data");
+                    Log.i(logTag, jsonArray.toString());
                     userAccount.setFriendsList(jsonArray);
                 } catch (JSONException e) {
                     e.printStackTrace();

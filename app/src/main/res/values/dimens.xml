@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <dimen name="button_height">@dimen/_26sdp</dimen>
+    <dimen name="button_width">@dimen/_70sdp</dimen>
+
+    <!--Profile Picture-->
+    <dimen name="profile_picture_height">@dimen/_120sdp</dimen>
+    <dimen name="profile_picture_width">@dimen/_120sdp</dimen>
+
+    <!-- Text sizes-->
+    <dimen name="descriptive_text">@dimen/_12sdp</dimen>
+    <dimen name="minor_text">@dimen/_12sdp</dimen>
+    <dimen name="major_text">@dimen/_14sdp</dimen>
+    <dimen name="button_text">@dimen/_12sdp</dimen>
+
+    <!-- Margins -->
+    <dimen name="box_margins">@dimen/_10sdp</dimen>
+    <dimen name="subtext_margins">@dimen/_2sdp</dimen>
+
+    <!--User card-->
+    <dimen name="card_corner_rad">@dimen/_4sdp</dimen>
+    <dimen name="card_major_text">@dimen/_14sdp</dimen>
+    <dimen name="card_minor_text">@dimen/_12sdp</dimen>
+    <dimen name="card_pic_width">@dimen/_72sdp</dimen>
+    <dimen name="card_pic_height">@dimen/_72sdp</dimen>
+
+    <!--Settings-->
+    <dimen name="password_dialog_width">@dimen/_138sdp</dimen>
+
+</resources>

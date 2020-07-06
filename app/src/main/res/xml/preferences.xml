@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">>
+
+<PreferenceCategory xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <SwitchPreferenceCompat
+        app:key="private"
+        app:title="@string/set_private"
+        android:persistent="true"
+        android:defaultValue="false"
+        android:summaryOn="slkhdkjsdh"
+        />
+
+    <SwitchPreferenceCompat
+        app:key="location"
+        app:title="@string/enable_location"/>
+
+    <SwitchPreferenceCompat
+        app:key="notifications"
+        app:title="@string/allow_notifications"/>
+
+    <Preference
+        app:key="password"
+        app:title="@string/change_password"
+        android:id="@+id/change_password"
+        />
+
+</PreferenceCategory>
+
+</PreferenceScreen>

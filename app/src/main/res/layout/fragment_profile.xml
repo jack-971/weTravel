@@ -52,7 +52,8 @@
                 android:layout_width="@dimen/button_width"
                 android:layout_height="@dimen/button_height"
                 android:background="@drawable/button"
-                android:inputType="textCapSentences"
+                android:textAllCaps="false"
+                android:inputType="text"
                 android:text="@string/add_friend"
                 android:textColor="@color/button_text"
                 android:textSize="@dimen/button_text"
@@ -64,7 +65,8 @@
                 android:layout_height="@dimen/button_height"
                 android:background="@drawable/tag"
                 android:clickable="false"
-                android:inputType="textCapSentences"
+                android:inputType="text"
+                android:textAllCaps="false"
                 android:text="@string/friends_tag"
                 android:textColor="@color/tag_color"
                 android:textSize="@dimen/button_text"
@@ -76,7 +78,8 @@
                 android:layout_height="@dimen/button_height"
                 android:background="@drawable/tag"
                 android:clickable="false"
-                android:inputType="textCapSentences"
+                android:inputType="text"
+                android:textAllCaps="false"
                 android:text="@string/requested"
                 android:textColor="@color/tag_color"
                 android:textSize="@dimen/button_text"
@@ -87,7 +90,8 @@
                 android:layout_width="@dimen/button_width"
                 android:layout_height="@dimen/button_height"
                 android:background="@drawable/button"
-                android:inputType="textCapSentences"
+                android:inputType="text"
+                android:textAllCaps="false"
                 android:text="@string/accept"
                 android:textColor="@color/button_text"
                 android:textSize="@dimen/button_text"
@@ -98,7 +102,8 @@
                 android:layout_width="@dimen/button_width"
                 android:layout_height="@dimen/button_height"
                 android:background="@drawable/button"
-                android:inputType="textCapSentences"
+                android:inputType="text"
+                android:textAllCaps="false"
                 android:onClick="onClickEdit"
                 android:text="@string/edit_profile"
                 android:textColor="@color/button_text"
@@ -110,7 +115,8 @@
                 android:layout_width="@dimen/button_width"
                 android:layout_height="@dimen/button_height"
                 android:background="@drawable/button"
-                android:inputType="textCapSentences"
+                android:inputType="text"
+                android:textAllCaps="false"
                 android:text="@string/save_changes"
                 android:textColor="@color/button_text"
                 android:textSize="@dimen/button_text"
@@ -121,6 +127,13 @@
         <!-- Invisible boxes for editing or viewing other peoples profiles-->
 
         <!-- Main body-->
+
+        <RelativeLayout
+            android:id="@+id/profile_body"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:layout_constraintTop_toBottomOf="@id/profile_changeable">
+
         <RelativeLayout
             android:id="@+id/profile_info_section"
             android:layout_width="match_parent"
@@ -129,7 +142,7 @@
             android:layout_margin="@dimen/box_margins"
             android:padding="@dimen/_15sdp"
             android:layout_marginTop="@dimen/_25sdp"
-            app:layout_constraintTop_toBottomOf="@id/profile_changeable">
+            >
 
             <!-- Buttons layout-->
             <RelativeLayout
@@ -146,7 +159,8 @@
                     android:layout_alignParentRight="true"
                     android:layout_marginBottom="@dimen/_4sdp"
                     android:background="@drawable/button"
-                    android:inputType="textCapSentences"
+                    android:inputType="text"
+                    android:textAllCaps="false"
                     android:text="@string/friends_button"
                     android:textColor="@color/button_text"
                     android:textSize="@dimen/button_text" />
@@ -159,7 +173,8 @@
                     android:layout_alignParentRight="true"
                     android:layout_marginBottom="@dimen/_4sdp"
                     android:background="@drawable/button"
-                    android:inputType="textCapSentences"
+                    android:inputType="text"
+                    android:textAllCaps="false"
                     android:text="@string/map"
                     android:textColor="@color/button_text"
                     android:textSize="@dimen/button_text" />
@@ -171,7 +186,8 @@
                     android:layout_below="@id/profile_map_button"
                     android:layout_alignParentRight="true"
                     android:background="@drawable/button"
-                    android:inputType="textCapSentences"
+                    android:inputType="text"
+                    android:textAllCaps="false"
                     android:text="@string/trips"
                     android:textColor="@color/button_text"
                     android:textSize="@dimen/button_text" />
@@ -269,7 +285,6 @@
         <!-- Description Section-->
 
         <RelativeLayout
-            android:id="@+id/profile_body"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_margin="@dimen/box_margins"
@@ -277,8 +292,7 @@
             android:padding="@dimen/_15sdp"
             android:background="@drawable/standard_border"
             android:layout_marginBottom="@dimen/_10sdp"
-
-            app:layout_constraintTop_toBottomOf="@id/profile_info_section">
+            android:layout_below="@id/profile_info_section">
 
             <TextView
                 android:id="@+id/profile_description"
@@ -299,7 +313,31 @@
                 tools:text="Description Section" />
 
         </RelativeLayout>
-        >
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:id="@+id/profile_private"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:visibility="gone"
+            app:layout_constraintTop_toBottomOf="@id/profile_changeable"
+            android:layout_margin="@dimen/box_margins"
+            android:layout_marginTop="@dimen/_25sdp"
+            android:padding="@dimen/_15sdp"
+            android:background="@drawable/standard_border"
+            android:layout_marginBottom="@dimen/_10sdp">
+
+            <TextView
+                android:id="@+id/profile_private_text"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="@android:color/black"
+                android:textSize="@dimen/major_text"
+                android:text="@string/profile_private"
+                tools:text="Profile is private" />
+
+        </RelativeLayout>
+
 
 
     </androidx.constraintlayout.widget.ConstraintLayout>

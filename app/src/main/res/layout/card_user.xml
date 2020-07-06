@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    app:cardCornerRadius="@dimen/card_corner_rad"
+    android:layout_marginBottom="@dimen/_5sdp">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/user_card"
+        android:layout_margin="@dimen/_4sdp">
+
+    <de.hdodenhof.circleimageview.CircleImageView
+        android:layout_width="@dimen/card_pic_width"
+        android:layout_height="@dimen/card_pic_height"
+        android:padding="@dimen/_2sdp"
+        android:id="@+id/user_card_image"
+        android:src="@drawable/profile_placeholder"/>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_toRightOf="@id/user_card_image"
+        android:textSize="@dimen/card_major_text"
+        android:layout_marginLeft="@dimen/_10sdp"
+        android:layout_marginTop="@dimen/_8sdp"
+        android:id="@+id/user_card_name"
+        android:textColor="@color/card_major_text"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_toRightOf="@id/user_card_image"
+            android:layout_below="@id/user_card_name"
+            android:textSize="@dimen/card_minor_text"
+            android:layout_marginLeft="@dimen/_10sdp"
+            android:id="@+id/user_card_username"
+            android:textColor="@color/card_minor_text"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_toRightOf="@id/user_card_image"
+            android:layout_below="@id/user_card_username"
+            android:textSize="@dimen/card_minor_text"
+            android:layout_marginLeft="@dimen/_10sdp"
+            android:layout_marginTop="@dimen/_10sdp"
+            android:id="@+id/user_card_home"
+            android:textColor="@color/card_major_text"/>
+
+        <Button
+            android:id="@+id/card_friends_tag"
+            android:layout_width="@dimen/button_width"
+            android:layout_height="@dimen/button_height"
+            android:background="@drawable/tag"
+            android:clickable="false"
+            android:layout_alignParentRight="true"
+            android:layout_marginRight="@dimen/_15sdp"
+            android:layout_marginTop="@dimen/_25sdp"
+            android:inputType="textCapSentences"
+            android:textAllCaps="false"
+            android:text="@string/friends_tag"
+            android:textColor="@color/tag_color"
+            android:textSize="@dimen/button_text"
+            android:visibility="gone" />
+
+    </RelativeLayout>
+
+</androidx.cardview.widget.CardView>
