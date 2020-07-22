@@ -17,8 +17,6 @@ public class UserAccount {
     private ArrayList<Profile> friendsList;
     private HashMap<String, Boolean> settings;
 
-
-
 /*
 
     private TripsList tripsList;

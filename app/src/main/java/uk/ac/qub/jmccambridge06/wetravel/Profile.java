@@ -67,7 +67,6 @@ public class Profile {
         } else {
             this.privateProfile = false;
         }
-
         Log.i("profile", "new profile created for "+ getName() + profileType);
     }
 

@@ -12,5 +12,14 @@
         android:background="@android:color/darker_gray">
 
     </androidx.recyclerview.widget.RecyclerView>
+
+    <TextView
+        android:id="@+id/list_no_data"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+        android:textSize="@dimen/_30sdp"
+        android:visibility="gone"
+        android:textColor="@android:color/white"/>
     
 </RelativeLayout>

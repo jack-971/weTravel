@@ -10,6 +10,7 @@ public class DisplayFragment extends Fragment {
     private Uri imageUri;
     private Bitmap mainImage;
     private String mainImageString;
+    private boolean pictureChanged = false;
 
     public Uri getImageUri() {
         return imageUri;
@@ -37,5 +38,13 @@ public class DisplayFragment extends Fragment {
 
     public void setMainImageString(String mainImageString) {
         this.mainImageString = mainImageString;
+    }
+
+    public boolean isPictureChanged() {
+        return pictureChanged;
+    }
+
+    public void setPictureChanged(boolean pictureChanged) {
+        this.pictureChanged = pictureChanged;
     }
 }

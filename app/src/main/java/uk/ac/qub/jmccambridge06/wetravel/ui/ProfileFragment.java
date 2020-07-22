@@ -22,6 +22,7 @@ import com.bumptech.glide.request.RequestOptions;
 import org.json.JSONObject;
 
 import java.io.IOException;
+import java.util.UUID;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -168,11 +169,9 @@ public class ProfileFragment extends DisplayFragment {
                     profile.setHomeLocation(profileHomeLocationEdit.getText().toString());
                     profile.setDescription(profileDescriptionEdit.getText().toString());
                     if (profilePictureChanged == true) {
-                        //profile.setProfilePictureImage(getMainImage());
-                        //String pictureName = FirebaseLink.profilePicturePrefix + UUID.randomUUID().toString();
-                        //profile.setProfilePicture(FirebaseLink.profilePicturePrefix + UUID.randomUUID().toString());
                         updateImageCallback();
-                        FirebaseLink.saveInFirebase(getImageUri(), getContext(), uploadProfilePictureCallback);
+                        String path = FirebaseLink.profilePicturePath+ FirebaseLink.profilePicturePrefix + UUID.randomUUID().toString();
+                        FirebaseLink.saveInFirebase(getImageUri(), getContext(), uploadProfilePictureCallback, path);
                         profilePictureChanged = false;
                     } else {
                         updateData(profile.getProfilePicture());
@@ -185,7 +184,6 @@ public class ProfileFragment extends DisplayFragment {
                         savedViews[loop].setVisibility(View.VISIBLE);
                         profileImage.setClickable(false);
                     }
-
                 }
             });
 
@@ -278,6 +276,7 @@ public class ProfileFragment extends DisplayFragment {
             @Override
             public void notifySuccess(JSONObject response) {
                 Toast.makeText(getActivity().getApplicationContext(), R.string.profile_change_saved, Toast.LENGTH_SHORT).show();
+                ((MainMenuActivity)getActivity()).loadDrawer();
             }
             @Override
             public void notifyError(VolleyError error) {

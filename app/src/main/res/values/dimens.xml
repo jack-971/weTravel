@@ -16,6 +16,14 @@
     <!-- Margins -->
     <dimen name="box_margins">@dimen/_10sdp</dimen>
     <dimen name="subtext_margins">@dimen/_2sdp</dimen>
+    <dimen name="trip_icon_margins">@dimen/_16sdp</dimen>
+    <dimen name="trip_icon_padding">@dimen/_16sdp</dimen>
+    
+    <!--Trips-->
+    <dimen name="trip_icon">@dimen/_96sdp</dimen>
+    <dimen name="trip_tab_width">@dimen/_132sdp</dimen>
+    <dimen name="text_margins">@dimen/_8sdp</dimen>
+    <dimen name="text_margin_bottom">@dimen/_12sdp</dimen>
 
     <!--User card-->
     <dimen name="card_corner_rad">@dimen/_4sdp</dimen>

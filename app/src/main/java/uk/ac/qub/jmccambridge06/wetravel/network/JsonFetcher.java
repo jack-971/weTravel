@@ -111,7 +111,8 @@ public class JsonFetcher {
         try {
             RequestQueue queue = Volley.newRequestQueue(context);
             Log.i("tag", url);
-            JsonObjectRequest jsonObject = new JsonObjectRequest(Request.Method.GET, url, null, new Response.Listener<JSONObject>() {
+            JSONObject parameters = new JSONObject(params);
+            JsonObjectRequest jsonObject = new JsonObjectRequest(Request.Method.GET, url, parameters, new Response.Listener<JSONObject>() {
                 @Override
                 public void onResponse(JSONObject response) {
                     if(networkResultCallback != null)
@@ -123,7 +124,48 @@ public class JsonFetcher {
                     if(networkResultCallback != null)
                         networkResultCallback.notifyError(error);
                 }
-            });
+            }){
+                @Override
+                public Map<String, String> getHeaders() throws AuthFailureError {
+                    HashMap<String, String> headers = new HashMap<String, String>();
+                    headers.put("X-HTTP-Method-Override","GET");
+                    headers.put("Content-Type", "application/json; charset=utf-8");
+                    //headers.put("x-api-key", "YOUR API KEY");
+                    return headers;
+                }};
+
+            queue.add(jsonObject);
+
+        }catch(Exception e){
+
+        }
+    }
+
+    public void deleteData(String url){
+        try {
+            RequestQueue queue = Volley.newRequestQueue(context);
+            Log.i("tag", url);
+            JsonObjectRequest jsonObject = new JsonObjectRequest(Request.Method.DELETE, url, null, new Response.Listener<JSONObject>() {
+                @Override
+                public void onResponse(JSONObject response) {
+                    if(networkResultCallback != null)
+                        networkResultCallback.notifySuccess(response);
+                }
+            }, new Response.ErrorListener() {
+                @Override
+                public void onErrorResponse(VolleyError error) {
+                    if(networkResultCallback != null)
+                        networkResultCallback.notifyError(error);
+                }
+            }){
+                @Override
+                public Map<String, String> getHeaders() throws AuthFailureError {
+                    HashMap<String, String> headers = new HashMap<String, String>();
+                    headers.put("X-HTTP-Method-Override","GET");
+                    headers.put("Content-Type", "application/json; charset=utf-8");
+                    //headers.put("x-api-key", "YOUR API KEY");
+                    return headers;
+                }};
 
             queue.add(jsonObject);
 

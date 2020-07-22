@@ -35,6 +35,7 @@ import org.json.JSONObject;
 import de.hdodenhof.circleimageview.CircleImageView;
 import uk.ac.qub.jmccambridge06.wetravel.Profile;
 import uk.ac.qub.jmccambridge06.wetravel.R;
+import uk.ac.qub.jmccambridge06.wetravel.Trip;
 import uk.ac.qub.jmccambridge06.wetravel.UserAccount;
 import uk.ac.qub.jmccambridge06.wetravel.network.NetworkResultCallback;
 import uk.ac.qub.jmccambridge06.wetravel.network.JsonFetcher;
@@ -53,6 +54,8 @@ public class MainMenuActivity extends AppCompatActivity implements NavigationVie
     NetworkResultCallback getFriendsCallback = null;
 
     JsonFetcher jsonFetcher;
+
+    private Trip displayedTrip;
 
     /**
      * Reference to the bottom navigation bar on the menu
@@ -75,7 +78,9 @@ public class MainMenuActivity extends AppCompatActivity implements NavigationVie
     public SettingsFragment settingsFragment;
     public UserListFragment searchFragment;
     public UserListFragment adminFriendList;
-
+    public TripListFragment plannedTrips;
+    public TripFragment currentTrip;
+    public TripListFragment completedTrips;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -86,9 +91,9 @@ public class MainMenuActivity extends AppCompatActivity implements NavigationVie
         setUserAccount(new UserAccount(1));
 
         // load the user profile
-        loadProfileCallback();
-        jsonFetcher = new JsonFetcher(getProfileCallback,this);
-        jsonFetcher.getData(routes.getAdminAccountData(getUserAccount().getUserId()));
+        loadProfileCallback(); // loads the callback so when volley requets completes this method is executed.
+        jsonFetcher = new JsonFetcher(getProfileCallback,this); // create volley request to get profile data
+        jsonFetcher.getData(routes.getAdminAccountData(getUserAccount().getUserId())); // send volley request
         loadFriendsCallback();
         jsonFetcher = new JsonFetcher(getFriendsCallback,getApplicationContext());
         jsonFetcher.getData(routes.getUsersRoute(getUserAccount().getUserId()));
@@ -121,6 +126,11 @@ public class MainMenuActivity extends AppCompatActivity implements NavigationVie
             profileFragment = new ProfileFragment();
             settingsFragment = new SettingsFragment();
             searchFragment = new UserListFragment();
+            currentTrip = new TripFragment();
+            plannedTrips = new TripListFragment();
+            plannedTrips.setStatus("planned");
+            completedTrips = new TripListFragment();
+            completedTrips.setStatus("completed");
             FragmentTransaction transaction = fragmentManager.beginTransaction();
             transaction.add(R.id.main_screen_container, newsfeedFragment, "newsfeed");
             transaction.add(R.id.main_screen_container, tripsFragment, "trips").hide(tripsFragment);
@@ -170,6 +180,11 @@ public class MainMenuActivity extends AppCompatActivity implements NavigationVie
     @Override
     public boolean onNavigationItemSelected(@NonNull MenuItem menuItem) {
         switch(menuItem.getItemId()) {
+            case R.id.home:
+                for(int count = 0; count < fragmentManager.getBackStackEntryCount(); count++) {
+                    fragmentManager.popBackStack();
+                }
+                break;
             case R.id.view_own_profile:
                 setFragment(profileFragment, "admin_profile", true);
                 break;
@@ -204,6 +219,7 @@ public class MainMenuActivity extends AppCompatActivity implements NavigationVie
                             break;
                         case R.id.menu_trips:
                             selectedFragment = tripsFragment;
+                            tripsFragment.setProfile(userAccount.getProfile());
                             tag = "trips";
                             break;
                         case R.id.menu_inbox:
@@ -260,7 +276,7 @@ public class MainMenuActivity extends AppCompatActivity implements NavigationVie
      * Callbacks for loading user profile and mapping to a user class and then the drawer views.
      */
     void loadProfileCallback(){
-        getProfileCallback = new NetworkResultCallback() {
+        getProfileCallback = new NetworkResultCallback() { //network result callback is an interface passed into the volley object
             @Override
             public void notifySuccess(JSONObject response) {
                 Log.i(logTag, "Successful JSON profile request:" + response);
@@ -272,6 +288,8 @@ public class MainMenuActivity extends AppCompatActivity implements NavigationVie
                     userAccount.createSettings(user);
                     loadDrawer();
                     Log.i(logTag, "Loaded the drawer");
+                    plannedTrips.setProfile(userAccount.getProfile());
+                    completedTrips.setProfile(userAccount.getProfile());
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
@@ -331,4 +349,11 @@ public class MainMenuActivity extends AppCompatActivity implements NavigationVie
         this.userAccount = userAccount;
     }
 
+    public Trip getDisplayedTrip() {
+        return displayedTrip;
+    }
+
+    public void setDisplayedTrip(Trip displayedTrip) {
+        this.displayedTrip = displayedTrip;
+    }
 }

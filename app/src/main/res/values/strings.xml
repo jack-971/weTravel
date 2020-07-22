@@ -22,7 +22,7 @@
     <!--User Search bar -->
     <string name="user_search_bar">User Search Bar</string>
     <string name="user_search_hint">Search for someone...</string>
-
+    <string name="error_no_users">No profiles to display</string>
     <!--profile-->
     <string name="years_old">years old</string>
     <string name="edit_profile">Edit Profile</string>
@@ -39,6 +39,59 @@
     <string name="friend_accepted">Friend request Accepted!</string>
     <string name="profile_private">This users profile is set to private so only friends have access to their profile. Send a friend requet
     to this user if you would like view thier profile!</string>
+
+
+    <!--Trips-->
+    <string name="planned_trips">Planned</string>
+    <string name="current_trips">Active</string>
+    <string name="complete_trips">Completed</string>
+    <string name="add_trips">New Trip</string>
+    <string name="trip_details">Details</string>
+    <string name="trip_itinerary">Itinerary</string>
+    <string name="trip_add">Add Activity</string>
+    <string name="trip_notes">Notes</string>
+    <string name="trip_map">Map</string>
+    <string name="trip_name">Name:</string>
+    <string name="trip_picture">Picture:</string>
+    <string name="trip_date_start">Start:</string>
+    <string name="trip_date_finish">Finish:</string>
+    <string name="trip_description">Description:</string>
+    <string name="trip_location">Location:</string>
+    <string name="trip_attendees">Attendees:</string>
+    <string name="trip_add_attendee">Add</string>
+    <string name="trip_edit_details">Edit Details</string>
+    <string name="make_active">Make Active Trip</string>
+    <string name="trip_notes_text">Notes:</string>
+    <string name="trip_name_hint">Add Name</string>
+    <string name="trip_picture_hint">Add Picture</string>
+    <string name="trip_picture_change">Change Picture</string>
+    <string name="trip_date_start_hint">Date</string>
+    <string name="trip_date_finish_hint">Date</string>
+    <string name="trip_time_start_hint">Time</string>
+    <string name="trip_time_finish_hint">Time</string>
+    <string name="trip_description_hint">Add Description</string>
+    <string name="trip_location_hint">Add Destination</string>
+    <string name="trip_notes_hint">Add Notes</string>
+    <string name="trip_type_friend">Type Name...</string>
+    <string name="trip_review_rating">Rating:</string>
+    <string name="trip_review_rating_hint">Add Rating 1-5</string>
+    <string name="trip_review_text">Review:</string>
+    <string name="trip_review_text_hint">Add Review</string>
+    <string name="trip_attachments">Attachments</string>
+    <string name="trip_attachments_hint">Add Attachment</string>
+    <string name="leave_trip">Leave</string>
+    <string name="edit_trip">Edit</string>
+    <!--Errors-->
+    <string name="error_select_friend_dropdown">Please select friend from dropdown list to add</string>
+    <string name="error_friend_already_added">Friend already added!</string>
+    <string name="error_name_field">Please ensure name field is completed before saving</string>
+    <string name="error_save">Error saving - please try again!</string>
+    <string name="error_date_before">Please ensure finish date is after start date</string>
+    <string name="error_attendee">Error adding friend, please try again</string>
+    <string name="error_no_trips">No trips to display!</string>
+    <!--Success-->
+    <string name="trip_saved">Trip Saved</string>
+
 
     <!--Settings-->
     <string name="set_private">Set Private Profile</string>

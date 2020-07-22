@@ -4,6 +4,11 @@
     tools:showIn="navigation_view">
 
     <item
+        android:id="@+id/home"
+        android:icon="@drawable/ic_home_black_24dp"
+        android:title="@string/home_navigation" />
+
+    <item
         android:id="@+id/view_own_profile"
         android:icon="@drawable/ic_account_circle_black_24dp"
         android:title="@string/view_profile" />

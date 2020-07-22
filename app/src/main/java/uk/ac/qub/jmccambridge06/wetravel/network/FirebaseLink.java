@@ -27,15 +27,11 @@ import uk.ac.qub.jmccambridge06.wetravel.ui.ProfileFragment;
 
 public class FirebaseLink {
 
-    /**
-     * File path in firebase for saving profile pictures.
-     */
-    private static String profilePicturePath = "profile_pictures/";
 
-    /**
-     * Prefix for saving profile pictures in firebase.
-     */
+    public static String profilePicturePath = "profile_pictures/";
     public static String profilePicturePrefix = "profile_";
+    public static String tripHeaderPath = "trip_headers/";
+    public static String tripHeaderPrefix = "trip_header_";
 
     private static StorageReference TripPictureFolder;
 
@@ -44,13 +40,12 @@ public class FirebaseLink {
      * @param imageUri
      * @param context
      */
-    public static void saveInFirebase(Uri imageUri, final Context context, FirebaseCallback callback) {
+    public static void saveInFirebase(Uri imageUri, final Context context, FirebaseCallback callback, String path) {
 
         if (imageUri != null) {
             final ProgressDialog progressDialog = new ProgressDialog(context);
             progressDialog.setTitle("Please wait...");
             progressDialog.show();
-            String path = profilePicturePath+ profilePicturePrefix + UUID.randomUUID().toString();
             StorageReference reference = FirebaseStorage.getInstance().getReference().child(path);
             try {
                 reference.putFile(imageUri).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
@@ -71,7 +66,6 @@ public class FirebaseLink {
                                     exception.printStackTrace();
                                 }
                             });
-                        Toast.makeText(context, "Saved successfully", Toast.LENGTH_SHORT).show();
                     }
                 }).addOnFailureListener(new OnFailureListener() {
                     @Override

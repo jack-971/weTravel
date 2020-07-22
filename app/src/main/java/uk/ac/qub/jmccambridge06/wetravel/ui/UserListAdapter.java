@@ -8,6 +8,7 @@ import android.widget.Button;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
@@ -39,9 +40,6 @@ public class UserListAdapter extends RecyclerView.Adapter<UserListAdapter.UserLi
             ButterKnife.bind(this, itemView);
         }
 
-        public Profile getProfile() {
-            return profile;
-        }
     }
 
     private ArrayList<Profile> userCardList;

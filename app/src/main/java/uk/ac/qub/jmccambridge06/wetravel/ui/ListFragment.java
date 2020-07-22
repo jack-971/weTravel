@@ -3,6 +3,7 @@ package uk.ac.qub.jmccambridge06.wetravel.ui;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -18,8 +19,11 @@ import org.json.JSONObject;
 
 import java.util.ArrayList;
 
+import butterknife.BindView;
+import butterknife.ButterKnife;
 import uk.ac.qub.jmccambridge06.wetravel.Profile;
 import uk.ac.qub.jmccambridge06.wetravel.R;
+import uk.ac.qub.jmccambridge06.wetravel.Trip;
 import uk.ac.qub.jmccambridge06.wetravel.network.JsonFetcher;
 import uk.ac.qub.jmccambridge06.wetravel.network.NetworkResultCallback;
 
@@ -28,43 +32,36 @@ import uk.ac.qub.jmccambridge06.wetravel.network.NetworkResultCallback;
  */
 public abstract class ListFragment extends Fragment {
 
+    @BindView(R.id.list_no_data) TextView noDataText;
+
     public String logtag;
     public ArrayList list;
     private RecyclerView recyclerView;
-    private RecyclerView.Adapter adapter;
+    protected RecyclerView.Adapter adapter;
     private RecyclerView.LayoutManager layoutManager;
     NetworkResultCallback getCallback = null;
     JsonFetcher jsonFetcher;
 
     Profile profile;
 
+    public ListFragment() {
+
+    }
+
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+        ButterKnife.bind(this, view);
 
-        // Get the friends data
-        if (savedInstanceState == null) {
-
-        }
-
-        Log.i(logtag, "new list view created");
         list = new ArrayList<>();
-
         recyclerView = view.findViewById(R.id.recycler_view);
         recyclerView.setHasFixedSize(true);
         layoutManager = new LinearLayoutManager(getActivity());
-        adapter = new UserListAdapter(list, getContext());
         recyclerView.setLayoutManager(layoutManager);
+        setAdapter();
         recyclerView.setAdapter(adapter);
 
-        loadCallback();
-        getData();
     }
-
-    /**
-     * Method retrieves user data from the API.
-     */
-    abstract void getData();
 
     /**
      * Callback for loading the user data into the fragment.
@@ -76,6 +73,9 @@ public abstract class ListFragment extends Fragment {
                 Log.i(logtag, "Successful JSON list request:" + response);
                 try {
                     JSONArray jsonArray = response.getJSONArray("data");
+                    if (jsonArray == null || jsonArray.length() == 0) {
+                        noData();
+                    }
                     fillList(getView(), jsonArray);
                 } catch (JSONException e) {
                     e.printStackTrace();
@@ -83,7 +83,7 @@ public abstract class ListFragment extends Fragment {
             }
             @Override
             public void notifyError(VolleyError error) {
-                Log.d(logtag, "Error on JSON callback for friend list");
+                Log.d(logtag, "Error on JSON callback for list");
                 error.printStackTrace();
             }
         };
@@ -95,7 +95,23 @@ public abstract class ListFragment extends Fragment {
      * @param jsonArray
      * @throws JSONException
      */
-    abstract void fillList(View view, JSONArray jsonArray) throws JSONException;
+    protected void fillList(View view, JSONArray jsonArray) throws JSONException {
+        Log.i(logtag, "filling list now" + jsonArray);
+        for (int loop=0; loop<jsonArray.length(); loop++) {
+            JSONObject item = jsonArray.getJSONObject(loop);
+            try {
+                Trip currentTrip = new Trip(item);
+                Log.d(logtag, "in add item");
+                currentTrip.setProfile(profile);
+                list.add(currentTrip);
+            } catch (Exception e) {
+                Log.e(logtag, "Error creating entry from data:" + item);
+                e.printStackTrace();
+            }
+        }
+        updateList();
+    }
+
 
     public void updateList() {
         adapter.notifyDataSetChanged();
@@ -109,6 +125,22 @@ public abstract class ListFragment extends Fragment {
         this.profile = profile;
     }
 
+    public RecyclerView.Adapter getAdapter() {
+        return adapter;
+    }
+
+    public abstract void setAdapter();
+
+    public RecyclerView getRecyclerView() {
+        return recyclerView;
+    }
+
+    /**
+     * Displays a message stating there is no data to display for the fragment list.
+     */
+    protected void noData() {
+        noDataText.setVisibility(View.VISIBLE);
+    }
 }
 
 

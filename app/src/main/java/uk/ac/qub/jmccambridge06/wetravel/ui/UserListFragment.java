@@ -5,10 +5,10 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.recyclerview.widget.RecyclerView;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -28,15 +28,20 @@ public class UserListFragment extends ListFragment {
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+        return inflater.inflate(R.layout.fragment_list, container, false);
+    }
+
+    @Override
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         logtag = "FriendListFragment";
-        Log.i(logtag, "creating new friends fragment");
-        return inflater.inflate(R.layout.fragment_user_list, container, false);
+        super.onViewCreated(view, savedInstanceState);
+        loadCallback();
+        getData();
     }
 
     /**
      * Checks whether it is for a search and determines which route to send.
      */
-    @Override
     void getData() {
         Log.i(logtag, "getting data");
             jsonFetcher = new JsonFetcher(getCallback,getContext());
@@ -75,10 +80,26 @@ public class UserListFragment extends ListFragment {
                 }
             }
         }
-        updateList();
+        if (list.size() == 0) {
+            noData();
+        } else {
+            updateList();
+        }
+
     }
 
     public void setQuery(String query) {
         this.query = query;
+    }
+
+    @Override
+    public void setAdapter() {
+        adapter = new UserListAdapter(list, getContext());
+    }
+
+    @Override
+    protected void noData() {
+        super.noData();
+        noDataText.setText(R.string.error_no_users);
     }
 }
