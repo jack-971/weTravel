@@ -62,8 +62,8 @@ public class Trip extends ItineraryItem {
     }
 
     public void setLegs(JSONArray array) {
-        this.legs = new ArrayList<Leg>();
-        ArrayList<Integer> existingLegs = new ArrayList<>(legs.size()); // maximum possible size needed
+        this.legs = new ArrayList<Leg>(getUserList().size()); // leg user list cannot be larger than the trip user list
+        //ArrayList<Integer> existingLegs = new ArrayList<>(legs.size()); // maximum possible size needed
         for (int loop=0; loop<array.length(); loop++) {
             try {
                 JSONObject leg = array.getJSONObject(loop);
@@ -75,12 +75,15 @@ public class Trip extends ItineraryItem {
                 } else {
                     legId = Integer.parseInt(leg.getString("ID"));
                 }
-                if (existingLegs.contains(legId)) {
+
+                /*if (existingLegs.contains(legId)) {
                     this.getLegs().get(legId).getUserList().put(legId, getUserList().get(legId));
-                } else {
+                } else {*/
+                    int userId = Integer.parseInt(leg.getString("UserID"));
                     this.legs.add(new Leg(leg));
-                    this.getLegs().get(legId).getUserList().put(legId, getUserList().get(legId));
-                }
+                    //this.getLegs().get(legId).getUserList().put(legId, this.getUserList().get(legId));
+                    this.getLegs().get(loop).getUserList().put(userId, this.getUserList().get(userId));
+                //}
             } catch (JSONException e) {
                 e.printStackTrace();
             } catch (Exception e) {

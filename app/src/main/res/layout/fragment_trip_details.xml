@@ -1,0 +1,476 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android" android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    >
+
+<RelativeLayout
+   android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:layout_margin="@dimen/_16sdp"
+    >
+
+    <RelativeLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/trip_name_view">
+
+        <TextView
+            android:textStyle="bold"
+            android:id="@+id/trip_name"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/trip_name"
+            android:textSize="@dimen/major_text"
+            android:textColor="@android:color/black"
+            android:layout_marginRight="@dimen/text_margins"
+            />
+
+        <EditText
+            android:textStyle="italic"
+            android:id="@+id/edit_trip_name"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="@dimen/major_text"
+            android:layout_toRightOf="@id/trip_name"
+            android:paddingBottom="5dp"
+            android:paddingTop="0dp"
+            android:hint="@string/trip_name_hint"/>
+
+    </RelativeLayout>
+
+    <RelativeLayout
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:id="@+id/trip_picture_view"
+    android:layout_below="@id/trip_name_view"
+    android:layout_marginTop="@dimen/text_margin_bottom">
+
+    <TextView
+        android:textStyle="bold"
+        android:id="@+id/trip_picture"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/trip_picture"
+        android:textSize="@dimen/major_text"
+        android:textColor="@android:color/black"
+        android:layout_marginRight="@dimen/text_margins"/>
+
+    <TextView
+        android:textStyle="italic"
+        android:id="@+id/edit_trip_picture"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textSize="@dimen/major_text"
+        android:layout_toRightOf="@id/trip_picture"
+        android:paddingBottom="5dp"
+        android:paddingTop="0dp"
+        android:text="@string/trip_picture_hint"/>
+
+</RelativeLayout>
+
+    <RelativeLayout
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:id="@+id/trip_date_view"
+    android:layout_below="@id/trip_picture_view"
+    android:layout_marginTop="@dimen/text_margin_bottom">
+
+    <TextView
+        android:textStyle="bold"
+        android:id="@+id/trip_date_start"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/trip_date_start"
+        android:textSize="@dimen/major_text"
+        android:textColor="@android:color/black"
+        android:layout_marginRight="@dimen/text_margins"/>
+
+    <EditText
+        android:textStyle="italic"
+        android:id="@+id/edit_trip_date_start"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textSize="@dimen/major_text"
+        android:layout_toRightOf="@id/trip_date_start"
+        android:paddingBottom="5dp"
+        android:paddingTop="0dp"
+        android:hint="@string/trip_date_start_hint"
+        android:editable="false"
+        android:clickable="true"
+        android:focusable="false"/>
+
+    <TextView
+        android:textStyle="bold"
+        android:layout_marginLeft="@dimen/text_margins"
+        android:id="@+id/trip_date_finish"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/trip_date_finish"
+        android:layout_toRightOf="@id/edit_trip_date_start"
+        android:textSize="@dimen/major_text"
+        android:textColor="@android:color/black"
+        android:layout_marginRight="@dimen/text_margins"/>
+
+    <EditText
+        android:textStyle="italic"
+        android:id="@+id/edit_trip_date_finish"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textSize="@dimen/major_text"
+        android:layout_toRightOf="@id/trip_date_finish"
+        android:paddingBottom="5dp"
+        android:paddingTop="0dp"
+        android:hint="@string/trip_date_finish_hint"
+        android:editable="false"
+        android:clickable="true"
+        android:focusable="false"/>
+
+</RelativeLayout>
+
+    <RelativeLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/trip_time_view"
+        android:layout_below="@id/trip_date_view"
+        android:layout_marginTop="@dimen/text_margin_bottom">
+
+        <TextView
+            android:textStyle="bold"
+            android:id="@+id/trip_time_start"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/trip_date_start"
+            android:textSize="@dimen/major_text"
+            android:textColor="@android:color/black"
+            android:layout_marginRight="@dimen/text_margins"/>
+
+        <EditText
+            android:textStyle="italic"
+            android:id="@+id/edit_trip_time_start"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="@dimen/major_text"
+            android:layout_toRightOf="@id/trip_time_start"
+            android:paddingBottom="5dp"
+            android:paddingTop="0dp"
+            android:hint="@string/trip_time_start_hint"/>
+
+        <TextView
+            android:textStyle="bold"
+            android:layout_marginLeft="@dimen/text_margins"
+            android:id="@+id/trip_time_finish"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/trip_date_finish"
+            android:layout_toRightOf="@id/edit_trip_time_start"
+            android:textSize="@dimen/major_text"
+            android:textColor="@android:color/black"
+            android:layout_marginRight="@dimen/text_margins"/>
+
+        <EditText
+            android:textStyle="italic"
+            android:id="@+id/edit_trip_time_finish"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="@dimen/major_text"
+            android:layout_toRightOf="@id/trip_time_finish"
+            android:paddingBottom="5dp"
+            android:paddingTop="0dp"
+            android:hint="@string/trip_time_finish_hint"/>
+
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/trip_description_view"
+        android:layout_below="@id/trip_time_view"
+        android:layout_marginTop="@dimen/text_margin_bottom">
+
+        <TextView
+            android:textStyle="bold"
+            android:id="@+id/trip_description"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/trip_description"
+            android:textSize="@dimen/major_text"
+            android:textColor="@android:color/black"
+            android:layout_marginRight="@dimen/text_margins"/>
+
+        <EditText
+            android:id="@+id/edit_trip_description"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="@dimen/major_text"
+            android:layout_below="@id/trip_description"
+            android:paddingBottom="5dp"
+            android:paddingLeft="0dp"
+            android:paddingTop="0dp"
+            android:hint="@string/trip_description_hint"
+            android:textStyle="italic"/>
+
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/trip_location_view"
+        android:layout_below="@id/trip_description_view"
+        android:layout_marginTop="@dimen/text_margin_bottom">
+
+        <TextView
+            android:textStyle="bold"
+            android:id="@+id/trip_location"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/trip_location"
+            android:textSize="@dimen/major_text"
+            android:textColor="@android:color/black"
+            android:layout_marginRight="@dimen/text_margins"/>
+
+        <TextView
+            android:textStyle="italic"
+            android:id="@+id/edit_trip_location"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="@dimen/major_text"
+            android:layout_below="@id/trip_location"
+            android:paddingBottom="5dp"
+            android:paddingTop="0dp"
+            android:hint="@string/trip_location_hint"
+            android:focusable="false"/>
+
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/trip_notes_view"
+        android:layout_below="@id/trip_location_view"
+        android:layout_marginTop="@dimen/text_margin_bottom"
+        android:visibility="visible">
+
+        <TextView
+            android:textStyle="bold"
+            android:id="@+id/trip_notes"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/trip_notes_text"
+            android:textSize="@dimen/major_text"
+            android:textColor="@android:color/black"
+            android:layout_marginRight="@dimen/text_margins"/>
+
+        <EditText
+            android:textStyle="italic"
+            android:id="@+id/trip_edit_notes"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="@dimen/major_text"
+            android:layout_toRightOf="@id/trip_notes"
+            android:paddingBottom="5dp"
+            android:paddingTop="0dp"
+            android:hint="@string/trip_notes_hint"/>
+
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/trip_attendees_view"
+        android:layout_below="@id/trip_notes_view"
+        android:layout_marginTop="@dimen/text_margin_bottom">
+
+        <TextView
+            android:textStyle="bold"
+            android:id="@+id/trip_attendee"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/trip_attendees"
+            android:textSize="@dimen/major_text"
+            android:textColor="@android:color/black"
+            android:layout_marginRight="@dimen/text_margins"/>
+
+        <TextView
+            android:id="@+id/trip_attendees_list"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="@dimen/major_text"
+            android:layout_below="@id/trip_attendee"
+            android:paddingBottom="5dp"
+            android:paddingTop="0dp"
+            android:hint="@string/trip_add_attendee"/>
+
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/trip_add_attendees_view"
+        android:layout_below="@id/trip_attendees_view"
+        android:visibility="visible">
+
+        <AutoCompleteTextView
+            android:textStyle="italic"
+            android:id="@+id/trip_add_attendee"
+            android:textSize="@dimen/major_text"
+            android:paddingBottom="5dp"
+            android:paddingTop="0dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:hint="@string/trip_type_friend"
+            android:completionThreshold="1" />
+
+        <TextView
+            android:id="@+id/trip_add_attendee_button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="@dimen/major_text"
+            android:layout_toRightOf="@id/trip_add_attendee"
+            android:paddingBottom="5dp"
+            android:paddingTop="0dp"
+            android:text="@string/trip_add_attendee"
+            android:textAllCaps="false"
+            />
+
+        <CheckBox android:id="@+id/checkbox_attendees"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_toRightOf="@id/trip_add_attendee_button"
+            android:text="Select All"
+            android:onClick="onCheckboxClicked"/>
+
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/trip_review_rating_view"
+        android:layout_below="@id/trip_add_attendees_view"
+        android:layout_marginTop="@dimen/text_margin_bottom">
+
+        <TextView
+            android:textStyle="bold"
+            android:id="@+id/trip_review_rating"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/trip_review_rating"
+            android:textSize="@dimen/major_text"
+            android:textColor="@android:color/black"
+            android:layout_marginRight="@dimen/text_margins"/>
+
+        <EditText
+            android:textStyle="italic"
+            android:id="@+id/edit_review_rating"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="@dimen/major_text"
+            android:layout_toRightOf="@id/trip_review_rating"
+            android:paddingBottom="5dp"
+            android:paddingTop="0dp"
+            android:hint="@string/trip_review_rating_hint"/>
+
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/trip_review_text_view"
+        android:layout_below="@id/trip_review_rating_view"
+        android:layout_marginTop="@dimen/text_margin_bottom">
+
+        <TextView
+            android:textStyle="bold"
+            android:id="@+id/trip_review_text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/trip_review_text"
+            android:textSize="@dimen/major_text"
+            android:textColor="@android:color/black"
+            android:layout_marginRight="@dimen/text_margins"/>
+
+        <EditText
+            android:textStyle="italic"
+            android:id="@+id/edit_review_text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="@dimen/major_text"
+            android:layout_toRightOf="@id/trip_review_text"
+            android:paddingBottom="5dp"
+            android:paddingTop="0dp"
+            android:hint="@string/trip_review_text_hint"/>
+
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/trip_attachments_view"
+        android:layout_below="@id/trip_review_text_view"
+        android:layout_marginTop="@dimen/text_margin_bottom">
+
+        <TextView
+            android:textStyle="bold"
+            android:id="@+id/trip_attachments_text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/trip_attachments"
+            android:textSize="@dimen/major_text"
+            android:textColor="@android:color/black"
+            android:layout_marginRight="@dimen/text_margins"/>
+
+        <EditText
+            android:textStyle="italic"
+            android:id="@+id/edit_attachment_text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="@dimen/major_text"
+            android:layout_toRightOf="@id/trip_attachments_text"
+            android:paddingBottom="5dp"
+            android:paddingTop="0dp"
+            android:hint="@string/trip_attachments_hint"/>
+
+    </RelativeLayout>
+
+    <Button
+    android:id="@+id/trip_edit_button"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:textSize="@dimen/major_text"
+    android:layout_below="@id/trip_attachments_view"
+    android:text="@string/edit_trip"
+    android:textAllCaps="false"
+    android:background="@color/colorAccent"
+    android:layout_marginTop="@dimen/text_margins"
+        android:visibility="visible"/>
+
+    <Button
+        android:id="@+id/trip_save_button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textSize="@dimen/major_text"
+        android:layout_below="@id/trip_attachments_view"
+        android:text="@string/save_changes"
+        android:textAllCaps="false"
+        android:background="@color/colorAccent"
+        android:layout_marginTop="@dimen/text_margins"
+        android:visibility="visible"/>
+
+    <Button
+        android:id="@+id/trip_leave_button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textSize="@dimen/major_text"
+        android:layout_below="@id/trip_attachments_view"
+        android:layout_toRightOf="@id/trip_edit_button"
+        android:layout_marginLeft="@dimen/text_margins"
+        android:text="@string/leave_trip"
+        android:textAllCaps="false"
+        android:background="@color/colorAccent"
+        android:layout_marginTop="@dimen/text_margins"
+        android:visibility="visible"/>
+
+
+
+
+</RelativeLayout>
+</ScrollView>

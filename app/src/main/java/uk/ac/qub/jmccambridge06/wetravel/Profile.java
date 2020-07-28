@@ -36,8 +36,11 @@ public class Profile {
                 user.getString("UserID"),
                 user.getString("Private"),
                 profileType);
+    }
 
-
+    public Profile(int id, String name) {
+        this.setUserId(id);
+        this.setName(name);
     }
 
     /**

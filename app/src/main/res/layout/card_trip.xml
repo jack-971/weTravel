@@ -1,0 +1,144 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    app:cardCornerRadius="@dimen/card_corner_rad"
+    android:layout_marginBottom="@dimen/_5sdp"
+    android:id="@+id/card">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/entry_card"
+        android:layout_margin="@dimen/_4sdp">
+
+    <de.hdodenhof.circleimageview.CircleImageView
+        android:layout_width="@dimen/card_pic_width"
+        android:layout_height="@dimen/card_pic_height"
+        android:padding="0dp"
+        android:layout_margin="0dp"
+        android:id="@+id/entry_card_image"
+        android:src="@drawable/ic_trip_placeholder_24dp"/>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_toRightOf="@id/entry_card_image"
+        android:textSize="@dimen/card_major_text"
+        android:layout_marginLeft="@dimen/_10sdp"
+        android:id="@+id/entry_card_name"
+        android:textColor="@color/card_major_text"
+        android:layout_marginTop="@dimen/_8sdp"/>
+
+        <RelativeLayout
+            android:id="@+id/card_dates_view"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/entry_card_name"
+            android:layout_marginTop="@dimen/_2sdp"
+            android:layout_toRightOf="@id/entry_card_image"
+            android:layout_marginLeft="@dimen/_10sdp">
+
+
+            <androidx.appcompat.widget.AppCompatImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@drawable/ic_date_24dp"
+                android:id="@+id/card_date_icon"
+                android:layout_marginTop="@dimen/_2sdp"/>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_toRightOf="@id/card_date_icon"
+                android:textSize="@dimen/card_minor_text"
+                android:id="@+id/entry_card_dates"
+                android:textColor="@color/card_minor_text"
+                />
+
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:id="@+id/card_times_view"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/entry_card_name"
+            android:layout_margin="@dimen/_2sdp"
+            android:layout_toRightOf="@id/card_dates_view"
+            android:layout_marginLeft="@dimen/_10sdp">
+
+            <androidx.appcompat.widget.AppCompatImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@drawable/ic_time_24dp"
+                android:id="@+id/card_time_icon"
+                android:layout_marginTop="@dimen/_2sdp"/>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_toRightOf="@id/card_time_icon"
+                android:textSize="@dimen/card_minor_text"
+                android:id="@+id/entry_card_times"
+                android:textColor="@color/card_minor_text"
+                android:text="times"
+                />
+
+        </RelativeLayout>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/card_description"
+            android:text="description"
+            android:layout_below="@id/card_times_view"
+            android:layout_toRightOf="@id/entry_card_image"
+            android:layout_marginLeft="@dimen/_10sdp"/>
+
+        <RelativeLayout
+            android:id="@+id/card_locations_view"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/card_description"
+            android:layout_toRightOf="@id/entry_card_image"
+            android:layout_marginLeft="@dimen/_10sdp"
+            android:layout_marginTop="@dimen/_5sdp">
+
+            <androidx.appcompat.widget.AppCompatImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@drawable/ic_location_24dp"
+                android:id="@+id/card_location_icon"
+                android:layout_marginTop="@dimen/_2sdp"/>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/entry_card_location"
+                android:layout_toRightOf="@id/card_location_icon" />
+
+        </RelativeLayout>
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/expandableLayout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/card_locations_view"
+            android:focusable="false"
+            android:visibility="gone"
+            android:focusableInTouchMode="false">
+
+            <FrameLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintLeft_toLeftOf="parent"
+                android:id="@+id/details_container"
+                />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+    </RelativeLayout>
+
+</androidx.cardview.widget.CardView>

@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    app:cardCornerRadius="@dimen/card_corner_rad"
+    android:layout_marginBottom="@dimen/_5sdp">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/entry_card"
+        android:layout_margin="@dimen/_4sdp">
+
+        <ImageView
+            android:layout_width="@dimen/card_pic_width"
+            android:layout_height="@dimen/card_pic_height"
+            android:padding="@dimen/_2sdp"
+            android:id="@+id/entry_card_image"
+            android:src="@drawable/ic_trip_placeholder_24dp"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_toRightOf="@id/entry_card_image"
+            android:textSize="@dimen/card_major_text"
+            android:layout_marginLeft="@dimen/_10sdp"
+            android:layout_marginTop="@dimen/_8sdp"
+            android:id="@+id/entry_card_name"
+            android:textColor="@color/card_major_text"
+            android:text="Trip Name"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_toRightOf="@id/entry_card_image"
+            android:layout_below="@id/entry_card_name"
+            android:textSize="@dimen/card_minor_text"
+            android:layout_marginLeft="@dimen/_10sdp"
+            android:id="@+id/entry_card_dates"
+            android:textColor="@color/card_minor_text"
+            />
+
+    </RelativeLayout>
+
+</androidx.cardview.widget.CardView>
