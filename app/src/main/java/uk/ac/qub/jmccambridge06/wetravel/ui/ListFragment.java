@@ -2,7 +2,9 @@ package uk.ac.qub.jmccambridge06.wetravel.ui;
 
 import android.os.Bundle;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -52,7 +54,6 @@ public abstract class ListFragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         ButterKnife.bind(this, view);
-
         list = new ArrayList<>();
         recyclerView = view.findViewById(R.id.recycler_view);
         recyclerView.setHasFixedSize(true);
@@ -60,7 +61,7 @@ public abstract class ListFragment extends Fragment {
         recyclerView.setLayoutManager(layoutManager);
         setAdapter();
         recyclerView.setAdapter(adapter);
-
+        Log.d("tag", "adapter set");
     }
 
     /**

@@ -34,6 +34,7 @@ public class Trip extends ItineraryItem {
         try {
             this.setTripPicture((trip.getString("Picture").equals("null")) ? null : trip.getString("Picture"));
             this.status = trip.getString("TripStatus");
+
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -61,19 +62,24 @@ public class Trip extends ItineraryItem {
     }
 
     public void setLegs(JSONArray array) {
-        /*this.legs = legs;
-        legs = new ArrayList<Leg>();
+        this.legs = new ArrayList<Leg>();
         ArrayList<Integer> existingLegs = new ArrayList<>(legs.size()); // maximum possible size needed
         for (int loop=0; loop<array.length(); loop++) {
             try {
                 JSONObject leg = array.getJSONObject(loop);
                 // Check does the leg already exist - if so need to add the new user for this entry (but not add new leg) so add the user
                 // to the leg user list. Otherwise, create a new leg.
-                int legId = Integer.parseInt(leg.getString("LegID"));
+                int legId;
+                if (leg.has("LegID")) {
+                    legId = Integer.parseInt(leg.getString("LegID"));
+                } else {
+                    legId = Integer.parseInt(leg.getString("ID"));
+                }
                 if (existingLegs.contains(legId)) {
                     this.getLegs().get(legId).getUserList().put(legId, getUserList().get(legId));
                 } else {
                     this.legs.add(new Leg(leg));
+                    this.getLegs().get(legId).getUserList().put(legId, getUserList().get(legId));
                 }
             } catch (JSONException e) {
                 e.printStackTrace();
@@ -81,6 +87,6 @@ public class Trip extends ItineraryItem {
                 e.printStackTrace();
             }
 
-        }*/
+        }
     }
 }
