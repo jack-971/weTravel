@@ -13,23 +13,16 @@
         android:id="@+id/itinerary_header"
         android:layout_margin="@dimen/_16sdp">
 
-        <FrameLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:id="@+id/edit_leg_container"
-            android:layout_margin="0dp"
-            android:visibility="gone"/>
-
         <Button
             android:id="@+id/add_leg_button"
-            android:layout_width="match_parent"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textSize="@dimen/major_text"
+            android:text="@string/add_leg"
             android:textAllCaps="false"
-            android:background="@android:color/darker_gray"
+            android:background="@color/colorAccent"
             android:layout_marginTop="@dimen/text_margins"
             android:visibility="gone"
-            android:layout_below="@id/edit_leg_container"
             android:layout_centerHorizontal="true"
             />
 

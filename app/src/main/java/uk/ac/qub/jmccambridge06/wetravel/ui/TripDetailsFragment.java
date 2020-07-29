@@ -213,7 +213,7 @@ public class TripDetailsFragment extends TripEntryFragment {
                         JSONArray tripArray = response.getJSONArray("data");
                         JSONObject tripData = tripArray.getJSONObject(0);
                         tripData.put("TripStatus", "planned"); // as new trip the status will always be planned.
-                        trip = new Trip(tripData);
+                        trip = new Trip(tripData, ((MainMenuActivity)getActivity()).getUserAccount().getProfile());
                         trip.setUserList(((MainMenuActivity)getActivity()).getUserAccount());
                         JSONArray legArray = response.getJSONArray("leg");
                         trip.setLegs(legArray);

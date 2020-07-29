@@ -10,16 +10,14 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import java.util.ArrayList;
 
-import uk.ac.qub.jmccambridge06.wetravel.ItineraryItem;
 import uk.ac.qub.jmccambridge06.wetravel.Leg;
-import uk.ac.qub.jmccambridge06.wetravel.MyApplication;
 import uk.ac.qub.jmccambridge06.wetravel.R;
 
-public class LegListAdapter extends EntryListAdapter {
+public class ActivityListAdapter extends EntryListAdapter {
 
-    public static class LegListViewHolder extends EntryListViewHolder {
+    public static class ActivityListViewHolder extends EntryListViewHolder {
 
-        public LegListViewHolder(@NonNull View itemView) {
+        public ActivityListViewHolder(@NonNull View itemView) {
             super(itemView);
             timesView.setVisibility(View.INVISIBLE);
             image.setVisibility(View.GONE);
@@ -28,32 +26,33 @@ public class LegListAdapter extends EntryListAdapter {
 
     @NonNull
     @Override
-    public LegListAdapter.LegListViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+    public ActivityListViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.card_trip, parent, false);
-        return new LegListAdapter.LegListViewHolder(v);
+        return new ActivityListViewHolder(v);
     }
 
-    public LegListAdapter(ArrayList<Leg> legCardList, Context context) {
+    public ActivityListAdapter(ArrayList<Leg> legCardList, Context context) {
         super(legCardList, context);
-        logtag = "Leg List Adapter";
+        logtag = "Activity List Adapter";
     }
 
     @Override
     public void onBindViewHolder(@NonNull EntryListViewHolder holder, int position) {
         super.onBindViewHolder(holder, position);
-        Leg current = (Leg) entryCardList.get(position);
-        checkDisplay(current, holder);
+        holder.name.setText("tester name");
+        /*Leg current = (Leg) entryCardList.get(position);
+        checkDisplay(current, holder);*/
         holder.card.setVisibility(View.VISIBLE);
         /*LegDetailsFragment legDetailsFragment = new LegDetailsFragment(current);
         ((AppCompatActivity)context).getSupportFragmentManager().beginTransaction().replace(R.id.details_container,
                 legDetailsFragment).commit();*/
-        holder.card.setOnClickListener(new View.OnClickListener() {
+        /*holder.card.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 ((AppCompatActivity)context).getSupportFragmentManager().beginTransaction().replace(R.id.main_screen_container,
                         new LegItineraryFragment(current)).addToBackStack(null).commit();
             }
-        });
+        });*/
     }
 
     @Override

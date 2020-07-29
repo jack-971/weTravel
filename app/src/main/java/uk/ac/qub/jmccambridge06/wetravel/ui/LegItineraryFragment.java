@@ -1,6 +1,5 @@
 package uk.ac.qub.jmccambridge06.wetravel.ui;
 
-import android.graphics.Color;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -12,36 +11,35 @@ import android.widget.FrameLayout;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
-import androidx.recyclerview.widget.RecyclerView;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
-import uk.ac.qub.jmccambridge06.wetravel.MyApplication;
+import uk.ac.qub.jmccambridge06.wetravel.Leg;
 import uk.ac.qub.jmccambridge06.wetravel.R;
 import uk.ac.qub.jmccambridge06.wetravel.Trip;
 
-public class TripItineraryFragment extends Fragment {
+public class LegItineraryFragment extends Fragment {
 
     //@BindView(R.id.trip_legs_list) RecyclerView legListRecycler;
     @BindView(R.id.leg_list_container) FrameLayout legListContainer;
     @BindView(R.id.add_leg_container) FrameLayout addLegContainer;
-    @BindView(R.id.add_leg_button) Button addLegButton;
+    @BindView(R.id.add_leg_button) Button addActivityButton;
+    @BindView(R.id.edit_leg_container) FrameLayout editLegContainer;
 
-    LegListFragment legListFragment;
+    ActivityListFragment activityListFragment;
+    ActivityDetailsFragment activityDetailsFragment;
     LegDetailsFragment legDetailsFragment;
+    Leg leg;
 
     private Trip trip;
 
     /**
-     * Constructor with trip argument - used for showing existing trips
-     * @param trip
+     * Constructor with leg argument
+     * @param leg
      */
-    public TripItineraryFragment(Trip trip) {
+    public LegItineraryFragment(Leg leg) {
         super();
-        this.trip = trip;
-    }
-
-    public TripItineraryFragment() {
+        this.leg = leg;
     }
 
     @Nullable
@@ -55,17 +53,26 @@ public class TripItineraryFragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         ButterKnife.bind(this, view);
-        legDetailsFragment = new LegDetailsFragment();
-        addLegButton.setText(R.string.add_leg);
-        if (trip != null) {
-            loadItinerary();
-            addLegButton.setVisibility(View.VISIBLE); // only visible once a trip exists.
-        }
+        //legDetailsFragment = new LegDetailsFragment();
+
+        // Load the edit Leg details section
+        legDetailsFragment = new LegDetailsFragment(leg);
+        getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.edit_leg_container,
+                legDetailsFragment, "edit_leg_fragment").commit();
+        editLegContainer.setVisibility(View.VISIBLE);
+
+        // Load the add activites section
+        activityDetailsFragment = new ActivityDetailsFragment();
         getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.add_leg_container,
-                legDetailsFragment, "leg_list_fragment").commit();
+                activityDetailsFragment, "activities_details_fragment").commit();
 
+        // Add the activities
+        //loadItinerary();
 
-        addLegButton.setOnClickListener(new View.OnClickListener() {
+        // Add the add activity button
+        addActivityButton.setText(R.string.add_activity);
+        addActivityButton.setVisibility(View.VISIBLE); // only visible once a trip exists.
+        addActivityButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 // if leg details is not visible show, otherwise hide it.
@@ -81,14 +88,10 @@ public class TripItineraryFragment extends Fragment {
     }
 
     public void loadItinerary() {
-        legListFragment = new LegListFragment(trip.getLegs());
+        activityListFragment = new ActivityListFragment();
         getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.leg_list_container,
-                legListFragment, "leg_list_fragment").commit();
-        Log.d("tag", "leg fragment created");
+                activityListFragment, "leg_list_fragment").commit();
+        Log.d("tag", "activity list fragment created");
     }
 
-    public void setTrip(Trip trip) {
-        this.trip = trip;
-        Log.d("tag", "trip has now been set");
-    }
 }

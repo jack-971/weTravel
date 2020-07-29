@@ -48,6 +48,9 @@ public class TripListAdapter extends EntryListAdapter {
     @Override
     public void onBindViewHolder(@NonNull EntryListViewHolder holder, int position) {
         Trip current = (Trip) entryCardList.get(position);
+        holder.datesView.setVisibility(View.VISIBLE);
+        holder.description.setVisibility(View.VISIBLE);
+        holder.locationsView.setVisibility(View.VISIBLE);
         Log.d(logtag, "binding" + current.getEntryName());
         checkDisplay(current, holder);
 

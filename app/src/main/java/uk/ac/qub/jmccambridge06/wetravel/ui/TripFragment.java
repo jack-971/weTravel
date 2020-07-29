@@ -24,6 +24,7 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import uk.ac.qub.jmccambridge06.wetravel.Leg;
 import uk.ac.qub.jmccambridge06.wetravel.R;
 import uk.ac.qub.jmccambridge06.wetravel.Trip;
 import uk.ac.qub.jmccambridge06.wetravel.network.JsonFetcher;
@@ -109,6 +110,7 @@ public class TripFragment extends Fragment {
                     // load the legs data into the trip
                     JSONArray legs = response.getJSONArray("legs");
                     getTrip().setLegs(legs);
+                    JSONArray activities = response.getJSONArray("activities");
 
                     tripDetailsFragment = new TripDetailsFragment(trip);
                     tripItineraryFragment = new TripItineraryFragment(trip);

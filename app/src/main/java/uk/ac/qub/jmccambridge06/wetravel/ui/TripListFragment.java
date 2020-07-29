@@ -80,7 +80,7 @@ public class TripListFragment extends ListFragment {
             JSONObject item = jsonArray.getJSONObject(loop);
             try {
                 Log.d(logtag, "filling list");
-                Trip currentTrip = new Trip(item);
+                Trip currentTrip = new Trip(item, profile);
                 Log.d(logtag, "in add item");
                 currentTrip.setProfile(profile);
                 list.add(currentTrip);

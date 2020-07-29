@@ -119,7 +119,7 @@
                 android:layout_toRightOf="@id/card_location_icon" />
 
         </RelativeLayout>
-
+<!--
         <androidx.constraintlayout.widget.ConstraintLayout
             android:id="@+id/expandableLayout"
             android:layout_width="match_parent"
@@ -128,7 +128,14 @@
             android:focusable="false"
             android:visibility="gone"
             android:focusableInTouchMode="false">
-
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="het"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintLeft_toLeftOf="parent"
+                android:id="@+id/tester"
+                />
             <FrameLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -137,7 +144,7 @@
                 android:id="@+id/details_container"
                 />
 
-        </androidx.constraintlayout.widget.ConstraintLayout>
+        </androidx.constraintlayout.widget.ConstraintLayout>-->
 
     </RelativeLayout>
 

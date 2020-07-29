@@ -32,15 +32,11 @@ public abstract class ItineraryItem {
     protected HashMap<Integer, String> userList;
     private Profile profile;
 
-    private boolean isExpanded;
-
-
-
     public ItineraryItem() {
 
     }
 
-    public ItineraryItem(JSONObject item){
+    public ItineraryItem(JSONObject item, Profile profile){
         logtag = "item";
         Log.d("tag", "in item create");
         // Load the location from Google Places API if there is a location key
@@ -52,7 +48,7 @@ public abstract class ItineraryItem {
             this.setDescription((item.getString("Description").equals("null")) ? null : item.getString("Description"));
             this.setLocation((item.getString("Location").equals("null")) ? null : item.getString("Location"));
             userList = new HashMap<>();
-            isExpanded = false;
+            this.profile = profile;
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -139,11 +135,4 @@ public abstract class ItineraryItem {
         this.location = new TripLocation(id);
     }
 
-    public boolean isExpanded() {
-        return isExpanded;
-    }
-
-    public void setExpanded(boolean expanded) {
-        isExpanded = expanded;
-    }
 }

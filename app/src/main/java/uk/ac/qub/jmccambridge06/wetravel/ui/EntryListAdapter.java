@@ -44,8 +44,9 @@ public abstract class EntryListAdapter extends RecyclerView.Adapter<EntryListAda
         @BindView(R.id.card_locations_view) View locationsView;
         @BindView(R.id.entry_card_location) TextView locations;
         @BindView(R.id.card) View card;
-        @BindView(R.id.expandableLayout) View expandableView;
-        @BindView(R.id.details_container) View detailsContainer;
+        //@BindView(R.id.expandableLayout) View expandableView;
+        //@BindView(R.id.tester) TextView testerText;
+        //@BindView(R.id.details_container) View detailsContainer;
 
         public EntryListViewHolder(@NonNull View itemView) {
             super(itemView);
@@ -69,19 +70,6 @@ public abstract class EntryListAdapter extends RecyclerView.Adapter<EntryListAda
     @Override
     public void onBindViewHolder(@NonNull EntryListViewHolder holder, int position) {
         ItineraryItem current = entryCardList.get(position);
-        holder.card.setVisibility(View.VISIBLE);
-        holder.description.setVisibility(View.VISIBLE);
-        holder.datesView.setVisibility(View.VISIBLE);
-        holder.locationsView.setVisibility(View.VISIBLE);
-        boolean isExpanded = current.isExpanded();
-        holder.expandableView.setVisibility(isExpanded ? View.VISIBLE : View.GONE);
-        holder.card.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                current.setExpanded(!current.isExpanded());
-                notifyItemChanged(position);
-            }
-        });
     }
 
     @Override
@@ -96,16 +84,15 @@ public abstract class EntryListAdapter extends RecyclerView.Adapter<EntryListAda
      */
     protected void checkDisplay(ItineraryItem current, EntryListViewHolder holder) {
         Log.d(logtag, "checkdatedisplay");
+        holder.locationsView.setVisibility(View.GONE);
         if (current.getLocation().getId() != null) {
             String locationKey = current.getLocation().getId();
             loadLocation(locationKey, holder, current);
             Log.d("tag", "getting location from API");
             JsonFetcher jsonFetcher = new JsonFetcher(getLocationsAPI, MyApplication.getContext());
             jsonFetcher.getData(routes.getPlacesAPI(locationKey));
-        } else {
-            holder.locationsView.setVisibility(View.GONE);
-            checkOther(current, holder);
         }
+        checkOther(current, holder);
 
     }
 
@@ -137,7 +124,7 @@ public abstract class EntryListAdapter extends RecyclerView.Adapter<EntryListAda
                     JSONObject obj = data.getJSONObject(0);
                     holder.locations.setText(obj.getString("formatted_address"));
                     current.getLocation().setName(obj.getString("formatted_address"));
-                    checkOther(current,holder);
+                    holder.locationsView.setVisibility(View.VISIBLE);
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }

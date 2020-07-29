@@ -17,6 +17,7 @@ import uk.ac.qub.jmccambridge06.wetravel.utilities.DateTime;
 
 public class Trip extends ItineraryItem {
 
+
     private String tripPicture;
     private String status;
     private ArrayList<Leg> legs;
@@ -26,8 +27,8 @@ public class Trip extends ItineraryItem {
         this.setEntryName(tripName);
     }
 
-    public Trip(JSONObject trip) {
-        super(trip);
+    public Trip(JSONObject trip, Profile profile) {
+        super(trip, profile);
         logtag = "Trip";
         Log.d(logtag, "in trip create");
         // Parse trip details
@@ -62,28 +63,33 @@ public class Trip extends ItineraryItem {
     }
 
     public void setLegs(JSONArray array) {
-        this.legs = new ArrayList<Leg>(getUserList().size()); // leg user list cannot be larger than the trip user list
-        //ArrayList<Integer> existingLegs = new ArrayList<>(legs.size()); // maximum possible size needed
+        this.legs = new ArrayList<Leg>(10); // leg user list cannot be larger than the trip user list
+        ArrayList<Integer> existingLegs = new ArrayList<>(legs.size()); // maximum possible size needed
         for (int loop=0; loop<array.length(); loop++) {
             try {
-                JSONObject leg = array.getJSONObject(loop);
+                JSONObject legJson = array.getJSONObject(loop);
                 // Check does the leg already exist - if so need to add the new user for this entry (but not add new leg) so add the user
                 // to the leg user list. Otherwise, create a new leg.
                 int legId;
-                if (leg.has("LegID")) {
-                    legId = Integer.parseInt(leg.getString("LegID"));
+                if (legJson.has("LegID")) {
+                    legId = Integer.parseInt(legJson.getString("LegID"));
                 } else {
-                    legId = Integer.parseInt(leg.getString("ID"));
+                    legId = Integer.parseInt(legJson.getString("ID"));
                 }
+                int userId = Integer.parseInt(legJson.getString("UserID"));
 
-                /*if (existingLegs.contains(legId)) {
-                    this.getLegs().get(legId).getUserList().put(legId, getUserList().get(legId));
-                } else {*/
-                    int userId = Integer.parseInt(leg.getString("UserID"));
-                    this.legs.add(new Leg(leg));
-                    //this.getLegs().get(legId).getUserList().put(legId, this.getUserList().get(legId));
-                    this.getLegs().get(loop).getUserList().put(userId, this.getUserList().get(userId));
-                //}
+                if (existingLegs.contains(legId)) {
+                    for (Leg leg : legs) {
+                        if (leg.getEntryId() == legId) {
+                            leg.getUserList().put(userId, this.getUserList().get(userId));
+                        }
+                    }
+                } else {
+                    Leg leg = new Leg(legJson, this.getProfile());
+                    this.legs.add(leg);
+                    leg.getUserList().put(userId, this.getUserList().get(userId));
+                    existingLegs.add(legId);
+                }
             } catch (JSONException e) {
                 e.printStackTrace();
             } catch (Exception e) {
@@ -92,4 +98,10 @@ public class Trip extends ItineraryItem {
 
         }
     }
+
+    public void addActivities(JSONArray activitiesArray) {
+
+    }
+
+
 }

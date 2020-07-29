@@ -9,28 +9,29 @@ import androidx.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.Date;
 
+import uk.ac.qub.jmccambridge06.wetravel.Activity;
 import uk.ac.qub.jmccambridge06.wetravel.Leg;
 import uk.ac.qub.jmccambridge06.wetravel.Profile;
 import uk.ac.qub.jmccambridge06.wetravel.utilities.DateTime;
 import uk.ac.qub.jmccambridge06.wetravel.utilities.EditTextDateClicker;
 
-public class LegDetailsFragment extends TripEntryFragment {
+public class ActivityDetailsFragment extends TripEntryFragment {
 
-    Leg leg;
+    Activity activity;
 
     /**
      * Constructor with leg argument - used for showing existing legs
-     * @param leg
+     * @param activity
      */
-    public LegDetailsFragment(Leg leg) {
+    public ActivityDetailsFragment(Activity activity) {
         super();
-        this.leg = leg;
+        this.activity = activity;
     }
 
     /**
      * Default constructor used for creating new legs
      */
-    public LegDetailsFragment() {
+    public ActivityDetailsFragment() {
 
     }
 
@@ -40,16 +41,14 @@ public class LegDetailsFragment extends TripEntryFragment {
         logtag = "Leg Details";
         tripPictureView.setVisibility(View.GONE);
         tripTimeView.setVisibility(View.GONE);
-        tripNotesView.setVisibility(View.GONE);
         tripRatingView.setVisibility(View.GONE);
         tripReviewView.setVisibility(View.GONE);
-        tripAttachmentsView.setVisibility(View.GONE);
 
         Date initialiseStartDate = null;
         Date initialiseFinishDate = null;
-        if (leg != null) {
-            initialiseStartDate=leg.getStartDate();
-            initialiseFinishDate=leg.getEndDate();
+        if (activity != null) {
+            initialiseStartDate=activity.getStartDate();
+            initialiseFinishDate=activity.getEndDate();
             loadDetails();
         } else {
             tripAttendeesView.setVisibility(View.GONE);
@@ -63,23 +62,23 @@ public class LegDetailsFragment extends TripEntryFragment {
 
     @Override
     public void loadDetails() {
-        tripName.setText(leg.getEntryName());
-        if (leg.getStartDate() != null) {
-            startDate.setText(DateTime.formatDate(leg.getStartDate()));
+        tripName.setText(activity.getEntryName());
+        if (activity.getStartDate() != null) {
+            startDate.setText(DateTime.formatDate(activity.getStartDate()));
         }
-        if (leg.getEndDate() != null) {
-            finishDate.setText(DateTime.formatDate(leg.getEndDate()));
+        if (activity.getEndDate() != null) {
+            finishDate.setText(DateTime.formatDate(activity.getEndDate()));
         }
-        if (leg.getDescription() != null) {
-            description.setText(leg.getDescription());
+        if (activity.getDescription() != null) {
+            description.setText(activity.getDescription());
         }
-        if (leg.getLocation() !=null) {
-            location.setText(leg.getLocation().getName());
-            location.setTag(leg.getLocation().getId());
+        if (activity.getLocation() !=null) {
+            location.setText(activity.getLocation().getName());
+            location.setTag(activity.getLocation().getId());
         }
 
         // add users to a string to add to attendees text view.
-        attendees.setText(addUsers(leg.getUserList().values()));
+        attendees.setText(addUsers(activity.getUserList().values()));
         ArrayList<Profile> profiles = new ArrayList<>();
         // for each person on the trip, if they are not already in the user leg list then they can be added.
         /*for (int value : trip.getUserList().keySet()) {

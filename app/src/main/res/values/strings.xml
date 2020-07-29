@@ -81,6 +81,8 @@
     <string name="trip_attachments_hint">Add Attachment</string>
     <string name="leave_trip">Leave</string>
     <string name="edit_trip">Edit</string>
+    <string name="add_leg">Add Leg</string>
+    <string name="add_activity">Add Activity</string>
     <!--Errors-->
     <string name="error_select_friend_dropdown">Please select friend from dropdown list to add</string>
     <string name="error_friend_already_added">Friend already added!</string>

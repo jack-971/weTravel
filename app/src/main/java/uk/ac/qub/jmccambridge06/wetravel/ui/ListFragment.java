@@ -101,7 +101,7 @@ public abstract class ListFragment extends Fragment {
         for (int loop=0; loop<jsonArray.length(); loop++) {
             JSONObject item = jsonArray.getJSONObject(loop);
             try {
-                Trip currentTrip = new Trip(item);
+                Trip currentTrip = new Trip(item, profile);
                 Log.d(logtag, "in add item");
                 currentTrip.setProfile(profile);
                 list.add(currentTrip);
