@@ -8,8 +8,10 @@ public class TripLocation {
     private String id;
     private Location location;
 
-    public TripLocation(String id) {
+    public TripLocation(String id, String name) {
+
         this.id = id;
+        this.name = name;
     }
 
     public String getName() {

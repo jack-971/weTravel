@@ -86,17 +86,14 @@ public abstract class EntryListAdapter extends RecyclerView.Adapter<EntryListAda
         Log.d(logtag, "checkdatedisplay");
         holder.locationsView.setVisibility(View.GONE);
         if (current.getLocation().getId() != null) {
-            String locationKey = current.getLocation().getId();
+            /*String locationKey = current.getLocation().getId();
             loadLocation(locationKey, holder, current);
             Log.d("tag", "getting location from API");
             JsonFetcher jsonFetcher = new JsonFetcher(getLocationsAPI, MyApplication.getContext());
-            jsonFetcher.getData(routes.getPlacesAPI(locationKey));
+            jsonFetcher.getData(routes.getPlacesAPI(locationKey))*/
+            holder.locations.setText(current.getLocation().getName());
+            holder.locationsView.setVisibility(View.VISIBLE);
         }
-        checkOther(current, holder);
-
-    }
-
-    protected void checkOther(ItineraryItem current, EntryListViewHolder holder) {
         holder.name.setText(current.getEntryName());
         if (current.getStartDate() != null) {
             if (current.getEndDate() != null) {
@@ -115,6 +112,7 @@ public abstract class EntryListAdapter extends RecyclerView.Adapter<EntryListAda
         }
     }
 
+/*
     void loadLocation(String locationId, EntryListViewHolder holder, ItineraryItem current) {
         getLocationsAPI = new NetworkResultCallback() {
             @Override
@@ -134,6 +132,6 @@ public abstract class EntryListAdapter extends RecyclerView.Adapter<EntryListAda
                 Log.e(logtag, "Error retrieving place");
             }
         };
-    }
+    }*/
 
 }

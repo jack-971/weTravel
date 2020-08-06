@@ -8,6 +8,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
 import java.util.ArrayList;
+import java.util.LinkedHashMap;
 
 import uk.ac.qub.jmccambridge06.wetravel.Activity;
 import uk.ac.qub.jmccambridge06.wetravel.Leg;
@@ -15,8 +16,13 @@ import uk.ac.qub.jmccambridge06.wetravel.Leg;
 
 public class ActivityListFragment extends EntryListFragment {
 
-    public ActivityListFragment(ArrayList<Activity> array) {
+    public ActivityListFragment(LinkedHashMap<Integer, Activity> activities) {
         super();
+        // Convert Linked hashmap to an array list so can be used in adapter
+        ArrayList<Activity> array = new ArrayList<>();
+        for (Activity activity : activities.values()) {
+            array.add(activity);
+        }
         list=array;
         logtag = "ActivityListFragment";
     }

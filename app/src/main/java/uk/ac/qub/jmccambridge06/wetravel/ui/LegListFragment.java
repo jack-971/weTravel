@@ -10,13 +10,22 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
 import java.util.ArrayList;
+import java.util.LinkedHashMap;
+
 import uk.ac.qub.jmccambridge06.wetravel.Leg;
+import uk.ac.qub.jmccambridge06.wetravel.Trip;
 
 
 public class LegListFragment extends EntryListFragment {
 
-    public LegListFragment(ArrayList<Leg> array) {
+
+    public LegListFragment(LinkedHashMap<Integer, Leg> legs) {
         super();
+        // Convert Linked hashmap to an array list so can be used in adapter
+        ArrayList<Leg> array = new ArrayList<>();
+        for (Leg leg : legs.values()) {
+            array.add(leg);
+        }
         list=array;
         logtag = "LegListFragment";
         Log.d(logtag, "list should be added");
@@ -33,6 +42,8 @@ public class LegListFragment extends EntryListFragment {
         adapter = new LegListAdapter(list, getContext());
     }
 
-
-
+    @Override
+    public void onResume() {
+        super.onResume();
+    }
 }

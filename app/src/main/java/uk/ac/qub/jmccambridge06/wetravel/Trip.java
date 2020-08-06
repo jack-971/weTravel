@@ -9,6 +9,7 @@ import org.json.JSONObject;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.LinkedHashMap;
 import java.util.Set;
 
 import uk.ac.qub.jmccambridge06.wetravel.network.JsonFetcher;
@@ -20,7 +21,7 @@ public class Trip extends ItineraryItem {
 
     private String tripPicture;
     private String status;
-    private ArrayList<Leg> legs;
+    private LinkedHashMap<Integer, Leg> legs;
 
     public Trip(int tripId, String tripName) {
         this.setEntryId(tripId);
@@ -58,13 +59,12 @@ public class Trip extends ItineraryItem {
         this.tripPicture = tripPicture;
     }
 
-    public ArrayList<Leg> getLegs() {
+    public LinkedHashMap<Integer, Leg> getLegs() {
         return legs;
     }
 
     public void setLegs(JSONArray array) {
-        this.legs = new ArrayList<Leg>(10); // leg user list cannot be larger than the trip user list
-        ArrayList<Integer> existingLegs = new ArrayList<>(legs.size()); // maximum possible size needed
+        this.legs = new LinkedHashMap<>();
         for (int loop=0; loop<array.length(); loop++) {
             try {
                 JSONObject legJson = array.getJSONObject(loop);
@@ -78,17 +78,13 @@ public class Trip extends ItineraryItem {
                 }
                 int userId = Integer.parseInt(legJson.getString("UserID"));
 
-                if (existingLegs.contains(legId)) {
-                    for (Leg leg : legs) {
-                        if (leg.getEntryId() == legId) {
-                            leg.getUserList().put(userId, this.getUserList().get(userId));
-                        }
-                    }
+                if (legs.containsKey(legId)) {
+                    legs.get(legId).getUserList().put(userId, this.getUserList().get(userId));
                 } else {
                     Leg leg = new Leg(legJson, this.getProfile());
-                    this.legs.add(leg);
-                    leg.getUserList().put(userId, this.getUserList().get(userId));
-                    existingLegs.add(legId);
+                    this.legs.put(legId, leg);
+                    legs.get(legId).getUserList().put(userId, this.getUserList().get(userId));
+                    Log.d("tag", "test");
                 }
             } catch (JSONException e) {
                 e.printStackTrace();
@@ -99,8 +95,51 @@ public class Trip extends ItineraryItem {
         }
     }
 
-    public void addActivities(JSONArray activitiesArray) {
+    /**
+     * Adds a leg to the leg list in correct location chronologically by date.
+     * @param leg
+     */
+    public void addLeg(Leg leg) {
+        if (leg.getStartDate() == null) {
+            legs.put(leg.getEntryId(), leg);
+        } else {
+            LinkedHashMap<Integer, Leg> newLegs = new LinkedHashMap<>();
+            boolean dateInserted = false;
+            for (Leg existingLeg : legs.values()) {
+                if (dateInserted == false) {
+                    if (existingLeg.getStartDate() == null || leg.getStartDate().before(existingLeg.getStartDate())) {
+                        newLegs.put(leg.getEntryId(), leg);
+                        dateInserted = true;
+                    }
+                }
+                newLegs.put(existingLeg.getEntryId(), existingLeg);
+            }
+            legs = newLegs;
+        }
 
+    }
+
+
+    public void addActivities(JSONArray activitiesArray) {
+        for (int loop=0; loop<activitiesArray.length(); loop++) {
+            try {
+                JSONObject activityJson = activitiesArray.getJSONObject(loop);
+                Integer legId = Integer.parseInt(activityJson.getString("LegID"));
+                Integer userId = Integer.parseInt(activityJson.getString("ActivityUserID"));
+                Integer activityId = Integer.parseInt(activityJson.getString("ActivityID"));
+                if (legs.get(legId).getActivities().containsKey(activityId)) { // if the activity has already been added to the leg
+                    legs.get(legId).getActivities().get(activityId).getUserList().put(userId, getUserList().get(userId)); // Just add the user to the activity
+                } else {
+                    Activity activity = new Activity(activityJson, getProfile());
+                    legs.get(legId).getActivities().put(activityId, activity);
+                    activity.getUserList().put(userId, getUserList().get(userId)); // Add with user id and then lookup name from trip users.
+                }
+            } catch (JSONException e) {
+                e.printStackTrace();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
     }
 
 

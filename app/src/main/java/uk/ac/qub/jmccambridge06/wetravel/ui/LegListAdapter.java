@@ -14,6 +14,7 @@ import uk.ac.qub.jmccambridge06.wetravel.ItineraryItem;
 import uk.ac.qub.jmccambridge06.wetravel.Leg;
 import uk.ac.qub.jmccambridge06.wetravel.MyApplication;
 import uk.ac.qub.jmccambridge06.wetravel.R;
+import uk.ac.qub.jmccambridge06.wetravel.Trip;
 
 public class LegListAdapter extends EntryListAdapter {
 
@@ -44,14 +45,11 @@ public class LegListAdapter extends EntryListAdapter {
         Leg current = (Leg) entryCardList.get(position);
         checkDisplay(current, holder);
         holder.card.setVisibility(View.VISIBLE);
-        /*LegDetailsFragment legDetailsFragment = new LegDetailsFragment(current);
-        ((AppCompatActivity)context).getSupportFragmentManager().beginTransaction().replace(R.id.details_container,
-                legDetailsFragment).commit();*/
         holder.card.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 ((AppCompatActivity)context).getSupportFragmentManager().beginTransaction().replace(R.id.main_screen_container,
-                        new LegItineraryFragment(current)).addToBackStack(null).commit();
+                        new LegItineraryFragment(current), "leg_itinerary_fragment").addToBackStack(null).commit();
             }
         });
     }

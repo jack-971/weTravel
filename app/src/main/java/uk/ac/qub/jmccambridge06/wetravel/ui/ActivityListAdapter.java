@@ -10,6 +10,7 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import java.util.ArrayList;
 
+import uk.ac.qub.jmccambridge06.wetravel.Activity;
 import uk.ac.qub.jmccambridge06.wetravel.Leg;
 import uk.ac.qub.jmccambridge06.wetravel.R;
 
@@ -39,20 +40,17 @@ public class ActivityListAdapter extends EntryListAdapter {
     @Override
     public void onBindViewHolder(@NonNull EntryListViewHolder holder, int position) {
         super.onBindViewHolder(holder, position);
-        holder.name.setText("tester name");
-        /*Leg current = (Leg) entryCardList.get(position);
-        checkDisplay(current, holder);*/
+
+        Activity current = (Activity) entryCardList.get(position);
+        checkDisplay(current, holder);
         holder.card.setVisibility(View.VISIBLE);
-        /*LegDetailsFragment legDetailsFragment = new LegDetailsFragment(current);
-        ((AppCompatActivity)context).getSupportFragmentManager().beginTransaction().replace(R.id.details_container,
-                legDetailsFragment).commit();*/
-        /*holder.card.setOnClickListener(new View.OnClickListener() {
+        holder.card.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 ((AppCompatActivity)context).getSupportFragmentManager().beginTransaction().replace(R.id.main_screen_container,
-                        new LegItineraryFragment(current)).addToBackStack(null).commit();
+                        new ActivityDetailsFragment(current)).addToBackStack(null).commit();
             }
-        });*/
+        });
     }
 
     @Override

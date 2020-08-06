@@ -84,14 +84,17 @@ public class TripFragment extends Fragment {
             tabs.setupWithViewPager(viewPager);
         }
 
-        FloatingActionButton fab = ((MainMenuActivity)getActivity()).findViewById(R.id.floating_action_button);
-        fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Snackbar.make(view, "Add new event", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
-            }
-        });
+        /*if (trip.getStatus().equals("active")) {
+            FloatingActionButton fab = ((MainMenuActivity)getActivity()).findViewById(R.id.floating_action_button);
+            fab.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    Snackbar.make(view, "Add new event", Snackbar.LENGTH_LONG)
+                            .setAction("Action", null).show();
+                }
+            });
+        }*/
+
     }
 
     /**
@@ -111,7 +114,7 @@ public class TripFragment extends Fragment {
                     JSONArray legs = response.getJSONArray("legs");
                     getTrip().setLegs(legs);
                     JSONArray activities = response.getJSONArray("activities");
-
+                    getTrip().addActivities(activities);
                     tripDetailsFragment = new TripDetailsFragment(trip);
                     tripItineraryFragment = new TripItineraryFragment(trip);
                     tripAddFragment = new TripAddFragment();
@@ -133,6 +136,10 @@ public class TripFragment extends Fragment {
                 error.printStackTrace();
             }
         };
+    }
+
+    public SectionsPagerAdapter getSectionsPagerAdapter() {
+        return sectionsPagerAdapter;
     }
 
     public Trip getTrip() {

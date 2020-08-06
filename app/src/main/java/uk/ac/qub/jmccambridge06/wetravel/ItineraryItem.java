@@ -46,7 +46,8 @@ public abstract class ItineraryItem {
             this.setStartDate((item.getString("DateStart").equals("null")) ? null : DateTime.sqlToDate(item.getLong("DateStart")));
             this.setEndDate((item.getString("DateFinish").equals("null")) ? null : DateTime.sqlToDate(item.getLong("DateFinish")));
             this.setDescription((item.getString("Description").equals("null")) ? null : item.getString("Description"));
-            this.setLocation((item.getString("Location").equals("null")) ? null : item.getString("Location"));
+            this.setLocation((item.getString("LocationID").equals("null")) ? null : item.getString("LocationID"),
+                    (item.getString("LocationDetail").equals("null")) ? null : item.getString("LocationDetail"));
             userList = new HashMap<>();
             this.profile = profile;
         } catch (Exception e) {
@@ -131,8 +132,8 @@ public abstract class ItineraryItem {
         return location;
     }
 
-    public void setLocation(String id) {
-        this.location = new TripLocation(id);
+    public void setLocation(String id, String name) {
+        this.location = new TripLocation(id, name);
     }
 
 }

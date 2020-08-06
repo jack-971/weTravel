@@ -5,12 +5,13 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
+import java.util.LinkedHashMap;
 
 import uk.ac.qub.jmccambridge06.wetravel.utilities.DateTime;
 
 public class Leg extends ItineraryItem {
 
-    private ArrayList activities;
+    private LinkedHashMap<Integer, Activity> activities;
 
     public Leg(int legId, String tripName) {
         this.setEntryId(legId);
@@ -19,10 +20,11 @@ public class Leg extends ItineraryItem {
 
     public Leg(JSONObject leg, Profile profile) throws Exception {
         super(leg, profile);
+        this.activities = new LinkedHashMap<>();
         logtag = "Leg";
     }
 
-    public ArrayList<Activity> getActivities() {
+    public LinkedHashMap<Integer, Activity> getActivities() {
         return activities;
     }
 
@@ -66,6 +68,30 @@ public class Leg extends ItineraryItem {
             }
 
         }*/
+    }
+
+    /**
+     * Adds a leg to the leg list in correct location chronologically by date.
+     * @param activity
+     */
+    public void addActivity(Activity activity) {
+        if (activity.getStartDate() == null) {
+            activities.put(activity.getEntryId(), activity);
+        } else {
+            LinkedHashMap<Integer, Activity> newActivities = new LinkedHashMap<>();
+            boolean dateInserted = false;
+            for (Activity existingActivity : activities.values()) {
+                if (dateInserted == false) {
+                    if (existingActivity.getStartDate() == null || activity.getStartDate().before(existingActivity.getStartDate())) {
+                        newActivities.put(activity.getEntryId(), activity);
+                        dateInserted = true;
+                    }
+                }
+                newActivities.put(existingActivity.getEntryId(), existingActivity);
+            }
+            activities = newActivities;
+        }
+
     }
 
 }

@@ -1,5 +1,6 @@
 package uk.ac.qub.jmccambridge06.wetravel.ui;
 
+import android.content.Context;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.util.Log;
@@ -8,6 +9,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.FrameLayout;
+import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -16,21 +19,16 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import uk.ac.qub.jmccambridge06.wetravel.Leg;
 import uk.ac.qub.jmccambridge06.wetravel.MyApplication;
 import uk.ac.qub.jmccambridge06.wetravel.R;
 import uk.ac.qub.jmccambridge06.wetravel.Trip;
 
-public class TripItineraryFragment extends Fragment {
-
-    //@BindView(R.id.trip_legs_list) RecyclerView legListRecycler;
-    @BindView(R.id.leg_list_container) FrameLayout legListContainer;
-    @BindView(R.id.add_leg_container) FrameLayout addLegContainer;
-    @BindView(R.id.add_leg_button) Button addLegButton;
-
-    LegListFragment legListFragment;
-    LegDetailsFragment legDetailsFragment;
+public class TripItineraryFragment extends ItineraryFragment {
 
     private Trip trip;
+    LegListFragment legListFragment;
+    LegDetailsFragment legDetailsFragment;
 
     /**
      * Constructor with trip argument - used for showing existing trips
@@ -44,40 +42,28 @@ public class TripItineraryFragment extends Fragment {
     public TripItineraryFragment() {
     }
 
-    @Nullable
-    @Override
-    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        MainMenuActivity.removeNavBar();
-        return inflater.inflate(R.layout.fragment_trip_itinerary, container, false);
-    }
-
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        ButterKnife.bind(this, view);
-        legDetailsFragment = new LegDetailsFragment();
-        addLegButton.setText(R.string.add_leg);
+        Toast.makeText(getActivity().getApplicationContext(), "view created", Toast.LENGTH_SHORT).show();
+    }
+
+    @Override
+    public void loadPage() {
+        super.loadPage();
+        // If no trip attached (new trip is being created but not yet saved) then can't view legs.
         if (trip != null) {
             loadItinerary();
             addLegButton.setVisibility(View.VISIBLE); // only visible once a trip exists.
+            noLegs.setVisibility(View.GONE);
+        } else {
+            noLegs.setVisibility(View.VISIBLE);
         }
+
+        legDetailsFragment = new LegDetailsFragment();
+        addLegButton.setText(R.string.add_leg);
         getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.add_leg_container,
-                legDetailsFragment, "leg_list_fragment").commit();
-
-
-        addLegButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                // if leg details is not visible show, otherwise hide it.
-                if (addLegContainer.getVisibility() == View.GONE) {
-                    addLegContainer.setVisibility(View.VISIBLE);
-                } else {
-                    addLegContainer.setVisibility(View.GONE);
-                }
-            }
-        });
-
-
+                legDetailsFragment, "leg_details_fragment").commit();
     }
 
     public void loadItinerary() {
@@ -87,8 +73,18 @@ public class TripItineraryFragment extends Fragment {
         Log.d("tag", "leg fragment created");
     }
 
+
     public void setTrip(Trip trip) {
         this.trip = trip;
-        Log.d("tag", "trip has now been set");
     }
+
+    public Trip getTrip() {
+        return trip;
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+    }
+
 }

@@ -18,29 +18,27 @@ import uk.ac.qub.jmccambridge06.wetravel.Leg;
 import uk.ac.qub.jmccambridge06.wetravel.R;
 import uk.ac.qub.jmccambridge06.wetravel.Trip;
 
-public class LegItineraryFragment extends Fragment {
+public class LegItineraryFragment extends ItineraryFragment {
 
     //@BindView(R.id.trip_legs_list) RecyclerView legListRecycler;
     @BindView(R.id.leg_list_container) FrameLayout legListContainer;
     @BindView(R.id.add_leg_container) FrameLayout addLegContainer;
     @BindView(R.id.add_leg_button) Button addActivityButton;
-    @BindView(R.id.edit_leg_container) FrameLayout editLegContainer;
+
 
     ActivityListFragment activityListFragment;
     ActivityDetailsFragment activityDetailsFragment;
     LegDetailsFragment legDetailsFragment;
     Leg leg;
 
-    private Trip trip;
-
     /**
      * Constructor with leg argument
      * @param leg
      */
     public LegItineraryFragment(Leg leg) {
-        super();
+        super(leg);
         this.leg = leg;
-    }
+}
 
     @Nullable
     @Override
@@ -52,7 +50,13 @@ public class LegItineraryFragment extends Fragment {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        ButterKnife.bind(this, view);
+
+    }
+
+    @Override
+    public void loadPage() {
+        super.loadPage();
+
         //legDetailsFragment = new LegDetailsFragment();
 
         // Load the edit Leg details section
@@ -67,7 +71,7 @@ public class LegItineraryFragment extends Fragment {
                 activityDetailsFragment, "activities_details_fragment").commit();
 
         // Add the activities
-        //loadItinerary();
+        loadItinerary();
 
         // Add the add activity button
         addActivityButton.setText(R.string.add_activity);
@@ -83,14 +87,13 @@ public class LegItineraryFragment extends Fragment {
                 }
             }
         });
-
-
     }
 
+    @Override
     public void loadItinerary() {
-        activityListFragment = new ActivityListFragment();
+        activityListFragment = new ActivityListFragment(leg.getActivities());
         getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.leg_list_container,
-                activityListFragment, "leg_list_fragment").commit();
+                activityListFragment, "activity_list_fragment").commit();
         Log.d("tag", "activity list fragment created");
     }
 

@@ -38,9 +38,10 @@ public class Profile {
                 profileType);
     }
 
-    public Profile(int id, String name) {
+    public Profile(int id, String name, int profileType) {
         this.setUserId(id);
         this.setName(name);
+        this.profileType = profileType;
     }
 
     /**

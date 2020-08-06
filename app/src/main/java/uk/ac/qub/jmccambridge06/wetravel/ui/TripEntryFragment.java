@@ -18,20 +18,14 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.fragment.app.Fragment;
 
 import com.android.volley.VolleyError;
 import com.google.android.gms.common.api.Status;
-import com.google.android.gms.maps.model.LatLng;
 import com.google.android.libraries.places.api.Places;
 import com.google.android.libraries.places.api.model.Place;
-import com.google.android.libraries.places.api.model.RectangularBounds;
-import com.google.android.libraries.places.api.model.TypeFilter;
 import com.google.android.libraries.places.api.net.PlacesClient;
 import com.google.android.libraries.places.widget.Autocomplete;
 import com.google.android.libraries.places.widget.AutocompleteActivity;
-import com.google.android.libraries.places.widget.AutocompleteSupportFragment;
-import com.google.android.libraries.places.widget.listener.PlaceSelectionListener;
 import com.google.android.libraries.places.widget.model.AutocompleteActivityMode;
 
 import org.json.JSONObject;
@@ -50,9 +44,7 @@ import uk.ac.qub.jmccambridge06.wetravel.Trip;
 import uk.ac.qub.jmccambridge06.wetravel.network.FirebaseCallback;
 import uk.ac.qub.jmccambridge06.wetravel.network.JsonFetcher;
 import uk.ac.qub.jmccambridge06.wetravel.network.NetworkResultCallback;
-import uk.ac.qub.jmccambridge06.wetravel.network.routes;
 import uk.ac.qub.jmccambridge06.wetravel.utilities.DateTime;
-import uk.ac.qub.jmccambridge06.wetravel.utilities.EditTextDateClicker;
 import uk.ac.qub.jmccambridge06.wetravel.utilities.Locations;
 import uk.ac.qub.jmccambridge06.wetravel.utilities.ProfileTypes;
 
@@ -98,7 +90,7 @@ public abstract class TripEntryFragment extends DisplayFragment {
     protected Trip trip;
 
     NetworkResultCallback addAttendeeCallback;
-    NetworkResultCallback saveTripCallback;
+    NetworkResultCallback saveEntryCallback;
     NetworkResultCallback leaveTripCallback;
     FirebaseCallback tripImageCallback;
     JsonFetcher jsonFetcher;
@@ -151,7 +143,7 @@ public abstract class TripEntryFragment extends DisplayFragment {
         });
     }
 
-
+    protected abstract void sendData();
 
     public abstract void loadDetails();
 
@@ -176,7 +168,21 @@ public abstract class TripEntryFragment extends DisplayFragment {
     /**
      * Method to send data to the database.
      */
-    protected abstract void sendData();
+    protected void saveTripRequest() {
+        saveTripData();
+        jsonFetcher = new JsonFetcher(saveEntryCallback, getContext());
+        jsonFetcher.addParam("name", tripName.getText().toString());
+        jsonFetcher.addParam("startDate", DateTime.dateToMilliseconds(startDate.getText().toString()));
+        jsonFetcher.addParam("finishDate", DateTime.dateToMilliseconds(finishDate.getText().toString()));
+        jsonFetcher.addParam("description", description.getText().toString());
+        if (location.getTag()==null) {
+            jsonFetcher.addParam("locationID", "");
+            jsonFetcher.addParam("locationDetail", "");
+        } else {
+            jsonFetcher.addParam("locationID", location.getTag().toString());
+            jsonFetcher.addParam("locationDetail", location.getText().toString());
+        }
+    };
 
     protected abstract void saveTripData();
 
@@ -185,39 +191,9 @@ public abstract class TripEntryFragment extends DisplayFragment {
      */
     protected abstract void sendLeaveRequest();
 
-    /**
-     * Method to send attendee insertion to database. Each subclass must implement separately depending on whether for a trip, activity, note.
-     */
-    protected void sendAttendeeData() {
-        // Check to make sure not already in trip - checking the id captured in suggestions box
-        for (int userId : trip.getUserList().keySet()) {
-            if ((Integer)addAttendees.getTag() == userId) {
-                Toast.makeText(getActivity().getApplicationContext(), R.string.error_friend_already_added, Toast.LENGTH_SHORT).show();
-                return;
-            }
-        }
-        // If not on trip then send data to database
-        saveAttendee();
-        jsonFetcher = new JsonFetcher(addAttendeeCallback, getContext());
-        jsonFetcher.addParam("user", addAttendees.getTag().toString());
+    protected abstract void sendAttendeeData();
 
-    };
-
-    protected void saveAttendee() {
-        addAttendeeCallback = new NetworkResultCallback() {
-            @Override
-            public void notifySuccess(JSONObject response) {
-                // Update the phone display to reflect new attendee in attendees list
-                trip.getUserList().put((Integer)addAttendees.getTag(), addAttendees.getText().toString());
-                attendees.setText(addUsers(trip.getUserList().values()));
-            }
-
-            @Override
-            public void notifyError(VolleyError error) {
-                Toast.makeText(getActivity().getApplicationContext(), R.string.error_attendee, Toast.LENGTH_SHORT).show();
-            }
-        };
-    }
+    protected abstract void saveAttendee();
 
     /**
      * Prepare call backs for leaving a trip or activity.
@@ -257,16 +233,6 @@ public abstract class TripEntryFragment extends DisplayFragment {
             count++;
         }
         return usersString;
-    }
-
-    @Override
-    public void onDestroy() {
-        super.onDestroy();
-    }
-
-    @Override
-    public void onCreate(@Nullable Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
     }
 
     public void setTrip(Trip trip) {

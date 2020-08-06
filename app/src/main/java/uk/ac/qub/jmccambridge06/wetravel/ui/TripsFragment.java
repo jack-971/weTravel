@@ -67,7 +67,7 @@ public class TripsFragment extends Fragment {
         addTrip.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                ((MainMenuActivity) getActivity()).setFragment(new TripFragment(), "user_add_trip_fragment", true);
+                ((MainMenuActivity) getActivity()).setFragment(new TripFragment(), "user_trip_fragment", true);
             }
         });
 

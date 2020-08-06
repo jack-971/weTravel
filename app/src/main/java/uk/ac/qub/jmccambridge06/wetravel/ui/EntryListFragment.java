@@ -34,9 +34,10 @@ public abstract class EntryListFragment extends Fragment {
 
     public String logtag;
     public ArrayList list;
-    private RecyclerView recyclerView;
+    protected RecyclerView recyclerView;
     protected RecyclerView.Adapter adapter;
-    private RecyclerView.LayoutManager layoutManager;
+    protected RecyclerView.LayoutManager layoutManager;
+
 
     public EntryListFragment() {
 

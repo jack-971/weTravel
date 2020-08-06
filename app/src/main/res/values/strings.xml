@@ -91,8 +91,9 @@
     <string name="error_date_before">Please ensure finish date is after start date</string>
     <string name="error_attendee">Error adding friend, please try again</string>
     <string name="error_no_trips">No trips to display!</string>
+    <string name="no_legs">Create trip to build itinerary</string>
     <!--Success-->
-    <string name="trip_saved">Trip Saved</string>
+    <string name="entry_saved">Entry Saved</string>
 
 
     <!--Settings-->

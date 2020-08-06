@@ -14,7 +14,10 @@ public final class routes {
     private static String settings = "settings/";
     private static String trips = "trips/";
     private static String trip = "trip/";
+    private static String leg = "leg/";
+    private static String activity = "activity/";
     private static String addUserToTrip = "user/";
+    private static String leaveTrip = "leave/";
 
     private static String placesAPI = "https://maps.googleapis.com/maps/api/geocode/json?place_id=";
 
@@ -62,11 +65,33 @@ public final class routes {
         return mainUrl + trips + trip + userId+"?trip="+tripId;
     }
 
+    public static String leaveTrip(int userId, int id, String type) {
+        return mainUrl + trips + leaveTrip + userId+"?id="+id+"&type="+type;
+    }
+
     /**
      * Get route to save a trips details
      */
     public static String saveTripDetails(int id) {
         return mainUrl + trips + trip + id;
+    }
+
+    /**
+     * Get route to save a legs details
+     * @param id
+     * @return
+     */
+    public static String saveLegDetails(int id) {
+        return mainUrl + trips + leg + id;
+    }
+
+    /**
+     * Get route to save an activities details
+     * @param id
+     * @return
+     */
+    public static String saveActivityDetails(int id) {
+        return mainUrl + trips + activity + id;
     }
 
     /**

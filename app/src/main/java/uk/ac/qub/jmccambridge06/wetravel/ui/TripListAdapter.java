@@ -57,8 +57,8 @@ public class TripListAdapter extends EntryListAdapter {
     }
 
     @Override
-    protected void checkOther(ItineraryItem current, EntryListViewHolder holder) {
-        super.checkOther(current, holder);
+    protected void checkDisplay(ItineraryItem current, EntryListViewHolder holder) {
+        super.checkDisplay(current, holder);
         Trip trip = (Trip) current;
         try {
             Glide.with(holder.itemView)
@@ -75,7 +75,7 @@ public class TripListAdapter extends EntryListAdapter {
                 TripFragment tripFrag = new TripFragment();
                 tripFrag.setTrip(trip);
                 MainMenuActivity.fragmentManager.beginTransaction().replace(R.id.main_screen_container,
-                        tripFrag).addToBackStack(null).commit();
+                        tripFrag, "user_trip_fragment").addToBackStack(null).commit();
             }
         });
         holder.card.setVisibility(View.VISIBLE);

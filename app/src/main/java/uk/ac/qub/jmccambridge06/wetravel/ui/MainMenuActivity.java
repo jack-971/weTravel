@@ -88,7 +88,8 @@ public class MainMenuActivity extends AppCompatActivity implements NavigationVie
         setContentView(R.layout.activity_main);
 
         // create the user account
-        setUserAccount(new UserAccount(1));
+        setUserAccount(new UserAccount(1
+        ));
 
         // load the user profile
         loadProfileCallback(); // loads the callback so when volley requets completes this method is executed.
@@ -349,11 +350,4 @@ public class MainMenuActivity extends AppCompatActivity implements NavigationVie
         this.userAccount = userAccount;
     }
 
-    public Trip getDisplayedTrip() {
-        return displayedTrip;
-    }
-
-    public void setDisplayedTrip(Trip displayedTrip) {
-        this.displayedTrip = displayedTrip;
-    }
 }

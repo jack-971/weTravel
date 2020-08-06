@@ -23,7 +23,6 @@ import java.util.UUID;
 
 import uk.ac.qub.jmccambridge06.wetravel.R;
 import uk.ac.qub.jmccambridge06.wetravel.Trip;
-import uk.ac.qub.jmccambridge06.wetravel.TripLocation;
 import uk.ac.qub.jmccambridge06.wetravel.network.FirebaseCallback;
 import uk.ac.qub.jmccambridge06.wetravel.network.FirebaseLink;
 import uk.ac.qub.jmccambridge06.wetravel.network.JsonFetcher;
@@ -159,21 +158,9 @@ public class TripDetailsFragment extends TripEntryFragment {
         }
     }
 
-    /**
-     * Prepares and sends the volley request to save the trip data.
-     */
-    private void saveTripRequest() {
-        saveTripData();
-        jsonFetcher = new JsonFetcher(saveTripCallback, getContext());
-        jsonFetcher.addParam("name", tripName.getText().toString());
-        jsonFetcher.addParam("startDate", DateTime.dateToMilliseconds(startDate.getText().toString()));
-        jsonFetcher.addParam("finishDate", DateTime.dateToMilliseconds(finishDate.getText().toString()));
-        jsonFetcher.addParam("description", description.getText().toString());
-        if (location.getTag()==null) {
-            jsonFetcher.addParam("location", "");
-        } else {
-            jsonFetcher.addParam("location", location.getTag().toString());
-        }
+    @Override
+    protected void saveTripRequest() {
+        super.saveTripRequest();
 
         // if there is no exisitng trip then must use post request to create new trip.
         if (trip == null) {
@@ -181,29 +168,58 @@ public class TripDetailsFragment extends TripEntryFragment {
             jsonFetcher.postDataVolley(routes.saveTripDetails(((MainMenuActivity)getActivity()).getUserAccount().getUserId()));
         } else {
             jsonFetcher.addParam("picture", trip.getTripPicture());
+            jsonFetcher.addParam("type", "trip");
             jsonFetcher.patchData(routes.saveTripDetails(trip.getEntryId()));
         }
+
 
     }
 
     @Override
     protected void sendAttendeeData() {
-        super.sendAttendeeData();
+        // Check to make sure not already in trip - checking the id captured in suggestions box
+        for (int userId : trip.getUserList().keySet()) {
+            if ((Integer)addAttendees.getTag() == userId) {
+                Toast.makeText(getActivity().getApplicationContext(), R.string.error_friend_already_added, Toast.LENGTH_SHORT).show();
+                return;
+            }
+        }
+        // If not on trip then send data to database
+        saveAttendee();
+        jsonFetcher = new JsonFetcher(addAttendeeCallback, getContext());
+        jsonFetcher.addParam("user", addAttendees.getTag().toString());
+        jsonFetcher.addParam("type", "trip");
         jsonFetcher.postDataVolley(routes.addUserToTrip(trip.getEntryId()));
+    }
+
+    protected void saveAttendee() {
+        addAttendeeCallback = new NetworkResultCallback() {
+            @Override
+            public void notifySuccess(JSONObject response) {
+                // Update the phone display to reflect new attendee in attendees list
+                trip.getUserList().put((Integer)addAttendees.getTag(), addAttendees.getText().toString());
+                attendees.setText(addUsers(trip.getUserList().values()));
+            }
+
+            @Override
+            public void notifyError(VolleyError error) {
+                Toast.makeText(getActivity().getApplicationContext(), R.string.error_attendee, Toast.LENGTH_SHORT).show();
+            }
+        };
     }
 
     @Override
     protected void sendLeaveRequest() {
         leave();
         jsonFetcher = new JsonFetcher(leaveTripCallback, getContext());
-        jsonFetcher.deleteData(routes.getTrip(((MainMenuActivity)getActivity()).getUserAccount().getUserId(), trip.getEntryId()));
+        jsonFetcher.deleteData(routes.leaveTrip(((MainMenuActivity)getActivity()).getUserAccount().getUserId(), trip.getEntryId(), "trip"));
     }
 
 
 
     @Override
     protected void saveTripData() {
-        saveTripCallback = new NetworkResultCallback() {
+        saveEntryCallback = new NetworkResultCallback() {
             @Override
             public void notifySuccess(JSONObject response) {
                 // if there is no existing trip, now it has been saved to database can create a trip instance.
@@ -226,9 +242,10 @@ public class TripDetailsFragment extends TripEntryFragment {
                         // Load the trip into the other fragments.
                         TripFragment tripFragment = (TripFragment) getParentFragment();
                         tripFragment.setTrip(trip);
+                        //tripFragment.tripItineraryFragment = new TripItineraryFragment(trip);
                         tripFragment.tripItineraryFragment.setTrip(trip);
+                        tripFragment.tripItineraryFragment.loadPage();
                         tripFragment.tripMapFragment.setTrip(trip);
-                        tripFragment.tripItineraryFragment.loadItinerary();
                     } catch (Exception e) {
                         e.printStackTrace();
                     }
@@ -241,12 +258,12 @@ public class TripDetailsFragment extends TripEntryFragment {
                     trip.setDescription(description.getText().toString());
                     trip.setTripPicture(getMainImageString());
                     if (trip.getLocation().getId() == null) {
-                        trip.setLocation(null);
+                        trip.setLocation(null, null);
                     } else {
-                        trip.setLocation(location.getTag().toString());
+                        trip.setLocation(location.getTag().toString(), location.getText().toString());
                     }
                 }
-                Toast.makeText(getActivity().getApplicationContext(), R.string.trip_saved, Toast.LENGTH_SHORT).show();
+                Toast.makeText(getActivity().getApplicationContext(), R.string.entry_saved, Toast.LENGTH_SHORT).show();
             }
 
             @Override
