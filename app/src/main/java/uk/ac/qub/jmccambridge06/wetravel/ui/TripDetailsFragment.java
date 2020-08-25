@@ -27,12 +27,15 @@ import uk.ac.qub.jmccambridge06.wetravel.network.FirebaseCallback;
 import uk.ac.qub.jmccambridge06.wetravel.network.FirebaseLink;
 import uk.ac.qub.jmccambridge06.wetravel.network.JsonFetcher;
 import uk.ac.qub.jmccambridge06.wetravel.network.NetworkResultCallback;
+import uk.ac.qub.jmccambridge06.wetravel.network.StatusTypesDb;
 import uk.ac.qub.jmccambridge06.wetravel.network.routes;
 import uk.ac.qub.jmccambridge06.wetravel.utilities.DateTime;
 import uk.ac.qub.jmccambridge06.wetravel.utilities.EditTextDateClicker;
 import uk.ac.qub.jmccambridge06.wetravel.utilities.ImageUtility;
 
 public class TripDetailsFragment extends TripEntryFragment {
+
+    NetworkResultCallback activeTripCallback;
 
     /**
      * Constructor with trip argument - used for showing existing trips
@@ -65,12 +68,29 @@ public class TripDetailsFragment extends TripEntryFragment {
         // Set visibility for all components.
         tripTimeView.setVisibility(View.GONE);
         tripNotesView.setVisibility(View.GONE);
-        tripReviewView.setVisibility(View.GONE);
-        tripRatingView.setVisibility(View.GONE);
-        tripAttachmentsView.setVisibility(View.GONE);
         addAllCheckBox.setVisibility(View.GONE);
-        saveButton.setVisibility(View.VISIBLE);
+        tripAttachmentsView.setVisibility(View.GONE);
         editButton.setVisibility(View.INVISIBLE);
+        tripRatingView.setVisibility(View.GONE);
+
+        if (trip == null) {
+            tripReviewView.setVisibility(View.GONE);
+            saveButton.setVisibility(View.VISIBLE);
+        } else if (trip.getStatus().equalsIgnoreCase("planned")) {
+            makeActiveButton.setVisibility(View.VISIBLE);
+            tripReviewView.setVisibility(View.GONE);
+            saveButton.setVisibility(View.VISIBLE);
+        } else if (trip.getStatus().equalsIgnoreCase("active")) {
+            saveButton.setVisibility(View.VISIBLE);
+            leaveButton.setVisibility(View.GONE);
+            makeActiveButton.setText(R.string.complete);
+            makeActiveButton.setVisibility(View.VISIBLE);
+            tripAddAttendeesView.setVisibility(View.GONE);
+            leaveButton.setVisibility(View.GONE);
+        } else {
+            displayComplete();
+
+        }
 
         // execute following code if trip is in editing phase. else it is a new trip being created so placeholders should be used. If new trip
         // dates in calendar picker automated to null otherwise come from the database values.
@@ -103,14 +123,18 @@ public class TripDetailsFragment extends TripEntryFragment {
     @Override
     public void loadDetails() {
        tripName.setText(trip.getEntryName());
+       completeTripName.setText(trip.getEntryName());
        if (trip.getStartDate() != null) {
            startDate.setText(DateTime.formatDate(trip.getStartDate()));
+           completeDateStart.setText(DateTime.formatDate(trip.getStartDate()));
        }
        if (trip.getEndDate() != null) {
            finishDate.setText(DateTime.formatDate(trip.getEndDate()));
+           completeDateFinish.setText(DateTime.formatDate(trip.getEndDate()));
        }
        if (trip.getDescription() != null) {
            description.setText(trip.getDescription());
+           completeDescription.setText(trip.getDescription());
        }
        if (trip.getTripPicture() != null) {
            tripPicture.setText(R.string.trip_picture_change);
@@ -119,13 +143,38 @@ public class TripDetailsFragment extends TripEntryFragment {
        if (trip.getLocation() !=null) {
            location.setText(trip.getLocation().getName());
            location.setTag(trip.getLocation().getId());
+           completeTripLocation.setText(trip.getLocation().getName());
+       }
+       if (trip.getReview() != null) {
+           review.setText(trip.getReview());
+           completeReview.setText(trip.getReview());
        }
 
         // add users to a string to add to attendees text view.
         attendees.setText(addUsers(trip.getUserList().values()));
+        completeAttendees.setText(addUsers(trip.getUserList().values()));
         addAttendeesSetUp(((MainMenuActivity)getActivity()).getUserAccount().getFriendsList());
 
+        makeActiveButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                makeActive();
+                JsonFetcher jsonFetcher = new JsonFetcher(activeTripCallback, getContext());
+                jsonFetcher.addParam("trip", String.valueOf(trip.getEntryId()));
+                String status;
+                if (trip.getStatus().equalsIgnoreCase("planned")) {
+                    status = String.valueOf(StatusTypesDb.getActive());
+                } else {
+                    status = String.valueOf(StatusTypesDb.getComplete());
+                }
+                jsonFetcher.addParam("status", status);
+                jsonFetcher.patchData(routes.patchTripStatus(((MainMenuActivity)getActivity()).getUserAccount().getUserId()));
+            }
+        });
+
     }
+
+
 
     /**
      * Activity result for when profile picture is clicked. Chosen image is saved as bitmap and saved to firebase.
@@ -161,15 +210,16 @@ public class TripDetailsFragment extends TripEntryFragment {
     @Override
     protected void saveTripRequest() {
         super.saveTripRequest();
-
+        jsonFetcher.addParam("type", "trip");
+        jsonFetcher.addParam("status", trip.getStatus());
         // if there is no exisitng trip then must use post request to create new trip.
         if (trip == null) {
-            jsonFetcher.addParam("picture", getMainImageString());
+            jsonFetcher.addParam("Picture", getMainImageString());
             jsonFetcher.postDataVolley(routes.saveTripDetails(((MainMenuActivity)getActivity()).getUserAccount().getUserId()));
         } else {
-            jsonFetcher.addParam("picture", trip.getTripPicture());
-            jsonFetcher.addParam("type", "trip");
-            jsonFetcher.patchData(routes.saveTripDetails(trip.getEntryId()));
+            jsonFetcher.addParam("Picture", trip.getTripPicture());
+            jsonFetcher.addParam("tripId", String.valueOf(trip.getEntryId()));
+            jsonFetcher.patchData(routes.saveTripDetails(((MainMenuActivity)getActivity()).getUserAccount().getUserId()));
         }
 
 
@@ -285,7 +335,7 @@ public class TripDetailsFragment extends TripEntryFragment {
 
             @Override
             public void notifyError(VolleyError error) {
-                Toast.makeText(getActivity().getApplicationContext(), "Error - please try again", Toast.LENGTH_SHORT).show();
+                Toast.makeText(getActivity().getApplicationContext(), R.string.error, Toast.LENGTH_SHORT).show();
             }
         };
     }
@@ -308,6 +358,30 @@ public class TripDetailsFragment extends TripEntryFragment {
             public void notifyError(Exception error) {
                 error.printStackTrace();
                 Toast.makeText(getActivity().getApplicationContext(), R.string.error_save, Toast.LENGTH_SHORT).show();
+            }
+        };
+    }
+
+    protected void makeActive() {
+        activeTripCallback = new NetworkResultCallback() {
+            @Override
+            public void notifySuccess(JSONObject response) {
+                String message;
+                if (trip.getStatus().equalsIgnoreCase("planned")) {
+                    message = getResources().getString(R.string.active_trip);
+                    trip.setStatus("active");
+                    makeActiveButton.setText(R.string.complete);
+                } else {
+                    message = getResources().getString(R.string.trip_completed);
+                    trip.setStatus("complete");
+                    getActivity().getSupportFragmentManager().popBackStack();
+                }
+                Toast.makeText(getActivity().getApplicationContext(), message, Toast.LENGTH_SHORT).show();
+            }
+
+            @Override
+            public void notifyError(VolleyError error) {
+                Toast.makeText(getActivity().getApplicationContext(), R.string.error, Toast.LENGTH_SHORT).show();
             }
         };
     }

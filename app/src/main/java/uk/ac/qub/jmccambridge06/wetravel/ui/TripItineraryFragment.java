@@ -45,7 +45,6 @@ public class TripItineraryFragment extends ItineraryFragment {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        Toast.makeText(getActivity().getApplicationContext(), "view created", Toast.LENGTH_SHORT).show();
     }
 
     @Override
@@ -54,16 +53,21 @@ public class TripItineraryFragment extends ItineraryFragment {
         // If no trip attached (new trip is being created but not yet saved) then can't view legs.
         if (trip != null) {
             loadItinerary();
-            addLegButton.setVisibility(View.VISIBLE); // only visible once a trip exists.
+            if (!trip.getStatus().equalsIgnoreCase("complete")) {
+                legDetailsFragment = new LegDetailsFragment();
+                addLegButton.setText(R.string.add_leg);
+                getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.add_leg_container,
+                        legDetailsFragment, "leg_details_fragment").commit();
+                addLegButton.setVisibility(View.VISIBLE); // only visible once a trip exists.
+            }
+
             noLegs.setVisibility(View.GONE);
         } else {
             noLegs.setVisibility(View.VISIBLE);
         }
 
-        legDetailsFragment = new LegDetailsFragment();
-        addLegButton.setText(R.string.add_leg);
-        getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.add_leg_container,
-                legDetailsFragment, "leg_details_fragment").commit();
+
+
     }
 
     public void loadItinerary() {

@@ -10,6 +10,7 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.Locale;
 
 public class DateTime extends Date{
 
@@ -110,6 +111,13 @@ public class DateTime extends Date{
                 return false;
             }
         }
+    }
+
+    public static String todaysDate() {
+        Date date = Calendar.getInstance().getTime();
+        SimpleDateFormat format = new SimpleDateFormat("dd/MM/yy", Locale.getDefault());
+        String formattedDate = format.format(date);
+        return formattedDate;
     }
 
 

@@ -36,6 +36,16 @@
             android:paddingTop="0dp"
             android:hint="@string/trip_name_hint"/>
 
+        <TextView
+            android:id="@+id/complete_trip_name"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="@dimen/major_text"
+            android:layout_toRightOf="@id/trip_name"
+            android:paddingBottom="5dp"
+            android:paddingTop="0dp"
+            android:visibility="gone"/>
+
     </RelativeLayout>
 
     <RelativeLayout
@@ -99,6 +109,16 @@
         android:clickable="true"
         android:focusable="false"/>
 
+        <TextView
+            android:id="@+id/complete_trip_date_start"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="@dimen/major_text"
+            android:layout_toRightOf="@id/trip_date_start"
+            android:paddingBottom="5dp"
+            android:paddingTop="0dp"
+            android:visibility="gone"/>
+
     <TextView
         android:textStyle="bold"
         android:layout_marginLeft="@dimen/text_margins"
@@ -124,6 +144,16 @@
         android:editable="false"
         android:clickable="true"
         android:focusable="false"/>
+
+        <TextView
+            android:id="@+id/complete_trip_date_finish"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="@dimen/major_text"
+            android:layout_toRightOf="@id/trip_date_finish"
+            android:paddingBottom="5dp"
+            android:paddingTop="0dp"
+            android:visibility="gone"/>
 
 </RelativeLayout>
 
@@ -209,6 +239,17 @@
             android:hint="@string/trip_description_hint"
             android:textStyle="italic"/>
 
+        <TextView
+            android:id="@+id/complete_trip_description"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="@dimen/major_text"
+            android:layout_below="@id/trip_description"
+            android:paddingBottom="5dp"
+            android:paddingLeft="0dp"
+            android:paddingTop="0dp"
+            android:visibility="gone"/>
+
     </RelativeLayout>
 
     <RelativeLayout
@@ -239,6 +280,16 @@
             android:paddingTop="0dp"
             android:hint="@string/trip_location_hint"
             android:focusable="false"/>
+
+        <TextView
+            android:id="@+id/complete_trip_location"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="@dimen/major_text"
+            android:layout_below="@id/trip_location"
+            android:paddingBottom="5dp"
+            android:paddingTop="0dp"
+            android:visibility="gone"/>
 
     </RelativeLayout>
 
@@ -271,6 +322,17 @@
             android:paddingTop="0dp"
             android:hint="@string/trip_notes_hint"/>
 
+        <TextView
+            android:textStyle="italic"
+            android:id="@+id/complete_notes"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="@dimen/major_text"
+            android:layout_toRightOf="@id/trip_notes"
+            android:paddingBottom="5dp"
+            android:paddingTop="0dp"
+            android:visibility="gone"/>
+
     </RelativeLayout>
 
     <RelativeLayout
@@ -299,6 +361,16 @@
             android:paddingBottom="5dp"
             android:paddingTop="0dp"
             android:hint="@string/trip_add_attendee"/>
+
+        <TextView
+            android:id="@+id/complete_attendees_list"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="@dimen/major_text"
+            android:layout_below="@id/trip_attendee"
+            android:paddingBottom="5dp"
+            android:paddingTop="0dp"
+            android:visibility="gone"/>
 
     </RelativeLayout>
 
@@ -399,6 +471,16 @@
             android:paddingTop="0dp"
             android:hint="@string/trip_review_text_hint"/>
 
+        <TextView
+            android:id="@+id/complete_review_text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="@dimen/major_text"
+            android:layout_toRightOf="@id/trip_review_text"
+            android:paddingBottom="5dp"
+            android:paddingTop="0dp"
+            android:visibility="gone"/>
+
     </RelativeLayout>
 
     <RelativeLayout
@@ -453,6 +535,7 @@
         android:textAllCaps="false"
         android:background="@color/colorAccent"
         android:layout_marginTop="@dimen/text_margins"
+        android:layout_marginBottom="@dimen/_8sdp"
         android:visibility="visible"/>
 
     <Button
@@ -468,6 +551,20 @@
         android:background="@color/colorAccent"
         android:layout_marginTop="@dimen/text_margins"
         android:visibility="visible"/>
+
+    <Button
+        android:id="@+id/trip_active_button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textSize="@dimen/major_text"
+        android:layout_below="@id/trip_attachments_view"
+        android:layout_toRightOf="@id/trip_leave_button"
+        android:layout_marginLeft="@dimen/text_margins"
+        android:text="@string/active"
+        android:textAllCaps="false"
+        android:background="@color/colorAccent"
+        android:layout_marginTop="@dimen/text_margins"
+        android:visibility="gone"/>
 
 
 

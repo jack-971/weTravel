@@ -45,12 +45,6 @@ public class TripListFragment extends ListFragment {
     void getData() {
         Log.i(logtag, "getting data");
         jsonFetcher = new JsonFetcher(getCallback,getContext());
-        if (status.equals("planned")) {
-            jsonFetcher.addParam("status", "planned");
-            Log.i(logtag, "planned param added");
-        } else {
-            jsonFetcher.addParam("status", "complete");
-        }
         jsonFetcher.getData(routes.getTrips(profile.getUserId(), status));
     }
 

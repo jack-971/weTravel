@@ -65,7 +65,7 @@ public abstract class TripEntryFragment extends DisplayFragment {
     @BindView(R.id.edit_trip_description) EditText description;
     @BindView(R.id.trip_location_view) View tripLocationView;
     @BindView(R.id.edit_trip_location) TextView location;
-    //@BindView(R.id.location_auto) AutocompleteSupportFragment locationAuto;
+
     @BindView(R.id.trip_notes_view) View tripNotesView;
     @BindView(R.id.trip_edit_notes) EditText notes;
     @BindView(R.id.trip_attendees_view) View tripAttendeesView;
@@ -78,6 +78,16 @@ public abstract class TripEntryFragment extends DisplayFragment {
     @BindView(R.id.edit_review_text) EditText review;
     @BindView(R.id.trip_attachments_view) View tripAttachmentsView;
     @BindView(R.id.edit_attachment_text) EditText attachments;
+    @BindView(R.id.trip_active_button) Button makeActiveButton;
+
+    @BindView(R.id.complete_trip_name) TextView completeTripName;
+    @BindView(R.id.complete_trip_date_start) TextView completeDateStart;
+    @BindView(R.id.complete_trip_date_finish) TextView completeDateFinish;
+    @BindView(R.id.complete_trip_description) TextView completeDescription;
+    @BindView(R.id.complete_trip_location) TextView completeTripLocation;
+    @BindView(R.id.complete_attendees_list) TextView completeAttendees;
+    @BindView(R.id.complete_notes) TextView completeNotes;
+    @BindView(R.id.complete_review_text) TextView completeReview;
 
     // All buttons
     @BindView(R.id.trip_edit_button) Button editButton;
@@ -143,6 +153,32 @@ public abstract class TripEntryFragment extends DisplayFragment {
         });
     }
 
+    /**
+     * Changes all the textboxes to edit text boxes
+     */
+    protected void displayComplete() {
+        tripName.setVisibility(View.GONE);
+        startDate.setVisibility(View.INVISIBLE);
+        finishDate.setVisibility(View.GONE);
+        description.setVisibility(View.GONE);
+        location.setVisibility(View.GONE);
+        notes.setVisibility(View.GONE);
+        attendees.setVisibility(View.GONE);
+        review.setVisibility(View.GONE);
+        completeTripName.setVisibility(View.VISIBLE);
+        completeDateStart.setVisibility(View.VISIBLE);
+        completeDateFinish.setVisibility(View.VISIBLE);
+        completeDescription.setVisibility(View.VISIBLE);
+        completeNotes.setVisibility(View.VISIBLE);
+        completeAttendees.setVisibility(View.VISIBLE);
+        tripAddAttendeesView.setVisibility(View.GONE);
+        completeReview.setVisibility(View.VISIBLE);
+        leaveButton.setVisibility(View.GONE);
+        saveButton.setVisibility(View.GONE);
+        makeActiveButton.setVisibility(View.GONE);
+        editButton.setVisibility(View.GONE);
+    }
+
     protected abstract void sendData();
 
     public abstract void loadDetails();
@@ -171,16 +207,17 @@ public abstract class TripEntryFragment extends DisplayFragment {
     protected void saveTripRequest() {
         saveTripData();
         jsonFetcher = new JsonFetcher(saveEntryCallback, getContext());
-        jsonFetcher.addParam("name", tripName.getText().toString());
-        jsonFetcher.addParam("startDate", DateTime.dateToMilliseconds(startDate.getText().toString()));
-        jsonFetcher.addParam("finishDate", DateTime.dateToMilliseconds(finishDate.getText().toString()));
-        jsonFetcher.addParam("description", description.getText().toString());
+        jsonFetcher.addParam("Name", tripName.getText().toString());
+        jsonFetcher.addParam("DateStart", DateTime.dateToMilliseconds(startDate.getText().toString()));
+        jsonFetcher.addParam("DateFinish", DateTime.dateToMilliseconds(finishDate.getText().toString()));
+        jsonFetcher.addParam("Description", description.getText().toString());
+        jsonFetcher.addParam("Review", review.getText().toString());
         if (location.getTag()==null) {
-            jsonFetcher.addParam("locationID", "");
-            jsonFetcher.addParam("locationDetail", "");
+            jsonFetcher.addParam("LocationID", "");
+            jsonFetcher.addParam("LocationDetail", "");
         } else {
-            jsonFetcher.addParam("locationID", location.getTag().toString());
-            jsonFetcher.addParam("locationDetail", location.getText().toString());
+            jsonFetcher.addParam("LocationID", location.getTag().toString());
+            jsonFetcher.addParam("LocationDetail", location.getText().toString());
         }
     };
 

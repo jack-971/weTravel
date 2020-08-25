@@ -83,6 +83,13 @@
     <string name="edit_trip">Edit</string>
     <string name="add_leg">Add Leg</string>
     <string name="add_activity">Add Activity</string>
+    <string name="active">Active</string>
+    <string name="complete">Complete</string>
+    <string name="active_trip">Trip now active</string>
+    <string name="select_leg">Select Leg:</string>
+    <string name="select_location_text">Select Location:</string>
+    <string name="quick_add_title">Add Activity From Location</string>
+    <string name="trip_completed">Trip Completed</string>
     <!--Errors-->
     <string name="error_select_friend_dropdown">Please select friend from dropdown list to add</string>
     <string name="error_friend_already_added">Friend already added!</string>
@@ -92,6 +99,9 @@
     <string name="error_attendee">Error adding friend, please try again</string>
     <string name="error_no_trips">No trips to display!</string>
     <string name="no_legs">Create trip to build itinerary</string>
+    <string name="no_active">You do not have an active trip!</string>
+    <string name="error">Error - please try again!</string>;
+    <string name="no_gps">Location services must be switched on for quick add!</string>
     <!--Success-->
     <string name="entry_saved">Entry Saved</string>
 
@@ -109,6 +119,14 @@
 
     <string name="submit">Submit</string>
     <string name="cancel">Cancel</string>
+
+    <string name="google_maps_key" templateMergeStrategy="preserve" translatable="false">AIzaSyACeTakfYCAWo-qWFcLg_w5bk-KpOj9jt8</string>
+
+    <!--login-->
+    <string name="username">Username</string>
+    <string name="password">Password</string>
+    <string name="login">Login</string>
+    <string name="signup">Signup here</string>
 
 
 

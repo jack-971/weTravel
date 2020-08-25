@@ -21,6 +21,10 @@ public class Activity extends ItineraryItem {
         this.setAttachments((activity.getString("Attachments").equals("null")) ? null : activity.getString("Attachments"));
     }
 
+    public Activity() {
+
+    }
+
     public String getNotes() {
         return notes;
     }

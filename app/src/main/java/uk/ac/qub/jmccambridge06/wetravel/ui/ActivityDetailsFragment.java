@@ -17,8 +17,10 @@ import java.util.Date;
 
 import uk.ac.qub.jmccambridge06.wetravel.Activity;
 import uk.ac.qub.jmccambridge06.wetravel.Leg;
+import uk.ac.qub.jmccambridge06.wetravel.MyApplication;
 import uk.ac.qub.jmccambridge06.wetravel.Profile;
 import uk.ac.qub.jmccambridge06.wetravel.R;
+import uk.ac.qub.jmccambridge06.wetravel.TripLocation;
 import uk.ac.qub.jmccambridge06.wetravel.network.JsonFetcher;
 import uk.ac.qub.jmccambridge06.wetravel.network.NetworkResultCallback;
 import uk.ac.qub.jmccambridge06.wetravel.network.routes;
@@ -29,6 +31,8 @@ public class ActivityDetailsFragment extends TripEntryFragment {
 
     Activity activity;
     private Leg leg;
+    private TripLocation quickAddLocation;
+    boolean quickAdd;
 
     /**
      * Constructor with leg argument - used for showing existing legs
@@ -37,13 +41,14 @@ public class ActivityDetailsFragment extends TripEntryFragment {
     public ActivityDetailsFragment(Activity activity) {
         super();
         this.activity = activity;
+        this.quickAdd = false;
     }
 
     /**
      * Default constructor used for creating new legs
      */
     public ActivityDetailsFragment() {
-
+        this.quickAdd = false;
     }
 
     @Override
@@ -54,50 +59,73 @@ public class ActivityDetailsFragment extends TripEntryFragment {
         tripPictureView.setVisibility(View.GONE);
         tripTimeView.setVisibility(View.GONE);
         tripRatingView.setVisibility(View.GONE);
-        tripReviewView.setVisibility(View.GONE);
 
         Date initialiseStartDate = null;
         Date initialiseFinishDate = null;
 
-        LegItineraryFragment legItineraryFragment = (LegItineraryFragment) ((MainMenuActivity)getActivity()).getSupportFragmentManager().findFragmentByTag("leg_itinerary_fragment");
-        leg = legItineraryFragment.leg;
+        if (quickAdd == false) {
+            LegItineraryFragment legItineraryFragment = (LegItineraryFragment) ((MainMenuActivity)getActivity()).getSupportFragmentManager().findFragmentByTag("leg_itinerary_fragment");
+            leg = legItineraryFragment.leg;
+        }
+
         if (activity != null) {
             initialiseStartDate=activity.getStartDate();
             initialiseFinishDate=activity.getEndDate();
             loadDetails();
+            if (activity.getStatus().equalsIgnoreCase("complete")) {
+                displayComplete();
+            }
         } else {
             tripAttendeesView.setVisibility(View.GONE);
             tripAddAttendeesView.setVisibility(View.GONE);
             leaveButton.setVisibility(View.GONE);
+            if (quickAdd == true) {
+                tripName.setText(quickAddLocation.getName());
+                location.setText(quickAddLocation.getVicinity());
+                location.setTag(quickAddLocation.getId());
+                startDate.setText(DateTime.todaysDate());
+                finishDate.setText(DateTime.todaysDate());
+            }
         }
 
         startDate.setOnClickListener(new EditTextDateClicker(getContext(), startDate, initialiseStartDate));
         finishDate.setOnClickListener(new EditTextDateClicker(getContext(), finishDate, initialiseFinishDate));
-
     }
 
     @Override
     public void loadDetails() {
         tripName.setText(activity.getEntryName());
+        completeTripName.setText(activity.getEntryName());
         if (activity.getStartDate() != null) {
             startDate.setText(DateTime.formatDate(activity.getStartDate()));
+            completeDateStart.setText(DateTime.formatDate(activity.getStartDate()));
         }
         if (activity.getEndDate() != null) {
             finishDate.setText(DateTime.formatDate(activity.getEndDate()));
+            completeDateFinish.setText(DateTime.formatDate(activity.getEndDate()));
         }
         if (activity.getDescription() != null) {
             description.setText(activity.getDescription());
+            completeDescription.setText(activity.getDescription());
         }
         if (activity.getLocation() !=null) {
             location.setText(activity.getLocation().getName());
+            completeTripLocation.setText(activity.getLocation().getName());
             location.setTag(activity.getLocation().getId());
         }
         if (activity.getNotes() != null) {
             notes.setText(activity.getNotes());
+            completeNotes.setText(activity.getNotes());
+        }
+
+        if (activity.getReview() != null) {
+            review.setText(activity.getReview());
+            completeReview.setText(activity.getReview());
         }
 
         // add users to a string to add to attendees text view.
         attendees.setText(addUsers(activity.getUserList().values()));
+        completeAttendees.setText(addUsers(activity.getUserList().values()));
         ArrayList<Profile> profiles = new ArrayList<>();
         // for each person on the trip, if they are not already in the user leg list then they can be added.
         for (int value : leg.getUserList().keySet()) {
@@ -118,12 +146,14 @@ public class ActivityDetailsFragment extends TripEntryFragment {
     protected void saveTripRequest() {
         super.saveTripRequest();
         jsonFetcher.addParam("leg", String.valueOf(leg.getEntryId()));
-        jsonFetcher.addParam("notes", notes.getText().toString());
+        jsonFetcher.addParam("Notes", notes.getText().toString());
+        jsonFetcher.addParam("type", "activity");
+        jsonFetcher.addParam("status", leg.getStatus()); // use leg so that if activity doesnt exist (is being created) then won't throw an exception
         if (activity == null) {
-            jsonFetcher.postDataVolley(routes.saveActivityDetails(((MainMenuActivity)getActivity()).getUserAccount().getUserId()));
+            jsonFetcher.postDataVolley(routes.saveTripDetails(((MainMenuActivity)getActivity()).getUserAccount().getUserId()));
         } else {
-            jsonFetcher.addParam("type", "activity");
-            jsonFetcher.patchData(routes.saveTripDetails(activity.getEntryId()));
+            jsonFetcher.addParam("activityId", String.valueOf(activity.getEntryId()));
+            jsonFetcher.patchData(routes.saveTripDetails(((MainMenuActivity)getActivity()).getUserAccount().getUserId()));
         }
     }
 
@@ -139,10 +169,16 @@ public class ActivityDetailsFragment extends TripEntryFragment {
                         JSONArray activityArray = response.getJSONArray("data");
                         JSONObject activityData = activityArray.getJSONObject(0);
                         Activity activity = new Activity(activityData, ((MainMenuActivity) getActivity()).getUserAccount().getProfile());
+                        activity.setStatus(leg.getStatus());
                         leg.addActivity(activity);
                         activity.setUserList(((MainMenuActivity)getActivity()).getUserAccount());
-                        ((MainMenuActivity) getActivity()).getSupportFragmentManager().beginTransaction().replace(R.id.main_screen_container,
-                                new ActivityDetailsFragment(activity)).addToBackStack(null).commit();
+                        if (quickAdd == false) {
+                            ((MainMenuActivity) getActivity()).getSupportFragmentManager().beginTransaction().replace(R.id.main_screen_container,
+                                    new ActivityDetailsFragment(activity)).addToBackStack(null).commit();
+                        } else {
+                            Toast.makeText(getActivity().getApplicationContext(), R.string.entry_saved, Toast.LENGTH_SHORT).show();
+                        }
+
                     } catch (Exception e) {
                         e.printStackTrace();
                     }
@@ -226,5 +262,14 @@ public class ActivityDetailsFragment extends TripEntryFragment {
                 Toast.makeText(getActivity().getApplicationContext(), "Error - please try again", Toast.LENGTH_SHORT).show();
             }
         };
+    }
+
+    /**
+     * Prepares the fragment for quick add activity by setting the autofill values carried through from the quick add dialog.
+     */
+    public void quickAdd(Leg leg, TripLocation tripLocation) {
+        quickAdd = true;
+        this.leg = leg;
+        this.quickAddLocation = tripLocation;
     }
 }

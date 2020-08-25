@@ -131,7 +131,7 @@ public class MainMenuActivity extends AppCompatActivity implements NavigationVie
             plannedTrips = new TripListFragment();
             plannedTrips.setStatus("planned");
             completedTrips = new TripListFragment();
-            completedTrips.setStatus("completed");
+            completedTrips.setStatus("complete");
             FragmentTransaction transaction = fragmentManager.beginTransaction();
             transaction.add(R.id.main_screen_container, newsfeedFragment, "newsfeed");
             transaction.add(R.id.main_screen_container, tripsFragment, "trips").hide(tripsFragment);

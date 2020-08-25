@@ -65,6 +65,7 @@ public class ProfileFragment extends DisplayFragment {
     @BindView(R.id.friend_accept) Button acceptFriendButton;
     @BindView(R.id.profile_body) View profileBody;
     @BindView(R.id.profile_private) View profilePrivateText;
+    @BindView(R.id.profile_trips_button) Button tripsButton;
     private Profile profile;
 
     // Arrays containing views to be shown or hidden in display or edit phase.
@@ -207,6 +208,14 @@ public class ProfileFragment extends DisplayFragment {
                             friendListFragment).addToBackStack(null).commit();
                 }
             });
+
+        tripsButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                ((MainMenuActivity)getActivity()).completedTrips.setProfile(profile);
+                ((MainMenuActivity) getActivity()).setFragment(((MainMenuActivity)getActivity()).completedTrips, "user_completed_trips_fragment", true);
+            }
+        });
 
         loadViews();
 

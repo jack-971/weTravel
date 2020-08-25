@@ -18,8 +18,10 @@ public final class routes {
     private static String activity = "activity/";
     private static String addUserToTrip = "user/";
     private static String leaveTrip = "leave/";
+    private static String status = "status/";
 
     private static String placesAPI = "https://maps.googleapis.com/maps/api/geocode/json?place_id=";
+    private static String locationsAPI = "https://maps.googleapis.com/maps/api/place/nearbysearch/json?";
 
     public static String getAdminAccountData(int userId) {
         return mainUrl+userAccount+admin+userId;
@@ -105,5 +107,14 @@ public final class routes {
 
     public static String getPlacesAPI(String placeKey) {
         return placesAPI+placeKey+"&key="+ Locations.key;
+    }
+
+    public static String getPlacesNearby(double latitude, double longditude) {
+        return locationsAPI+"location="+latitude+","+longditude+"&radius=20&key="+Locations.key;
+    }
+
+
+    public static String patchTripStatus(int userId) {
+        return mainUrl + trips + status + userId;
     }
 }

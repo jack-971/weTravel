@@ -22,6 +22,7 @@ public abstract class ItineraryItem {
     protected String logtag;
     private int entryId;
     private String entryName;
+    private String review;
 
     private Date startDate;
     private Date endDate;
@@ -31,6 +32,7 @@ public abstract class ItineraryItem {
 
     protected HashMap<Integer, String> userList;
     private Profile profile;
+    protected String status;
 
     public ItineraryItem() {
 
@@ -46,6 +48,7 @@ public abstract class ItineraryItem {
             this.setStartDate((item.getString("DateStart").equals("null")) ? null : DateTime.sqlToDate(item.getLong("DateStart")));
             this.setEndDate((item.getString("DateFinish").equals("null")) ? null : DateTime.sqlToDate(item.getLong("DateFinish")));
             this.setDescription((item.getString("Description").equals("null")) ? null : item.getString("Description"));
+            this.setReview((item.getString("Review").equals("null")) ? null : item.getString("Review"));
             this.setLocation((item.getString("LocationID").equals("null")) ? null : item.getString("LocationID"),
                     (item.getString("LocationDetail").equals("null")) ? null : item.getString("LocationDetail"));
             userList = new HashMap<>();
@@ -128,6 +131,14 @@ public abstract class ItineraryItem {
         this.profile = profile;
     }
 
+    public String getReview() {
+        return review;
+    }
+
+    public void setReview(String review) {
+        this.review = review;
+    }
+
     public TripLocation getLocation() {
         return location;
     }
@@ -136,4 +147,11 @@ public abstract class ItineraryItem {
         this.location = new TripLocation(id, name);
     }
 
+    public String getStatus() {
+        return status;
+    }
+
+    public void setStatus(String status) {
+        this.status = status;
+    }
 }

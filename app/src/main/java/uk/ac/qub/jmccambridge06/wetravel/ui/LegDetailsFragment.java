@@ -53,7 +53,7 @@ public class LegDetailsFragment extends TripEntryFragment {
         tripTimeView.setVisibility(View.GONE);
         tripNotesView.setVisibility(View.GONE);
         tripRatingView.setVisibility(View.GONE);
-        tripReviewView.setVisibility(View.GONE);
+
         tripAttachmentsView.setVisibility(View.GONE);
 
         TripFragment tripFragment = (TripFragment) ((MainMenuActivity)getActivity()).getSupportFragmentManager().findFragmentByTag("user_trip_fragment");
@@ -65,6 +65,13 @@ public class LegDetailsFragment extends TripEntryFragment {
             initialiseStartDate=leg.getStartDate();
             initialiseFinishDate=leg.getEndDate();
             loadDetails();
+            if (leg.getStatus().equalsIgnoreCase("complete")) {
+                displayComplete();
+            } else if (leg.getStatus().equalsIgnoreCase("active")) {
+
+            } else{
+                tripReviewView.setVisibility(View.GONE);
+            }
         } else {
             tripAttendeesView.setVisibility(View.GONE);
             tripAddAttendeesView.setVisibility(View.GONE);
@@ -80,22 +87,32 @@ public class LegDetailsFragment extends TripEntryFragment {
     @Override
     public void loadDetails() {
         tripName.setText(leg.getEntryName());
+        completeTripName.setText(leg.getEntryName());
         if (leg.getStartDate() != null) {
             startDate.setText(DateTime.formatDate(leg.getStartDate()));
+            completeDateStart.setText(DateTime.formatDate(leg.getStartDate()));
         }
         if (leg.getEndDate() != null) {
             finishDate.setText(DateTime.formatDate(leg.getEndDate()));
+            completeDateFinish.setText(DateTime.formatDate(leg.getEndDate()));
         }
         if (leg.getDescription() != null) {
             description.setText(leg.getDescription());
+            completeDescription.setText(leg.getDescription());
         }
         if (leg.getLocation() !=null) {
             location.setText(leg.getLocation().getName());
+            completeTripLocation.setText(leg.getLocation().getName());
             location.setTag(leg.getLocation().getId());
+        }
+        if (trip.getReview() != null) {
+            review.setText(leg.getReview());
+            completeReview.setText(leg.getReview());
         }
 
         // add users to a string to add to attendees text view.
         attendees.setText(addUsers(leg.getUserList().values()));
+        completeAttendees.setText(addUsers(leg.getUserList().values()));
         ArrayList<Profile> profiles = new ArrayList<>();
 
         // for each person on the trip, if they are not already in the user leg list then they can be added.
@@ -116,12 +133,14 @@ public class LegDetailsFragment extends TripEntryFragment {
     @Override
     protected void saveTripRequest() {
         super.saveTripRequest();
+        jsonFetcher.addParam("type", "leg");
+        jsonFetcher.addParam("status", trip.getStatus());
         jsonFetcher.addParam("trip", String.valueOf(trip.getEntryId()));
         if (leg == null) {
-            jsonFetcher.postDataVolley(routes.saveLegDetails(((MainMenuActivity)getActivity()).getUserAccount().getUserId()));
+            jsonFetcher.postDataVolley(routes.saveTripDetails(((MainMenuActivity)getActivity()).getUserAccount().getUserId()));
         } else {
-            jsonFetcher.addParam("type", "leg");
-            jsonFetcher.patchData(routes.saveTripDetails(leg.getEntryId()));
+            jsonFetcher.addParam("legId", String.valueOf(leg.getEntryId()));
+            jsonFetcher.patchData(routes.saveTripDetails(((MainMenuActivity)getActivity()).getUserAccount().getUserId()));
         }
 
 

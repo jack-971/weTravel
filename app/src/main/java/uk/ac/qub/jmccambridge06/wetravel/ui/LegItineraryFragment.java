@@ -65,28 +65,32 @@ public class LegItineraryFragment extends ItineraryFragment {
                 legDetailsFragment, "edit_leg_fragment").commit();
         editLegContainer.setVisibility(View.VISIBLE);
 
-        // Load the add activites section
-        activityDetailsFragment = new ActivityDetailsFragment();
-        getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.add_leg_container,
-                activityDetailsFragment, "activities_details_fragment").commit();
+        // Load the add activites section if trip is not compelete
+        if (!leg.getStatus().equalsIgnoreCase("complete")) {
+            activityDetailsFragment = new ActivityDetailsFragment();
+            getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.add_leg_container,
+                    activityDetailsFragment, "activities_details_fragment").commit();
+            // Add the add activity button
+            addActivityButton.setText(R.string.add_activity);
+            addActivityButton.setVisibility(View.VISIBLE); // only visible once a trip exists.
+            addActivityButton.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    // if leg details is not visible show, otherwise hide it.
+                    if (addLegContainer.getVisibility() == View.GONE) {
+                        addLegContainer.setVisibility(View.VISIBLE);
+                    } else {
+                        addLegContainer.setVisibility(View.GONE);
+                    }
+                }
+            });
+        }
 
         // Add the activities
         loadItinerary();
 
-        // Add the add activity button
-        addActivityButton.setText(R.string.add_activity);
-        addActivityButton.setVisibility(View.VISIBLE); // only visible once a trip exists.
-        addActivityButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                // if leg details is not visible show, otherwise hide it.
-                if (addLegContainer.getVisibility() == View.GONE) {
-                    addLegContainer.setVisibility(View.VISIBLE);
-                } else {
-                    addLegContainer.setVisibility(View.GONE);
-                }
-            }
-        });
+
+
     }
 
     @Override

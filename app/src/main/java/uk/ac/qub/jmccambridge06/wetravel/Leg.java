@@ -75,6 +75,7 @@ public class Leg extends ItineraryItem {
      * @param activity
      */
     public void addActivity(Activity activity) {
+        activity.status = this.status;
         if (activity.getStartDate() == null) {
             activities.put(activity.getEntryId(), activity);
         } else {

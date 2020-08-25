@@ -20,7 +20,6 @@ public class Trip extends ItineraryItem {
 
 
     private String tripPicture;
-    private String status;
     private LinkedHashMap<Integer, Leg> legs;
 
     public Trip(int tripId, String tripName) {
@@ -82,6 +81,7 @@ public class Trip extends ItineraryItem {
                     legs.get(legId).getUserList().put(userId, this.getUserList().get(userId));
                 } else {
                     Leg leg = new Leg(legJson, this.getProfile());
+                    leg.status = this.status;
                     this.legs.put(legId, leg);
                     legs.get(legId).getUserList().put(userId, this.getUserList().get(userId));
                     Log.d("tag", "test");
@@ -100,6 +100,7 @@ public class Trip extends ItineraryItem {
      * @param leg
      */
     public void addLeg(Leg leg) {
+        leg.status = this.status;
         if (leg.getStartDate() == null) {
             legs.put(leg.getEntryId(), leg);
         } else {
@@ -119,7 +120,6 @@ public class Trip extends ItineraryItem {
 
     }
 
-
     public void addActivities(JSONArray activitiesArray) {
         for (int loop=0; loop<activitiesArray.length(); loop++) {
             try {
@@ -131,6 +131,7 @@ public class Trip extends ItineraryItem {
                     legs.get(legId).getActivities().get(activityId).getUserList().put(userId, getUserList().get(userId)); // Just add the user to the activity
                 } else {
                     Activity activity = new Activity(activityJson, getProfile());
+                    activity.setStatus(this.getStatus());
                     legs.get(legId).getActivities().put(activityId, activity);
                     activity.getUserList().put(userId, getUserList().get(userId)); // Add with user id and then lookup name from trip users.
                 }
