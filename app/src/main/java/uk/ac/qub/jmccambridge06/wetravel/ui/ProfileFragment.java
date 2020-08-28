@@ -256,10 +256,21 @@ public class ProfileFragment extends DisplayFragment {
         profileNameEdit.setText(profile.getName());
         profileAge.setText(String.valueOf(profile.getAge()) +" " + getContext().getResources().getString(R.string.years_old));
         profileCurrentTrip.setText("Vietnam Tour - Hanoi, Vietnam");
-        profileHomeLocation.setText(profile.getHomeLocation());
-        profileHomeLocationEdit.setText(profile.getHomeLocation());
-        profileDescription.setText(profile.getDescription());
-        profileDescriptionEdit.setText(profile.getDescription());
+        if (profile.getHomeLocation() == null) {
+            profileHomeLocation.setText(R.string.unknown_location);
+            profileHomeLocationEdit.setText(R.string.unknown_location);
+        } else {
+            profileHomeLocation.setText(profile.getHomeLocation());
+            profileHomeLocationEdit.setText(profile.getHomeLocation());
+        }
+        if (profile.getDescription() == null) {
+            profileDescription.setText(R.string.no_description);
+            profileDescriptionEdit.setText(profile.getDescription());
+        } else {
+            profileDescription.setText(profile.getDescription());
+            profileDescriptionEdit.setText(profile.getDescription());
+        }
+
     }
 
     void updateImageCallback() {

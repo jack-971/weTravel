@@ -37,9 +37,11 @@ import uk.ac.qub.jmccambridge06.wetravel.Profile;
 import uk.ac.qub.jmccambridge06.wetravel.R;
 import uk.ac.qub.jmccambridge06.wetravel.Trip;
 import uk.ac.qub.jmccambridge06.wetravel.UserAccount;
+import uk.ac.qub.jmccambridge06.wetravel.login.LoginActivity;
 import uk.ac.qub.jmccambridge06.wetravel.network.NetworkResultCallback;
 import uk.ac.qub.jmccambridge06.wetravel.network.JsonFetcher;
 import uk.ac.qub.jmccambridge06.wetravel.network.routes;
+import uk.ac.qub.jmccambridge06.wetravel.utilities.TokenOperator;
 
 /**
  * Class contains all UI activity for the main menu.
@@ -87,9 +89,17 @@ public class MainMenuActivity extends AppCompatActivity implements NavigationVie
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        // retrieve userId from login activity
+        Intent intent = getIntent();
+        int userId = intent.getIntExtra("userId", 0);
+
         // create the user account
-        setUserAccount(new UserAccount(1
-        ));
+        if (userId == 0) {
+            this.finish();
+        } else {
+            setUserAccount(new UserAccount(userId
+            ));
+        }
 
         // load the user profile
         loadProfileCallback(); // loads the callback so when volley requets completes this method is executed.
@@ -192,8 +202,11 @@ public class MainMenuActivity extends AppCompatActivity implements NavigationVie
             case R.id.edit_settings:
                 setFragment(settingsFragment, "settings", true);
                 break;
-            case R.id.tutorial:
-                Toast.makeText(this, R.string.tutorial_started, Toast.LENGTH_SHORT).show();
+            case R.id.logout:
+                Intent intent = new Intent(getApplicationContext(), LoginActivity.class);
+                TokenOperator.setToken(getApplicationContext(), "");
+                startActivity(intent);
+                this.finish();
                 break;
         }
 

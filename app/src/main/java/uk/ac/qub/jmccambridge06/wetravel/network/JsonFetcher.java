@@ -18,6 +18,8 @@ import org.json.JSONObject;
 import java.util.HashMap;
 import java.util.Map;
 
+import uk.ac.qub.jmccambridge06.wetravel.utilities.TokenOperator;
+
 
 public class JsonFetcher {
 
@@ -31,6 +33,8 @@ public class JsonFetcher {
         this.context = context;
         header = new HashMap<>();
         params = new HashMap<>();
+        Log.d("tagtoken", TokenOperator.getToken(context));
+
     }
 
     public void addHeader(String key, String value) {
@@ -63,7 +67,7 @@ public class JsonFetcher {
                     HashMap<String, String> headers = new HashMap<String, String>();
                     headers.put("X-HTTP-Method-Override","PATCH");
                     headers.put("Content-Type", "application/json; charset=utf-8");
-                    //headers.put("x-api-key", "YOUR API KEY");
+                    headers.put("authorization", TokenOperator.getToken(context));
                     return headers;
                 }};
 
@@ -97,6 +101,8 @@ public class JsonFetcher {
                     headers.put("X-HTTP-Method-Override","POST");
                     headers.put("Content-Type", "application/json; charset=utf-8");
                     //headers.put("x-api-key", "YOUR API KEY");
+                    headers.put("authorization", TokenOperator.getToken(context));
+
                     return headers;
                 }};
 
@@ -131,6 +137,7 @@ public class JsonFetcher {
                     headers.put("X-HTTP-Method-Override","GET");
                     headers.put("Content-Type", "application/json; charset=utf-8");
                     //headers.put("x-api-key", "YOUR API KEY");
+                    headers.put("authorization", TokenOperator.getToken(context));
                     return headers;
                 }};
 
@@ -164,6 +171,7 @@ public class JsonFetcher {
                     headers.put("X-HTTP-Method-Override","GET");
                     headers.put("Content-Type", "application/json; charset=utf-8");
                     //headers.put("x-api-key", "YOUR API KEY");
+                    headers.put("authorization", TokenOperator.getToken(context));
                     return headers;
                 }};
 

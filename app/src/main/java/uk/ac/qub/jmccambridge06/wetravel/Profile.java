@@ -5,6 +5,8 @@ import android.util.Log;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.util.Date;
+
 import uk.ac.qub.jmccambridge06.wetravel.utilities.DateTime;
 
 public class Profile {
@@ -28,9 +30,8 @@ public class Profile {
     public Profile(JSONObject user, int profileType) throws JSONException {
         this(user.getString("Name"),
                 user.getString("Username"),
-                user.getString("Dob"),
+                user.getLong("Dob"),
                 user.getString("HomeLocation"),
-                user.getString("CurrentLocation"),
                 user.getString("ProfilePicture"),
                 user.getString("Description"),
                 user.getString("UserID"),
@@ -51,19 +52,17 @@ public class Profile {
      * @param username
      * @param dob
      * @param homeLocation
-     * @param currentLocation
      * @param profilePicture
      * @param description
      */
-    private Profile(String name, String username, String dob, String homeLocation, String currentLocation, String profilePicture,
+    private Profile(String name, String username, long dob, String homeLocation, String profilePicture,
                     String description, String userId, String privateProfile, int profileType) {
         this.name = name;
         this.username = username;
         this.setAge(dob);
-        this.homeLocation = homeLocation;
-        this.currentLocation = currentLocation;
+        this.homeLocation = ((homeLocation.equals("null")) ? null : homeLocation);
         this.profilePicture = profilePicture;
-        this.description = description;
+        this.description = ((description.equals("null")) ? null : description);
         this.userId = Integer.parseInt(userId);
         this.profileType = profileType;
         if (Integer.parseInt(privateProfile) == 1) {
@@ -99,8 +98,10 @@ public class Profile {
      *
      * @param dob
      */
-    public void setAge(String dob) {
-        this.age = DateTime.getAge(dob);
+    public void setAge(long dob) {
+        Date date = DateTime.sqlToDate(dob);
+        //String dateString = DateTime.formatDate(date);
+        this.age = DateTime.getAge(date);
     }
 
     public String getHomeLocation() {

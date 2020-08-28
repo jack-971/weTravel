@@ -7,13 +7,12 @@
     <string name="message_centre_navigation">Inbox</string>
     <string name="notification_centre_navigation">Notifications</string>
 
-    <!--Tutorials-->
-    <string name="tutorial_started">Tutorial Started</string>
+
     
     <!-- Dropdown menu names -->
     <string name="view_profile">View Profile</string>
     <string name="edit_settings">Edit Settings</string>
-    <string name="tutorial">Tutorial</string>
+    <string name="logout">Logout</string>
     
     <!-- Drawer Strings -->
     <string name="nav_drawer_open">Open Navigation Drawer</string>
@@ -39,6 +38,8 @@
     <string name="friend_accepted">Friend request Accepted!</string>
     <string name="profile_private">This users profile is set to private so only friends have access to their profile. Send a friend requet
     to this user if you would like view thier profile!</string>
+    <string name="unknown_location">Unknown Location</string>
+    <string name="no_description">No description Added</string>
 
 
     <!--Trips-->
@@ -127,6 +128,14 @@
     <string name="password">Password</string>
     <string name="login">Login</string>
     <string name="signup">Signup here</string>
+    <string name="login_error">Invalid username/password - please try again!</string>
+    <string name="dob">DOB</string>
+    <string name="register_name">Full Name</string>
+    <string name="match_passwords">*Passwords must match!</string>
+    <string name="format_password">*Password must contain at least 1 upper and lower case letter, 1 number and be atleast 8 characters long.</string>
+    <string name="register">Register</string>
+    <string name="enter_all">Please enter all fields!</string>
+    <string name="username_taken">Username taken - please choose a new username!</string>
 
 
 

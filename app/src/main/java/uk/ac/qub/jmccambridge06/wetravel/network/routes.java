@@ -7,6 +7,7 @@ public final class routes {
     private static String mainUrl = "http://10.0.2.2:8080/";
     //private static String mainUrl = "https://travel-with-4cd49.web.app/";
 
+    private static String secure = "secure/";
     private static String userAccount = "profile/";
     private static String admin = "admin/";
     private static String users = "users/";
@@ -24,7 +25,7 @@ public final class routes {
     private static String locationsAPI = "https://maps.googleapis.com/maps/api/place/nearbysearch/json?";
 
     public static String getAdminAccountData(int userId) {
-        return mainUrl+userAccount+admin+userId;
+        return mainUrl+secure+userAccount+admin+userId;
     }
 
     /**
@@ -33,15 +34,15 @@ public final class routes {
      * @return
      */
     public static String getUserAccountData(int userId) {
-        return mainUrl+userAccount+userId;
+        return mainUrl+secure+userAccount+userId;
     }
 
     public static String getUsersRoute(int userId) {
-        return mainUrl + users + userId;
+        return mainUrl +secure  + users + userId;
     }
 
     public static String getUserSearchList(String query) {
-        return mainUrl + userSearchList + query;
+        return mainUrl + secure + userSearchList + query;
     }
 
     /**
@@ -50,11 +51,11 @@ public final class routes {
      * @return
      */
     public static String updateSettings(int userId) {
-        return mainUrl+settings+userId;
+        return mainUrl+secure+settings+userId;
     }
 
     public static String getTrips(int userId, String status) {
-        return mainUrl + trips + userId+"?status="+status;
+        return mainUrl +secure+ trips + userId+"?status="+status;
     }
 
     /**
@@ -64,36 +65,18 @@ public final class routes {
      * @return
      */
     public static String getTrip(int userId, int tripId) {
-        return mainUrl + trips + trip + userId+"?trip="+tripId;
+        return mainUrl +secure+ trips + trip + userId+"?trip="+tripId;
     }
 
     public static String leaveTrip(int userId, int id, String type) {
-        return mainUrl + trips + leaveTrip + userId+"?id="+id+"&type="+type;
+        return mainUrl + secure + trips + leaveTrip + userId+"?id="+id+"&type="+type;
     }
 
     /**
      * Get route to save a trips details
      */
     public static String saveTripDetails(int id) {
-        return mainUrl + trips + trip + id;
-    }
-
-    /**
-     * Get route to save a legs details
-     * @param id
-     * @return
-     */
-    public static String saveLegDetails(int id) {
-        return mainUrl + trips + leg + id;
-    }
-
-    /**
-     * Get route to save an activities details
-     * @param id
-     * @return
-     */
-    public static String saveActivityDetails(int id) {
-        return mainUrl + trips + activity + id;
+        return mainUrl +secure + trips + trip + id;
     }
 
     /**
@@ -102,7 +85,7 @@ public final class routes {
      * @return
      */
     public static String addUserToTrip(int tripId) {
-        return mainUrl+trips+trip+addUserToTrip+tripId;
+        return mainUrl+secure+trips+trip+addUserToTrip+tripId;
     }
 
     public static String getPlacesAPI(String placeKey) {
@@ -115,6 +98,14 @@ public final class routes {
 
 
     public static String patchTripStatus(int userId) {
-        return mainUrl + trips + status + userId;
+        return mainUrl+secure + trips + status + userId;
+    }
+
+    public static String registerUser() {
+        return mainUrl + "register";
+    }
+
+    public static String loginUser() {
+        return mainUrl + "login";
     }
 }
