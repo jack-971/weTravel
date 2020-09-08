@@ -1,7 +1,6 @@
 package uk.ac.qub.jmccambridge06.wetravel.ui;
 
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 
 import androidx.annotation.NonNull;
@@ -10,8 +9,7 @@ import androidx.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
 
-import uk.ac.qub.jmccambridge06.wetravel.Activity;
-import uk.ac.qub.jmccambridge06.wetravel.Leg;
+import uk.ac.qub.jmccambridge06.wetravel.models.Activity;
 
 
 public class ActivityListFragment extends EntryListFragment {

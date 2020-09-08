@@ -13,9 +13,9 @@ import com.bumptech.glide.request.RequestOptions;
 
 import java.util.ArrayList;
 
-import uk.ac.qub.jmccambridge06.wetravel.ItineraryItem;
+import uk.ac.qub.jmccambridge06.wetravel.models.ItineraryItem;
 import uk.ac.qub.jmccambridge06.wetravel.R;
-import uk.ac.qub.jmccambridge06.wetravel.Trip;
+import uk.ac.qub.jmccambridge06.wetravel.models.Trip;
 
 public class TripListAdapter extends EntryListAdapter {
 

@@ -15,9 +15,9 @@ import androidx.fragment.app.Fragment;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
-import uk.ac.qub.jmccambridge06.wetravel.ItineraryItem;
+import uk.ac.qub.jmccambridge06.wetravel.models.ItineraryItem;
 import uk.ac.qub.jmccambridge06.wetravel.R;
-import uk.ac.qub.jmccambridge06.wetravel.Trip;
+import uk.ac.qub.jmccambridge06.wetravel.models.Trip;
 
 public abstract class ItineraryFragment extends Fragment {
 

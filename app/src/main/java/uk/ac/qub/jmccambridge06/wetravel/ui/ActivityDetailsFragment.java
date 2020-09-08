@@ -15,12 +15,11 @@ import org.json.JSONObject;
 import java.util.ArrayList;
 import java.util.Date;
 
-import uk.ac.qub.jmccambridge06.wetravel.Activity;
-import uk.ac.qub.jmccambridge06.wetravel.Leg;
-import uk.ac.qub.jmccambridge06.wetravel.MyApplication;
-import uk.ac.qub.jmccambridge06.wetravel.Profile;
+import uk.ac.qub.jmccambridge06.wetravel.models.Activity;
+import uk.ac.qub.jmccambridge06.wetravel.models.Leg;
+import uk.ac.qub.jmccambridge06.wetravel.models.Profile;
 import uk.ac.qub.jmccambridge06.wetravel.R;
-import uk.ac.qub.jmccambridge06.wetravel.TripLocation;
+import uk.ac.qub.jmccambridge06.wetravel.models.TripLocation;
 import uk.ac.qub.jmccambridge06.wetravel.network.JsonFetcher;
 import uk.ac.qub.jmccambridge06.wetravel.network.NetworkResultCallback;
 import uk.ac.qub.jmccambridge06.wetravel.network.routes;

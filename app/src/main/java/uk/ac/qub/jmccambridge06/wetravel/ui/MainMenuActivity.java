@@ -15,6 +15,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -25,6 +26,8 @@ import android.widget.Toast;
 
 import com.android.volley.VolleyError;
 import com.bumptech.glide.Glide;
+import com.google.android.material.bottomnavigation.BottomNavigationItemView;
+import com.google.android.material.bottomnavigation.BottomNavigationMenuView;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.navigation.NavigationView;
 
@@ -33,11 +36,12 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import de.hdodenhof.circleimageview.CircleImageView;
-import uk.ac.qub.jmccambridge06.wetravel.Profile;
+import uk.ac.qub.jmccambridge06.wetravel.models.NotificationCentre;
+import uk.ac.qub.jmccambridge06.wetravel.models.Profile;
 import uk.ac.qub.jmccambridge06.wetravel.R;
-import uk.ac.qub.jmccambridge06.wetravel.Trip;
-import uk.ac.qub.jmccambridge06.wetravel.UserAccount;
-import uk.ac.qub.jmccambridge06.wetravel.login.LoginActivity;
+import uk.ac.qub.jmccambridge06.wetravel.models.Trip;
+import uk.ac.qub.jmccambridge06.wetravel.models.UserAccount;
+import uk.ac.qub.jmccambridge06.wetravel.ui.login.LoginActivity;
 import uk.ac.qub.jmccambridge06.wetravel.network.NetworkResultCallback;
 import uk.ac.qub.jmccambridge06.wetravel.network.JsonFetcher;
 import uk.ac.qub.jmccambridge06.wetravel.network.routes;
@@ -63,6 +67,9 @@ public class MainMenuActivity extends AppCompatActivity implements NavigationVie
      * Reference to the bottom navigation bar on the menu
      */
     private static BottomNavigationView bottomNav;
+    private BottomNavigationItemView notificationItem;
+    private View notificationBadge;
+    private TextView bagdeText;
 
     public static FragmentManager fragmentManager;
 
@@ -74,8 +81,7 @@ public class MainMenuActivity extends AppCompatActivity implements NavigationVie
 
     public NewsfeedFragment newsfeedFragment;
     public TripsFragment tripsFragment;
-    public InboxFragment inboxFragment;
-    public NotificationsFragment notificationsFragment;
+    public NotificationListFragment notificationListFragment;
     public ProfileFragment profileFragment;
     public SettingsFragment settingsFragment;
     public UserListFragment searchFragment;
@@ -102,12 +108,12 @@ public class MainMenuActivity extends AppCompatActivity implements NavigationVie
         }
 
         // load the user profile
-        loadProfileCallback(); // loads the callback so when volley requets completes this method is executed.
+        loadProfileCallback(); // loads the callback so when volley request completes this method is executed.
         jsonFetcher = new JsonFetcher(getProfileCallback,this); // create volley request to get profile data
         jsonFetcher.getData(routes.getAdminAccountData(getUserAccount().getUserId())); // send volley request
-        loadFriendsCallback();
+        /*loadFriendsCallback();
         jsonFetcher = new JsonFetcher(getFriendsCallback,getApplicationContext());
-        jsonFetcher.getData(routes.getUsersRoute(getUserAccount().getUserId()));
+        jsonFetcher.getData(routes.getUsersRoute(getUserAccount().getUserId()));*/
 
         // Load the custom toolbar
         Toolbar toolbar = findViewById(R.id.toolbar);
@@ -129,11 +135,15 @@ public class MainMenuActivity extends AppCompatActivity implements NavigationVie
         bottomNav.setOnNavigationItemSelectedListener(navListener);
         fragmentManager = getSupportFragmentManager();
 
+        // get notification references
+        notificationItem = (BottomNavigationItemView) ((BottomNavigationMenuView) bottomNav.getChildAt(0)).getChildAt(2);
+        notificationBadge = LayoutInflater.from(MainMenuActivity.this).inflate(R.layout.notification_badge, bottomNav, false);
+        bagdeText = notificationBadge.findViewById(R.id.badge_text_view);
+        removeNotificationBadge();
+
         if (savedInstanceState == null) {
             newsfeedFragment = new NewsfeedFragment();
             tripsFragment = new TripsFragment();
-            inboxFragment = new InboxFragment();
-            notificationsFragment = new NotificationsFragment();
             profileFragment = new ProfileFragment();
             settingsFragment = new SettingsFragment();
             searchFragment = new UserListFragment();
@@ -145,11 +155,11 @@ public class MainMenuActivity extends AppCompatActivity implements NavigationVie
             FragmentTransaction transaction = fragmentManager.beginTransaction();
             transaction.add(R.id.main_screen_container, newsfeedFragment, "newsfeed");
             transaction.add(R.id.main_screen_container, tripsFragment, "trips").hide(tripsFragment);
-            transaction.add(R.id.main_screen_container, inboxFragment, "inbox").hide(inboxFragment);
-            transaction.add(R.id.main_screen_container, notificationsFragment, "notifications").hide(notificationsFragment);
             transaction.commit();
         }
     }
+
+
 
     /**
      * Add the search bar and functionality
@@ -172,6 +182,18 @@ public class MainMenuActivity extends AppCompatActivity implements NavigationVie
         super.onNewIntent(intent);
         setIntent(intent);
         handleIntent(intent);
+        Toast.makeText(getApplicationContext(), "about to handle the intent", Toast.LENGTH_SHORT).show();
+    }
+
+    private void onNewNotification() {
+        boolean notification = getIntent().getBooleanExtra("notification", false);
+        if (notification) {
+            fragmentManager.popBackStack();
+            fragmentManager.beginTransaction().hide(newsfeedFragment).hide(tripsFragment).hide(notificationListFragment).commit();
+            setFragment(notificationListFragment, "notifications_fragment",false);
+            bottomNav = findViewById(R.id.main_navigation);
+            bottomNav.setSelectedItemId(R.id.menu_notifications);
+        }
     }
 
     private void handleIntent(Intent intent) {
@@ -203,16 +225,38 @@ public class MainMenuActivity extends AppCompatActivity implements NavigationVie
                 setFragment(settingsFragment, "settings", true);
                 break;
             case R.id.logout:
-                Intent intent = new Intent(getApplicationContext(), LoginActivity.class);
-                TokenOperator.setToken(getApplicationContext(), "");
-                startActivity(intent);
-                this.finish();
+                // remove notification key
+                /*JsonFetcher jsonFetcher = new JsonFetcher(new NetworkResultCallback() {
+                    @Override
+                    public void notifySuccess(JSONObject response) {
+                        logout();
+                    }
+
+                    @Override
+                    public void notifyError(VolleyError error) {
+                        Log.d(logTag, "Could not remove notification key");
+                        logout();
+                    }
+                }, getApplicationContext());
+                jsonFetcher.addParam("key", null);
+                jsonFetcher.addParam("status", "logout");
+                jsonFetcher.patchData(routes.postNotificationKey(getUserAccount().getUserId()));*/
+                logout();
                 break;
         }
 
         drawer.closeDrawer(GravityCompat.START);
         return true;
     }
+
+    private void logout() {
+        // remove authorization token and end activity
+        Intent intent = new Intent(getApplicationContext(), LoginActivity.class);
+        TokenOperator.setToken(getApplicationContext(), "");
+        startActivity(intent);
+        this.finish();
+    }
+
 
     /**
      * A listener to wait for clicks on an item of the nav menu. Uses a switch statement
@@ -223,7 +267,7 @@ public class MainMenuActivity extends AppCompatActivity implements NavigationVie
             new BottomNavigationView.OnNavigationItemSelectedListener() {
                 @Override
                 public boolean onNavigationItemSelected(@NonNull MenuItem menuItem) {
-                    fragmentManager.beginTransaction().hide(newsfeedFragment).hide(tripsFragment).hide(inboxFragment).hide(notificationsFragment).commit();
+                    fragmentManager.beginTransaction().hide(newsfeedFragment).hide(tripsFragment).hide(notificationListFragment).commit();
                     Fragment selectedFragment = null;
                     String tag = "";
                     switch(menuItem.getItemId()) {
@@ -236,12 +280,9 @@ public class MainMenuActivity extends AppCompatActivity implements NavigationVie
                             tripsFragment.setProfile(userAccount.getProfile());
                             tag = "trips";
                             break;
-                        case R.id.menu_inbox:
-                            selectedFragment = inboxFragment;
-                            tag = "inbox";
-                            break;
                         case R.id.menu_notifications:
-                            selectedFragment = notificationsFragment;
+                            selectedFragment = notificationListFragment;
+                            removeNotificationBadge();
                             tag = "notifications";
                             break;
                     }
@@ -300,6 +341,21 @@ public class MainMenuActivity extends AppCompatActivity implements NavigationVie
                     userAccount.setProfile(new Profile(user, 0));
                     profileFragment.setProfile(userAccount.getProfile());// 0 is admin profile type
                     userAccount.createSettings(user);
+
+                    JSONArray friendArray = response.getJSONArray("friendsList");
+                    Log.i(logTag, friendArray.toString());
+                    userAccount.setFriendsList(friendArray);
+
+                    // get notifications - if unread then highlight notifications tab
+                    JSONArray notificationArray = response.getJSONArray("notifications");
+                    getUserAccount().setNotificationCentre(new NotificationCentre(notificationArray));
+                    notificationListFragment = new NotificationListFragment();
+                    fragmentManager.beginTransaction().add(R.id.main_screen_container, notificationListFragment, "notifications").hide(notificationListFragment).commit();
+                    updateNotificationBadge();
+
+                    // If launched by a notification then display this page.
+                    onNewNotification();
+
                     loadDrawer();
                     Log.i(logTag, "Loaded the drawer");
                     plannedTrips.setProfile(userAccount.getProfile());
@@ -314,6 +370,28 @@ public class MainMenuActivity extends AppCompatActivity implements NavigationVie
                 error.printStackTrace();
             }
         };
+    }
+
+    /**
+     * Adds a notification badge to the notification menu icon with the number of unread notifications from the notification centre.
+     */
+    public void updateNotificationBadge() {
+        removeNotificationBadge();
+        if (getUserAccount().getNotificationCentre().getUnread() > 0) {
+            bagdeText.setText(String.valueOf(getUserAccount().getNotificationCentre().getUnread()));
+            notificationItem.addView(notificationBadge);
+            notificationBadge.setVisibility(View.VISIBLE);
+            invalidateOptionsMenu();
+        } else {
+            removeNotificationBadge();
+        }
+    }
+
+    /**
+     * Removes the notification badge from the notification menu icon.
+     */
+    public void removeNotificationBadge() {
+        notificationItem.removeView(notificationBadge);
     }
 
     /**
@@ -362,5 +440,9 @@ public class MainMenuActivity extends AppCompatActivity implements NavigationVie
     public void setUserAccount(UserAccount userAccount) {
         this.userAccount = userAccount;
     }
+
+
+
+
 
 }

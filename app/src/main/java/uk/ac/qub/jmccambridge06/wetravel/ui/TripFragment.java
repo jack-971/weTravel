@@ -1,6 +1,5 @@
 package uk.ac.qub.jmccambridge06.wetravel.ui;
 
-import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.Dialog;
 import android.content.Context;
@@ -38,17 +37,15 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.List;
 
-import uk.ac.qub.jmccambridge06.wetravel.Leg;
+import uk.ac.qub.jmccambridge06.wetravel.models.Leg;
 import uk.ac.qub.jmccambridge06.wetravel.R;
-import uk.ac.qub.jmccambridge06.wetravel.Trip;
-import uk.ac.qub.jmccambridge06.wetravel.TripLocation;
+import uk.ac.qub.jmccambridge06.wetravel.models.Trip;
+import uk.ac.qub.jmccambridge06.wetravel.models.TripLocation;
 import uk.ac.qub.jmccambridge06.wetravel.network.JsonFetcher;
 import uk.ac.qub.jmccambridge06.wetravel.network.NetworkResultCallback;
 import uk.ac.qub.jmccambridge06.wetravel.network.routes;
-import uk.ac.qub.jmccambridge06.wetravel.utilities.Locater;
 
 public class TripFragment extends Fragment {
 

@@ -1,7 +1,6 @@
 package uk.ac.qub.jmccambridge06.wetravel.ui;
 
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -18,10 +17,9 @@ import org.json.JSONObject;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
-import butterknife.OnClick;
-import uk.ac.qub.jmccambridge06.wetravel.Profile;
+import uk.ac.qub.jmccambridge06.wetravel.models.Profile;
 import uk.ac.qub.jmccambridge06.wetravel.R;
-import uk.ac.qub.jmccambridge06.wetravel.Trip;
+import uk.ac.qub.jmccambridge06.wetravel.models.Trip;
 import uk.ac.qub.jmccambridge06.wetravel.network.JsonFetcher;
 import uk.ac.qub.jmccambridge06.wetravel.network.NetworkResultCallback;
 import uk.ac.qub.jmccambridge06.wetravel.network.routes;

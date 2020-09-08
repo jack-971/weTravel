@@ -22,12 +22,14 @@ import com.bumptech.glide.request.RequestOptions;
 import org.json.JSONObject;
 
 import java.io.IOException;
+import java.util.Calendar;
 import java.util.UUID;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import de.hdodenhof.circleimageview.CircleImageView;
-import uk.ac.qub.jmccambridge06.wetravel.Profile;
+import uk.ac.qub.jmccambridge06.wetravel.models.Profile;
+import uk.ac.qub.jmccambridge06.wetravel.utilities.DateTime;
 import uk.ac.qub.jmccambridge06.wetravel.utilities.ProfileTypes;
 import uk.ac.qub.jmccambridge06.wetravel.network.FirebaseCallback;
 import uk.ac.qub.jmccambridge06.wetravel.network.FirebaseLink;
@@ -116,6 +118,7 @@ public class ProfileFragment extends DisplayFragment {
                     requestFriend();
                     JsonFetcher jsonFetcher = new JsonFetcher(requestFriendCallback, getContext());
                     jsonFetcher.addParam("requestee", String.valueOf(profile.getUserId()));
+                    jsonFetcher.addParam("time", String.valueOf(DateTime.dateToSQL(Calendar.getInstance().getTime())));
                     String url = routes.getUsersRoute(((MainMenuActivity) getActivity()).getUserAccount().getUserId());
                     Log.i(logTag, url);
                     jsonFetcher.postDataVolley(url);
@@ -131,6 +134,7 @@ public class ProfileFragment extends DisplayFragment {
                     acceptFriend();
                     JsonFetcher jsonFetcher = new JsonFetcher(acceptFriendCallback, getContext());
                     jsonFetcher.addParam("requestor", String.valueOf(profile.getUserId()));
+                    jsonFetcher.addParam("time", String.valueOf(DateTime.dateToSQL(Calendar.getInstance().getTime())));
                     String url = routes.getUsersRoute(((MainMenuActivity) getActivity()).getUserAccount().getUserId());
                     Log.i(logTag, url);
                     jsonFetcher.patchData(url);
@@ -218,11 +222,9 @@ public class ProfileFragment extends DisplayFragment {
         });
 
         loadViews();
+        checkPrivate();
 
-        if (profile.isPrivateProfile() && (profile.getProfileType() != ProfileTypes.PROFILE_ADMIN && profile.getProfileType() != ProfileTypes.PROFILE_FRIEND)) {
-            profilePrivateText.setVisibility(View.VISIBLE);
-            profileBody.setVisibility(View.GONE);
-        }
+
     }
 
     /**
@@ -288,6 +290,16 @@ public class ProfileFragment extends DisplayFragment {
         };
     }
 
+    private void checkPrivate() {
+        if (profile.isPrivateProfile() && (profile.getProfileType() != ProfileTypes.PROFILE_ADMIN && profile.getProfileType() != ProfileTypes.PROFILE_FRIEND)) {
+            profilePrivateText.setVisibility(View.VISIBLE);
+            profileBody.setVisibility(View.GONE);
+        } else {
+            profilePrivateText.setVisibility(View.GONE);
+            profileBody.setVisibility(View.VISIBLE);
+        }
+    }
+
     /**
      * Loads callbacks for when the user profile data is updated. Toast message will confirm this has been completed.
      */
@@ -317,6 +329,7 @@ public class ProfileFragment extends DisplayFragment {
                 addFriendButton.setVisibility(View.GONE);
                 friendRequestedTag.setVisibility(View.VISIBLE);
                 Toast.makeText(getActivity().getApplicationContext(), R.string.friend_requested, Toast.LENGTH_SHORT).show();
+                sendNotification();
             }
             @Override
             public void notifyError(VolleyError error) {
@@ -332,9 +345,10 @@ public class ProfileFragment extends DisplayFragment {
             public void notifySuccess(JSONObject response) {
                 Log.i(logTag, "Friend accepted");
                 profile.setProfileType(ProfileTypes.PROFILE_FRIEND);
-                ((MainMenuActivity)getActivity()).getUserAccount().addFriend(profile);
+                //((MainMenuActivity)getActivity()).getUserAccount().addFriend(profile);
                 acceptFriendButton.setVisibility(View.GONE);
                 friendsTag.setVisibility(View.VISIBLE);
+                checkPrivate();
                 Toast.makeText(getActivity().getApplicationContext(), R.string.friend_accepted, Toast.LENGTH_SHORT).show();
             }
 
@@ -362,6 +376,12 @@ public class ProfileFragment extends DisplayFragment {
         jsonFetcher.addParam("image", downloadUrl);
         jsonFetcher.addParam("description", profileDescriptionEdit.getText().toString());
         jsonFetcher.patchData((routes.getUserAccountData(((MainMenuActivity) getActivity()).getUserAccount().getUserId())));
+    }
+
+
+
+    private void sendNotification() {
+
     }
 
 }

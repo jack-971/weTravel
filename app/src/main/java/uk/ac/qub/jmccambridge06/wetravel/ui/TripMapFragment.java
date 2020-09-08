@@ -27,10 +27,9 @@ import com.google.android.libraries.places.widget.listener.PlaceSelectionListene
 import java.util.ArrayList;
 import java.util.Arrays;
 
-import uk.ac.qub.jmccambridge06.wetravel.MyApplication;
 import uk.ac.qub.jmccambridge06.wetravel.R;
-import uk.ac.qub.jmccambridge06.wetravel.Trip;
-import uk.ac.qub.jmccambridge06.wetravel.TripLocation;
+import uk.ac.qub.jmccambridge06.wetravel.models.Trip;
+import uk.ac.qub.jmccambridge06.wetravel.models.TripLocation;
 
 public class TripMapFragment extends Fragment implements OnMapReadyCallback, GoogleMap.OnMarkerClickListener {
 

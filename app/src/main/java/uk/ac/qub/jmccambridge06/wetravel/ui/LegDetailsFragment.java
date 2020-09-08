@@ -6,8 +6,6 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.fragment.app.Fragment;
 
 import com.android.volley.VolleyError;
 
@@ -17,10 +15,9 @@ import org.json.JSONObject;
 import java.util.ArrayList;
 import java.util.Date;
 
-import uk.ac.qub.jmccambridge06.wetravel.Leg;
-import uk.ac.qub.jmccambridge06.wetravel.Profile;
+import uk.ac.qub.jmccambridge06.wetravel.models.Leg;
+import uk.ac.qub.jmccambridge06.wetravel.models.Profile;
 import uk.ac.qub.jmccambridge06.wetravel.R;
-import uk.ac.qub.jmccambridge06.wetravel.Trip;
 import uk.ac.qub.jmccambridge06.wetravel.network.JsonFetcher;
 import uk.ac.qub.jmccambridge06.wetravel.network.NetworkResultCallback;
 import uk.ac.qub.jmccambridge06.wetravel.network.routes;

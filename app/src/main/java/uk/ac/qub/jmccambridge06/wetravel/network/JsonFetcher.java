@@ -33,8 +33,6 @@ public class JsonFetcher {
         this.context = context;
         header = new HashMap<>();
         params = new HashMap<>();
-        Log.d("tagtoken", TokenOperator.getToken(context));
-
     }
 
     public void addHeader(String key, String value) {

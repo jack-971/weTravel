@@ -1,4 +1,4 @@
-package uk.ac.qub.jmccambridge06.wetravel.login;
+package uk.ac.qub.jmccambridge06.wetravel.ui.login;
 
 import android.os.Bundle;
 import android.text.Editable;
@@ -19,8 +19,6 @@ import com.android.volley.VolleyError;
 
 import org.json.JSONException;
 import org.json.JSONObject;
-
-import java.util.Date;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;

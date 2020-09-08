@@ -18,11 +18,12 @@ import org.json.JSONArray;
 import org.json.JSONObject;
 
 import java.io.IOException;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.UUID;
 
 import uk.ac.qub.jmccambridge06.wetravel.R;
-import uk.ac.qub.jmccambridge06.wetravel.Trip;
+import uk.ac.qub.jmccambridge06.wetravel.models.Trip;
 import uk.ac.qub.jmccambridge06.wetravel.network.FirebaseCallback;
 import uk.ac.qub.jmccambridge06.wetravel.network.FirebaseLink;
 import uk.ac.qub.jmccambridge06.wetravel.network.JsonFetcher;
@@ -211,12 +212,14 @@ public class TripDetailsFragment extends TripEntryFragment {
     protected void saveTripRequest() {
         super.saveTripRequest();
         jsonFetcher.addParam("type", "trip");
-        jsonFetcher.addParam("status", trip.getStatus());
+
         // if there is no exisitng trip then must use post request to create new trip.
         if (trip == null) {
             jsonFetcher.addParam("Picture", getMainImageString());
+            jsonFetcher.addParam("status", "planned");
             jsonFetcher.postDataVolley(routes.saveTripDetails(((MainMenuActivity)getActivity()).getUserAccount().getUserId()));
         } else {
+            jsonFetcher.addParam("status", trip.getStatus());
             jsonFetcher.addParam("Picture", trip.getTripPicture());
             jsonFetcher.addParam("tripId", String.valueOf(trip.getEntryId()));
             jsonFetcher.patchData(routes.saveTripDetails(((MainMenuActivity)getActivity()).getUserAccount().getUserId()));
@@ -239,6 +242,7 @@ public class TripDetailsFragment extends TripEntryFragment {
         jsonFetcher = new JsonFetcher(addAttendeeCallback, getContext());
         jsonFetcher.addParam("user", addAttendees.getTag().toString());
         jsonFetcher.addParam("type", "trip");
+        jsonFetcher.addParam("time", String.valueOf(DateTime.dateToSQL(Calendar.getInstance().getTime())));
         jsonFetcher.postDataVolley(routes.addUserToTrip(trip.getEntryId()));
     }
 

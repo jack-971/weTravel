@@ -1,4 +1,4 @@
-package uk.ac.qub.jmccambridge06.wetravel;
+package uk.ac.qub.jmccambridge06.wetravel.models;
 
 import android.app.Application;
 import android.content.Context;

@@ -31,4 +31,8 @@
     <!--Cards-->
     <color name="card_major_text">@android:color/black</color>
     <color name="card_minor_text">@android:color/darker_gray</color>
+
+    <!--Notifications-->
+    <color name="card_unread">#e0e0e0</color>
+    <color name="card_read">@android:color/white</color>
 </resources>

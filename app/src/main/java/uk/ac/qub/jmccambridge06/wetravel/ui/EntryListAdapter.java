@@ -9,25 +9,14 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 
-import com.android.volley.VolleyError;
-
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
-
 import java.util.ArrayList;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import de.hdodenhof.circleimageview.CircleImageView;
-import uk.ac.qub.jmccambridge06.wetravel.ItineraryItem;
-import uk.ac.qub.jmccambridge06.wetravel.Leg;
-import uk.ac.qub.jmccambridge06.wetravel.MyApplication;
+import uk.ac.qub.jmccambridge06.wetravel.models.ItineraryItem;
 import uk.ac.qub.jmccambridge06.wetravel.R;
-import uk.ac.qub.jmccambridge06.wetravel.TripLocation;
-import uk.ac.qub.jmccambridge06.wetravel.network.JsonFetcher;
 import uk.ac.qub.jmccambridge06.wetravel.network.NetworkResultCallback;
-import uk.ac.qub.jmccambridge06.wetravel.network.routes;
 import uk.ac.qub.jmccambridge06.wetravel.utilities.DateTime;
 
 public abstract class EntryListAdapter extends RecyclerView.Adapter<EntryListAdapter.EntryListViewHolder> {

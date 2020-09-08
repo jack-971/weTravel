@@ -10,11 +10,8 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import java.util.ArrayList;
 
-import uk.ac.qub.jmccambridge06.wetravel.ItineraryItem;
-import uk.ac.qub.jmccambridge06.wetravel.Leg;
-import uk.ac.qub.jmccambridge06.wetravel.MyApplication;
+import uk.ac.qub.jmccambridge06.wetravel.models.Leg;
 import uk.ac.qub.jmccambridge06.wetravel.R;
-import uk.ac.qub.jmccambridge06.wetravel.Trip;
 
 public class LegListAdapter extends EntryListAdapter {
 

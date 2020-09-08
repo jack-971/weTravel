@@ -1,8 +1,6 @@
-package uk.ac.qub.jmccambridge06.wetravel;
+package uk.ac.qub.jmccambridge06.wetravel.models;
 
 import android.util.Log;
-
-import com.android.volley.VolleyError;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -11,9 +9,6 @@ import org.json.JSONObject;
 import java.util.Date;
 import java.util.HashMap;
 
-import uk.ac.qub.jmccambridge06.wetravel.network.JsonFetcher;
-import uk.ac.qub.jmccambridge06.wetravel.network.NetworkResultCallback;
-import uk.ac.qub.jmccambridge06.wetravel.network.routes;
 import uk.ac.qub.jmccambridge06.wetravel.utilities.DateTime;
 
 

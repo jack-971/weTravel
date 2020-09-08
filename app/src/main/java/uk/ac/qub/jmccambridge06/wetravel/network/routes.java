@@ -6,6 +6,7 @@ public final class routes {
 
     private static String mainUrl = "http://10.0.2.2:8080/";
     //private static String mainUrl = "https://travel-with-4cd49.web.app/";
+    //private static String mainUrl = "https://us-central1-travel-with-4cd49.cloudfunctions.net/app/";
 
     private static String secure = "secure/";
     private static String userAccount = "profile/";
@@ -20,6 +21,7 @@ public final class routes {
     private static String addUserToTrip = "user/";
     private static String leaveTrip = "leave/";
     private static String status = "status/";
+    private static String notification = "notification/";
 
     private static String placesAPI = "https://maps.googleapis.com/maps/api/geocode/json?place_id=";
     private static String locationsAPI = "https://maps.googleapis.com/maps/api/place/nearbysearch/json?";
@@ -107,5 +109,13 @@ public final class routes {
 
     public static String loginUser() {
         return mainUrl + "login";
+    }
+
+    public static String postNotificationKey(int userId) {
+        return mainUrl + secure + notification + userId;
+    }
+
+    public static String patchNotification(int notificationId) {
+        return mainUrl+secure+notification+"read/"+notificationId;
     }
 }

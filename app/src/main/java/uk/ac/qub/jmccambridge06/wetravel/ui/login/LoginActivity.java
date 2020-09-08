@@ -1,7 +1,8 @@
-package uk.ac.qub.jmccambridge06.wetravel.login;
+package uk.ac.qub.jmccambridge06.wetravel.ui.login;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -15,6 +16,7 @@ public class LoginActivity extends AppCompatActivity {
 
     private LoginFragment loginFragment;
     private RegisterFragment registerFragment;
+    private boolean notification;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -55,9 +57,25 @@ public class LoginActivity extends AppCompatActivity {
         JWT jwt = new JWT(token);
         int userId = jwt.getClaim("userId").asInt();
         TokenOperator.setToken(getApplicationContext(), token);
+
+        // get notification from firebase notification intent
+        Intent startUpIntent = getIntent();
+        boolean notification = startUpIntent.getBooleanExtra("notification", false);
+
         Intent intent = new Intent(getApplicationContext(), MainMenuActivity.class);
         intent.putExtra("userId", userId); //Optional parameters
+        intent.putExtra("notification", notification);
+        /*intent.putExtra("type", intent.getStringExtra("type"));
+        intent.putExtra("id", intent.getStringExtra("id"));*/
         startActivity(intent);
         this.finish();
+    }
+
+    @Override
+    protected void onNewIntent(Intent intent) {
+        super.onNewIntent(intent);
+        setIntent(intent);
+        // add boolean to confirm if cold boot from notification.
+        this.notification = intent.getBooleanExtra("notification", false);
     }
 }

@@ -42,12 +42,18 @@ public class DateTime extends Date{
     }
 
     public static Date sqlToDate(Long milliseconds) {
-
         // Create a calendar object that will convert the date and time value in milliseconds to date.
         Calendar calendar = Calendar.getInstance();
         calendar.setTimeInMillis(milliseconds);
         return calendar.getTime();
     }
+
+    public static long dateToSQL(Date date) {
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTime(date);
+        return calendar.getTimeInMillis();
+    }
+
 
     /**
      * Converts a string date into milliseconds long format.
@@ -78,6 +84,11 @@ public class DateTime extends Date{
      */
     public static String formatDate(Date date) {
         SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yy");
+        return formatter.format(date);
+    }
+
+    public static String formatTime(Date date) {
+        SimpleDateFormat formatter = new SimpleDateFormat("HH:mm");
         return formatter.format(date);
     }
 

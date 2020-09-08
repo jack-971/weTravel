@@ -1,28 +1,32 @@
 package uk.ac.qub.jmccambridge06.wetravel.ui;
 
+import android.content.Context;
 import android.os.Bundle;
-import android.util.Log;
+import android.util.AttributeSet;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.fragment.app.Fragment;
 
 import org.json.JSONArray;
 import org.json.JSONException;
-import org.json.JSONObject;
 
+import java.util.ArrayList;
 
-import uk.ac.qub.jmccambridge06.wetravel.models.Profile;
+import uk.ac.qub.jmccambridge06.wetravel.models.Notification;
 import uk.ac.qub.jmccambridge06.wetravel.R;
-import uk.ac.qub.jmccambridge06.wetravel.network.RelationshipTypesDb;
-import uk.ac.qub.jmccambridge06.wetravel.network.JsonFetcher;
-import uk.ac.qub.jmccambridge06.wetravel.network.routes;
 
-public class UserListFragment extends ListFragment {
+public class NotificationListFragment extends ListFragment {
 
-    private String query = null;
+    ArrayList<Notification> notifications;
+
+    public NotificationListFragment() {
+        this.notifications = null;
+    }
 
     @Nullable
     @Override
@@ -32,17 +36,29 @@ public class UserListFragment extends ListFragment {
 
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
-        logtag = "FriendListFragment";
+        logtag = "NotificationListFragment";
         super.onViewCreated(view, savedInstanceState);
-        loadCallback();
-        getData();
+        setNotifications(((MainMenuActivity)getActivity()).getUserAccount().getNotificationCentre().getNotifications());
+        if (notifications.size() == 0) {
+            noData();
+        }
+        /*loadCallback();
+        getData();*/
+
+    }
+
+    private void addNotifications() {
+        for (int loop=0; loop<notifications.size(); loop++) {
+            list.add(notifications.get(loop));
+        }
+        updateList();
     }
 
     /**
      * Checks whether it is for a search and determines which route to send.
      */
     void getData() {
-        Log.i(logtag, "getting data");
+        /*Log.i(logtag, "getting data");
             jsonFetcher = new JsonFetcher(getCallback,getContext());
             String url;
             if (query != null) {
@@ -50,12 +66,13 @@ public class UserListFragment extends ListFragment {
             } else {
                 url = routes.getUsersRoute(profile.getUserId());
             }
-            jsonFetcher.getData(url);
+            jsonFetcher.getData(url);*/
     }
+
 
     @Override
     public void fillList(View view, JSONArray jsonArray) throws JSONException {
-        Log.i(logtag, "filling list now");
+        /*Log.i(logtag, "filling list now");
         for (int loop=0; loop<jsonArray.length(); loop++) {
             JSONObject friend = jsonArray.getJSONObject(loop);
             int userId = Integer.parseInt(friend.getString("UserID"));
@@ -83,22 +100,30 @@ public class UserListFragment extends ListFragment {
             noData();
         } else {
             updateList();
-        }
+        }*/
 
-    }
-
-    public void setQuery(String query) {
-        this.query = query;
     }
 
     @Override
     public void setAdapter() {
-        adapter = new UserListAdapter(list, getContext());
+        adapter = new NotificationListAdapter(list, getContext());
     }
 
     @Override
     protected void noData() {
         super.noData();
-        noDataText.setText(R.string.error_no_users);
+        noDataText.setText(R.string.no_notifications);
     }
+
+    public void setNotifications(ArrayList<Notification> notifications) {
+        this.notifications = notifications;
+        addNotifications();
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        ((MainMenuActivity)getActivity()).updateNotificationBadge();
+    }
+
 }

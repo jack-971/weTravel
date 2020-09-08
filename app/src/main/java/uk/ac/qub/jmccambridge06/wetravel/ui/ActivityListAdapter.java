@@ -10,8 +10,8 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import java.util.ArrayList;
 
-import uk.ac.qub.jmccambridge06.wetravel.Activity;
-import uk.ac.qub.jmccambridge06.wetravel.Leg;
+import uk.ac.qub.jmccambridge06.wetravel.models.Activity;
+import uk.ac.qub.jmccambridge06.wetravel.models.Leg;
 import uk.ac.qub.jmccambridge06.wetravel.R;
 
 public class ActivityListAdapter extends EntryListAdapter {

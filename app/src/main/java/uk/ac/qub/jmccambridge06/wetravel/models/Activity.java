@@ -1,8 +1,6 @@
-package uk.ac.qub.jmccambridge06.wetravel;
+package uk.ac.qub.jmccambridge06.wetravel.models;
 
 import org.json.JSONObject;
-
-import java.util.ArrayList;
 
 public class Activity extends ItineraryItem {
 

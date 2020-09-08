@@ -1,13 +1,10 @@
-package uk.ac.qub.jmccambridge06.wetravel;
+package uk.ac.qub.jmccambridge06.wetravel.models;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.util.ArrayList;
 import java.util.LinkedHashMap;
-
-import uk.ac.qub.jmccambridge06.wetravel.utilities.DateTime;
 
 public class Leg extends ItineraryItem {
 

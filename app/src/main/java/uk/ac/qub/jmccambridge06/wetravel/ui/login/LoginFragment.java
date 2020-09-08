@@ -1,6 +1,5 @@
-package uk.ac.qub.jmccambridge06.wetravel.login;
+package uk.ac.qub.jmccambridge06.wetravel.ui.login;
 
-import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -16,6 +15,10 @@ import androidx.fragment.app.Fragment;
 
 import com.android.volley.VolleyError;
 import com.auth0.android.jwt.JWT;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.iid.FirebaseInstanceId;
+import com.google.firebase.iid.InstanceIdResult;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -26,8 +29,6 @@ import uk.ac.qub.jmccambridge06.wetravel.R;
 import uk.ac.qub.jmccambridge06.wetravel.network.JsonFetcher;
 import uk.ac.qub.jmccambridge06.wetravel.network.NetworkResultCallback;
 import uk.ac.qub.jmccambridge06.wetravel.network.routes;
-import uk.ac.qub.jmccambridge06.wetravel.ui.MainMenuActivity;
-import uk.ac.qub.jmccambridge06.wetravel.utilities.TokenOperator;
 
 public class LoginFragment extends Fragment {
 
@@ -37,6 +38,7 @@ public class LoginFragment extends Fragment {
     @BindView(R.id.login_password) EditText password;
 
     NetworkResultCallback loginCallback;
+    String logtag = "Login";
 
     @Nullable
     @Override
@@ -75,17 +77,32 @@ public class LoginFragment extends Fragment {
                 try {
                     String token = response.getString("token");
                     ((LoginActivity)getActivity()).launchMainMenu(token);
+                    // get notification token for device and send to db
+                    FirebaseInstanceId.getInstance().getInstanceId().addOnCompleteListener(new OnCompleteListener<InstanceIdResult>() {
+                        @Override
+                        public void onComplete(@NonNull Task<InstanceIdResult> task) {
+                            if (task.isSuccessful()) {
+                                JWT jwt = new JWT(token);
+                                String key = task.getResult().getToken();
+                                Log.i("tag", key);
+                                JsonFetcher jsonFetcher = new JsonFetcher(null, getContext());
+                                jsonFetcher.addParam("key", key);
+                                jsonFetcher.addParam("status", "login");
+                                jsonFetcher.patchData(routes.postNotificationKey(jwt.getClaim("userId").asInt()));
+                            } else {
+                                Log.d(logtag, "Error getting notification token");
+                            }
+                        }
+                    });
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
-                // extract web token
-                // decrypt web token
-                // get userId
-                // launch activity - setting user account to that retrieved user id.
             }
 
             @Override
             public void notifyError(VolleyError error) {
+                Log.e(logtag, error.toString());
+                error.printStackTrace();
                 Toast.makeText(getContext(), R.string.login_error, Toast.LENGTH_SHORT).show();
             }
         };

@@ -2,9 +2,7 @@ package uk.ac.qub.jmccambridge06.wetravel.ui;
 
 import android.os.Bundle;
 import android.util.Log;
-import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -12,8 +10,7 @@ import androidx.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
 
-import uk.ac.qub.jmccambridge06.wetravel.Leg;
-import uk.ac.qub.jmccambridge06.wetravel.Trip;
+import uk.ac.qub.jmccambridge06.wetravel.models.Leg;
 
 
 public class LegListFragment extends EntryListFragment {

@@ -6,7 +6,6 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -14,21 +13,9 @@ import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
-
 import java.util.ArrayList;
 
-import butterknife.BindView;
-import butterknife.ButterKnife;
-import uk.ac.qub.jmccambridge06.wetravel.ItineraryItem;
-import uk.ac.qub.jmccambridge06.wetravel.Profile;
 import uk.ac.qub.jmccambridge06.wetravel.R;
-import uk.ac.qub.jmccambridge06.wetravel.Trip;
-import uk.ac.qub.jmccambridge06.wetravel.network.JsonFetcher;
-import uk.ac.qub.jmccambridge06.wetravel.network.NetworkResultCallback;
-import uk.ac.qub.jmccambridge06.wetravel.network.routes;
 
 public abstract class EntryListFragment extends Fragment {
 

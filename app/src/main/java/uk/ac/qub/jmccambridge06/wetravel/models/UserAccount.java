@@ -1,4 +1,4 @@
-package uk.ac.qub.jmccambridge06.wetravel;
+package uk.ac.qub.jmccambridge06.wetravel.models;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -16,6 +16,7 @@ public class UserAccount {
     private Profile profile;
     private ArrayList<Profile> friendsList;
     private HashMap<String, Boolean> settings;
+    private NotificationCentre notificationCentre;
 
 /*
 
@@ -80,6 +81,23 @@ public class UserAccount {
         }
     }
 
+    public Profile getFriendsProfile(int id) {
+        for (int loop = 0; loop<friendsList.size(); loop++) {
+            if (friendsList.get(loop).getUserId() == id) {
+                return friendsList.get(loop);
+            }
+        }
+        //int index = friendsList.indexOf(profile.getUserId() == id);
+        return null;
+    }
+
+    public boolean checkFriendsProfile(int id) {
+        if (friendsList.contains(profile.getUserId() == id)) {
+            return true;
+        }
+        return false;
+    }
+
     /**
      * Adds a profile to the friends list.
      * @param profile
@@ -142,4 +160,11 @@ public class UserAccount {
 
     }
 
+    public NotificationCentre getNotificationCentre() {
+        return notificationCentre;
+    }
+
+    public void setNotificationCentre(NotificationCentre notificationCentre) {
+        this.notificationCentre = notificationCentre;
+    }
 }

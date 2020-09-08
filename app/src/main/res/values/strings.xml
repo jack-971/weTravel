@@ -137,6 +137,11 @@
     <string name="enter_all">Please enter all fields!</string>
     <string name="username_taken">Username taken - please choose a new username!</string>
 
-
+    <!--Notifications-->
+    <string name="friend_req_notification">You have a new friend request!</string>
+    <string name="friend_accept_notification">Your friend request has been accepted!</string>
+    <string name="added_trip_notification">You have been added to a trip!</string>
+    <string name="no_notifications">No notifications to display!</string>
+    <string name="notification_title">New Notification</string>
 
 </resources>

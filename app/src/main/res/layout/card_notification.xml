@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    app:cardCornerRadius="@dimen/card_corner_rad"
+    android:layout_marginBottom="@dimen/_5sdp"
+    android:id="@+id/card">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/notification_card"
+        android:layout_margin="@dimen/_4sdp">
+
+    <de.hdodenhof.circleimageview.CircleImageView
+        android:layout_width="@dimen/_32sdp"
+        android:layout_height="@dimen/_48sdp"
+        android:padding="0dp"
+        android:layout_marginLeft="@dimen/_8sdp"
+        android:id="@+id/notification_image"
+        android:layout_centerVertical="true"
+        android:src="@drawable/ic_notifications_none_black_24dp"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_toRightOf="@id/notification_image"
+            android:textSize="@dimen/_14sdp"
+            android:id="@+id/notification_text"
+            android:textColor="@color/card_major_text"
+            android:layout_marginTop="@dimen/_8sdp"
+            android:layout_marginLeft="@dimen/_12sdp"
+            />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/notification_text"
+                android:layout_toRightOf="@id/notification_image"
+                android:textSize="@dimen/_12sdp"
+                android:id="@+id/notification_time"
+                android:textColor="@color/card_minor_text"
+                android:layout_marginLeft="@dimen/_12sdp"
+                />
+
+        </RelativeLayout>
+
+</androidx.cardview.widget.CardView>
