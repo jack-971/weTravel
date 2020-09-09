@@ -52,7 +52,7 @@ public abstract class TripEntryFragment extends DisplayFragment {
     @BindView(R.id.trip_name_view) View tripNameView;
     @BindView(R.id.edit_trip_name) EditText tripName;
     @BindView(R.id.trip_picture_view) View tripPictureView;
-    @BindView(R.id.edit_trip_picture) TextView tripPicture;
+    @BindView(R.id.edit_trip_picture) Button tripPicture;
     @BindView(R.id.trip_date_view) View tripDateView;
     @BindView(R.id.edit_trip_date_start) EditText startDate;
     @BindView(R.id.edit_trip_date_finish) EditText finishDate;
@@ -87,11 +87,9 @@ public abstract class TripEntryFragment extends DisplayFragment {
     @BindView(R.id.complete_notes) TextView completeNotes;
     @BindView(R.id.complete_review_text) TextView completeReview;
 
-    // All buttons
-    @BindView(R.id.trip_edit_button) Button editButton;
     @BindView(R.id.trip_save_button) Button saveButton;
     @BindView(R.id.trip_leave_button) Button leaveButton;
-    @BindView(R.id.trip_add_attendee_button) TextView addAttendeeButton;
+    @BindView(R.id.trip_add_attendee_button) Button addAttendeeButton;
 
     @BindView(R.id.checkbox_attendees) CheckBox addAllCheckBox;
 
@@ -174,7 +172,6 @@ public abstract class TripEntryFragment extends DisplayFragment {
         leaveButton.setVisibility(View.GONE);
         saveButton.setVisibility(View.GONE);
         makeActiveButton.setVisibility(View.GONE);
-        editButton.setVisibility(View.GONE);
     }
 
     protected abstract void sendData();
@@ -211,8 +208,8 @@ public abstract class TripEntryFragment extends DisplayFragment {
         jsonFetcher.addParam("Description", description.getText().toString());
         jsonFetcher.addParam("Review", review.getText().toString());
         if (location.getTag()==null) {
-            jsonFetcher.addParam("LocationID", "");
-            jsonFetcher.addParam("LocationDetail", "");
+            jsonFetcher.addParam("LocationID", "null");
+            jsonFetcher.addParam("LocationDetail", "null");
         } else {
             jsonFetcher.addParam("LocationID", location.getTag().toString());
             jsonFetcher.addParam("LocationDetail", location.getText().toString());

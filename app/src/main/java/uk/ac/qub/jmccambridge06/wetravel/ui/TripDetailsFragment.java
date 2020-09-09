@@ -71,26 +71,21 @@ public class TripDetailsFragment extends TripEntryFragment {
         tripNotesView.setVisibility(View.GONE);
         addAllCheckBox.setVisibility(View.GONE);
         tripAttachmentsView.setVisibility(View.GONE);
-        editButton.setVisibility(View.INVISIBLE);
         tripRatingView.setVisibility(View.GONE);
 
         if (trip == null) {
-            tripReviewView.setVisibility(View.GONE);
             saveButton.setVisibility(View.VISIBLE);
         } else if (trip.getStatus().equalsIgnoreCase("planned")) {
             makeActiveButton.setVisibility(View.VISIBLE);
-            tripReviewView.setVisibility(View.GONE);
             saveButton.setVisibility(View.VISIBLE);
         } else if (trip.getStatus().equalsIgnoreCase("active")) {
             saveButton.setVisibility(View.VISIBLE);
             leaveButton.setVisibility(View.GONE);
             makeActiveButton.setText(R.string.complete);
             makeActiveButton.setVisibility(View.VISIBLE);
-            tripAddAttendeesView.setVisibility(View.GONE);
             leaveButton.setVisibility(View.GONE);
         } else {
             displayComplete();
-
         }
 
         // execute following code if trip is in editing phase. else it is a new trip being created so placeholders should be used. If new trip

@@ -64,10 +64,11 @@
     <string name="make_active">Make Active Trip</string>
     <string name="trip_notes_text">Notes:</string>
     <string name="trip_name_hint">Add Name</string>
-    <string name="trip_picture_hint">Add Picture</string>
-    <string name="trip_picture_change">Change Picture</string>
-    <string name="trip_date_start_hint">Date</string>
-    <string name="trip_date_finish_hint">Date</string>
+    <string name="trip_picture_hint">Add Icon</string>
+    <string name="trip_picture_change">Change Icon</string>
+    <string name="trip_date_start_hint">Date Start</string>
+    <string name="date_hyphen">-</string>
+    <string name="trip_date_finish_hint">Date Finish</string>
     <string name="trip_time_start_hint">Time</string>
     <string name="trip_time_finish_hint">Time</string>
     <string name="trip_description_hint">Add Description</string>

@@ -29,7 +29,6 @@ public abstract class EntryListAdapter extends RecyclerView.Adapter<EntryListAda
         @BindView(R.id.entry_card_dates) TextView dates;
         @BindView(R.id.card_times_view) View timesView;
         @BindView(R.id.entry_card_times) TextView times;
-        @BindView(R.id.card_description) TextView description;
         @BindView(R.id.card_locations_view) View locationsView;
         @BindView(R.id.entry_card_location) TextView locations;
         @BindView(R.id.card) View card;
@@ -92,12 +91,6 @@ public abstract class EntryListAdapter extends RecyclerView.Adapter<EntryListAda
             }
         } else {
             holder.datesView.setVisibility(View.GONE);
-        }
-
-        if (current.getDescription() != null) {
-            holder.description.setText((current.getDescription()));
-        } else {
-            holder.description.setVisibility(View.GONE);
         }
     }
 

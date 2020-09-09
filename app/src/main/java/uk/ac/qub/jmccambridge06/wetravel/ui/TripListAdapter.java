@@ -27,7 +27,6 @@ public class TripListAdapter extends EntryListAdapter {
             super(itemView);
             Log.d(logtag, "start trip list view holder");
             timesView.setVisibility(View.INVISIBLE);
-            description.setVisibility(View.GONE);
         }
     }
 
@@ -49,7 +48,6 @@ public class TripListAdapter extends EntryListAdapter {
     public void onBindViewHolder(@NonNull EntryListViewHolder holder, int position) {
         Trip current = (Trip) entryCardList.get(position);
         holder.datesView.setVisibility(View.VISIBLE);
-        holder.description.setVisibility(View.VISIBLE);
         holder.locationsView.setVisibility(View.VISIBLE);
         Log.d(logtag, "binding" + current.getEntryName());
         checkDisplay(current, holder);
