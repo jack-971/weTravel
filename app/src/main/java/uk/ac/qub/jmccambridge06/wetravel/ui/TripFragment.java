@@ -91,7 +91,7 @@ public class TripFragment extends Fragment {
         if (trip != null) {
             loadTripDataCallback();
             jsonFetcher = new JsonFetcher(getTripCallback, getContext());
-            jsonFetcher.getData(routes.getTrip(trip.getProfile().getUserId(), trip.getEntryId()));
+            jsonFetcher.getData(routes.getTrip(trip.getProfile().getUserId(), trip.getEntryId(), trip.getStatus()));
             if (trip.getStatus().equals("active")) {
                 FloatingActionButton quickAdd = ((MainMenuActivity)getActivity()).findViewById(R.id.floating_action_button);
                 //quickAdd.setVisibility(View.VISIBLE);

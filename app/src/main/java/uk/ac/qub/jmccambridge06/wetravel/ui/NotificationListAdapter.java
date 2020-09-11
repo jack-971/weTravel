@@ -114,7 +114,7 @@ public class NotificationListAdapter extends RecyclerView.Adapter<NotificationLi
                     public void onClick(View v) {
                         loadTrip();
                         jsonFetcher = new JsonFetcher(tripCallback, context);
-                        jsonFetcher.getData(routes.getTrip( ((MainMenuActivity)context).getUserAccount().getUserId(), current.getTripId()));
+                        jsonFetcher.getData(routes.getTrip( ((MainMenuActivity)context).getUserAccount().getUserId(), current.getTripId(), "planned"));
                         updateRead(current);
                     }
                 };

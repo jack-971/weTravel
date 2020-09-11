@@ -79,6 +79,14 @@
             android:id="@+id/date_icon"
             android:layout_centerVertical="true"/>
 
+        <RelativeLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/edit_trip_date_view"
+            android:layout_toRightOf="@id/date_icon"
+            android:layout_marginTop="0dp"
+            android:layout_centerHorizontal="true">
+
     <EditText
         android:textStyle="italic"
         android:id="@+id/edit_trip_date_start"
@@ -87,27 +95,18 @@
         android:textSize="@dimen/major_text"
         android:paddingBottom="5dp"
         android:paddingTop="0dp"
-        android:layout_toRightOf="@id/date_icon"
         android:hint="@string/trip_date_start_hint"
         android:editable="false"
         android:clickable="true"
         android:focusable="false"/>
 
         <TextView
-            android:id="@+id/complete_trip_date_start"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textSize="@dimen/major_text"
-            android:layout_toRightOf="@id/date_icon"
-            android:paddingBottom="5dp"
-            android:paddingTop="0dp"
-            android:visibility="gone"/>
-
-        <TextView
             android:textStyle="bold"
             android:id="@+id/trip_date_hyphen"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginLeft="0dp"
+            android:layout_marginRight="@dimen/_2sdp"
             android:text="@string/date_hyphen"
             android:layout_toRightOf="@id/edit_trip_date_start"
             android:textSize="@dimen/major_text"
@@ -124,7 +123,6 @@
         android:layout_toRightOf="@id/edit_trip_date_start"
         android:textSize="@dimen/major_text"
         android:textColor="@android:color/black"
-        android:layout_marginRight="@dimen/text_margins"
         android:visibility="gone"/>
 
     <EditText
@@ -141,15 +139,51 @@
         android:clickable="true"
         android:focusable="false"/>
 
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/complete_trip_date_view"
+            android:layout_toRightOf="@id/date_icon"
+            android:layout_marginTop="0dp"
+            android:layout_centerHorizontal="true">
+
+        <TextView
+            android:id="@+id/complete_trip_date_start"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="@dimen/major_text"
+            android:paddingBottom="5dp"
+            android:paddingTop="0dp"
+            android:layout_marginRight="0dp"
+            android:visibility="gone"/>
+
+        <TextView
+            android:textStyle="bold"
+            android:id="@+id/complete_trip_date_hyphen"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="0dp"
+            android:layout_marginRight="@dimen/_2sdp"
+            android:text="@string/date_hyphen"
+            android:layout_toRightOf="@id/complete_trip_date_start"
+            android:textSize="@dimen/major_text"
+            android:textColor="@android:color/black"
+            android:visibility="gone"/>
+
         <TextView
             android:id="@+id/complete_trip_date_finish"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textSize="@dimen/major_text"
-            android:layout_toRightOf="@id/trip_date_hyphen"
+            android:layout_toRightOf="@id/complete_trip_date_hyphen"
             android:paddingBottom="5dp"
             android:paddingTop="0dp"
-            android:visibility="gone"/>
+            android:visibility="gone"
+            android:layout_marginLeft="0dp"/>
+
+        </RelativeLayout>
 
 </RelativeLayout>
 
@@ -268,7 +302,8 @@
         android:id="@+id/trip_picture_view"
         android:layout_below="@id/trip_location_view"
         android:layout_marginTop="0dp"
-        android:layout_centerHorizontal="true">
+        android:layout_centerHorizontal="true"
+        android:visibility="gone">
 
         <TextView
             android:textStyle="bold"
@@ -356,8 +391,9 @@
         android:id="@+id/trip_notes_view"
         android:layout_below="@id/trip_description_view"
         android:layout_marginTop="@dimen/text_margin_bottom"
-        android:visibility="visible"
-        android:layout_centerHorizontal="true">
+        android:visibility="gone"
+        android:layout_centerHorizontal="true"
+        >
 
         <TextView
             android:textStyle="bold"
@@ -443,7 +479,8 @@
         android:id="@+id/trip_attendees_view"
         android:layout_below="@id/trip_review_text_view"
         android:layout_marginTop="@dimen/text_margin_bottom"
-        android:layout_centerHorizontal="true">
+        android:layout_centerHorizontal="true"
+        android:visibility="gone">
 
         <TextView
             android:textStyle="bold"
@@ -486,7 +523,7 @@
         android:layout_height="wrap_content"
         android:id="@+id/trip_add_attendees_view"
         android:layout_below="@id/trip_attendees_view"
-        android:visibility="visible"
+        android:visibility="gone"
         android:layout_centerHorizontal="true">
 
         <AutoCompleteTextView
@@ -619,45 +656,79 @@
         android:layout_marginTop="@dimen/_16sdp"
         android:layout_centerHorizontal="true">
 
+        <Button
+            android:id="@+id/trip_gallery_button"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textSize="@dimen/major_text"
+            android:text="@string/view_gallery"
+            android:textAllCaps="false"
+            android:background="@drawable/button"
+            android:layout_marginTop="@dimen/_4sdp"
+            android:layout_marginBottom="@dimen/_4sdp"
+            android:textColor="@color/button_text"
+            android:visibility="visible"/>
+
+        <FrameLayout
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/_200sdp"
+            android:id="@+id/gallery_container"
+            android:layout_below="@id/trip_gallery_button"
+            android:visibility="gone"/>
+
+        <Button
+            android:id="@+id/trip_add_picture_button"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:textSize="@dimen/major_text"
+            android:text="@string/add_picture"
+            android:textAllCaps="false"
+            android:background="@drawable/button"
+            android:layout_below="@id/gallery_container"
+            android:layout_marginTop="@dimen/_4sdp"
+            android:layout_marginBottom="@dimen/_4sdp"
+            android:textColor="@color/button_text"
+            android:visibility="visible"/>
+
     <Button
         android:id="@+id/trip_save_button"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:textSize="@dimen/major_text"
         android:text="@string/save_changes"
         android:textAllCaps="false"
+        android:layout_below="@id/trip_add_picture_button"
         android:background="@drawable/button"
-        android:layout_marginTop="@dimen/text_margins"
-        android:layout_marginBottom="@dimen/_8sdp"
+        android:layout_marginTop="@dimen/_4sdp"
+        android:layout_marginBottom="@dimen/_4sdp"
         android:textColor="@color/button_text"
         android:visibility="visible"/>
 
     <Button
         android:id="@+id/trip_leave_button"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:textSize="@dimen/major_text"
-        android:layout_toRightOf="@id/trip_save_button"
-        android:layout_marginLeft="@dimen/text_margins"
+        android:layout_below="@id/trip_save_button"
         android:text="@string/leave_trip"
         android:textAllCaps="false"
         android:background="@drawable/button"
-        android:layout_marginTop="@dimen/text_margins"
+        android:layout_marginTop="@dimen/_4sdp"
+        android:layout_marginBottom="@dimen/_4sdp"
         android:textColor="@color/button_text"
-        android:visibility="visible"/>
+        android:visibility="gone"/>
 
     <Button
         android:id="@+id/trip_active_button"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:textSize="@dimen/major_text"
-
-        android:layout_toRightOf="@id/trip_leave_button"
-        android:layout_marginLeft="@dimen/text_margins"
+        android:layout_below="@id/trip_leave_button"
         android:text="@string/active"
         android:textAllCaps="false"
         android:background="@drawable/button"
-        android:layout_marginTop="@dimen/text_margins"
+        android:layout_marginTop="@dimen/_4sdp"
+        android:layout_marginBottom="@dimen/_4sdp"
         android:textColor="@color/button_text"
         android:visibility="gone"/>
 

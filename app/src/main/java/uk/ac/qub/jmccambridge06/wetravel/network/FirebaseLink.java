@@ -32,6 +32,8 @@ public class FirebaseLink {
     public static String profilePicturePrefix = "profile_";
     public static String tripHeaderPath = "trip_headers/";
     public static String tripHeaderPrefix = "trip_header_";
+    public static String postPath = "post/";
+    public static String postPrefix = "post_";
 
     private static StorageReference TripPictureFolder;
 

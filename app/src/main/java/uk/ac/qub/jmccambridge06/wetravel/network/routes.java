@@ -22,6 +22,7 @@ public final class routes {
     private static String leaveTrip = "leave/";
     private static String status = "status/";
     private static String notification = "notification/";
+    private static String image = "image/";
 
     private static String placesAPI = "https://maps.googleapis.com/maps/api/geocode/json?place_id=";
     private static String locationsAPI = "https://maps.googleapis.com/maps/api/place/nearbysearch/json?";
@@ -66,8 +67,8 @@ public final class routes {
      * @param tripId
      * @return
      */
-    public static String getTrip(int userId, int tripId) {
-        return mainUrl +secure+ trips + trip + userId+"?trip="+tripId;
+    public static String getTrip(int userId, int tripId, String status) {
+        return mainUrl +secure+ trips + trip + userId+"?trip="+tripId+"&status="+status;
     }
 
     public static String leaveTrip(int userId, int id, String type) {
@@ -117,5 +118,13 @@ public final class routes {
 
     public static String patchNotification(int notificationId) {
         return mainUrl+secure+notification+"read/"+notificationId;
+    }
+
+    public static String postImage(int postId) {
+        return mainUrl + secure + image + postId;
+    }
+
+    public static String getImage(int postId, int userId, String type) {
+        return mainUrl + secure + image + postId+"?user="+userId+"&type="+type;
     }
 }

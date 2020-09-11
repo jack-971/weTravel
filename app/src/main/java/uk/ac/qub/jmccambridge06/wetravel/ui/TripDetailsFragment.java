@@ -19,7 +19,6 @@ import org.json.JSONObject;
 
 import java.io.IOException;
 import java.util.Calendar;
-import java.util.Date;
 import java.util.UUID;
 
 import uk.ac.qub.jmccambridge06.wetravel.R;
@@ -31,27 +30,22 @@ import uk.ac.qub.jmccambridge06.wetravel.network.NetworkResultCallback;
 import uk.ac.qub.jmccambridge06.wetravel.network.StatusTypesDb;
 import uk.ac.qub.jmccambridge06.wetravel.network.routes;
 import uk.ac.qub.jmccambridge06.wetravel.utilities.DateTime;
-import uk.ac.qub.jmccambridge06.wetravel.utilities.EditTextDateClicker;
 import uk.ac.qub.jmccambridge06.wetravel.utilities.ImageUtility;
 
 public class TripDetailsFragment extends TripEntryFragment {
 
     NetworkResultCallback activeTripCallback;
+    Trip trip;
+    final int ICON_REQUEST_CODE = 03;
 
-    /**
-     * Constructor with trip argument - used for showing existing trips
-     * @param trip
-     */
     public TripDetailsFragment(Trip trip) {
-        super();
+        super(trip);
         this.trip = trip;
+        this.type = "trip";
     }
 
-    /**
-     * Default constructor - used for new trips
-     */
     public TripDetailsFragment() {
-
+        this.type = "trip";
     }
 
     @Nullable
@@ -66,50 +60,21 @@ public class TripDetailsFragment extends TripEntryFragment {
         super.onViewCreated(view, savedInstanceState);
         logtag = "trip details";
 
-        // Set visibility for all components.
-        tripTimeView.setVisibility(View.GONE);
-        tripNotesView.setVisibility(View.GONE);
-        addAllCheckBox.setVisibility(View.GONE);
-        tripAttachmentsView.setVisibility(View.GONE);
-        tripRatingView.setVisibility(View.GONE);
-
-        if (trip == null) {
-            saveButton.setVisibility(View.VISIBLE);
-        } else if (trip.getStatus().equalsIgnoreCase("planned")) {
+        if (item == null) {
+            tripPictureView.setVisibility(View.GONE);
+        } else if (item.getStatus().equalsIgnoreCase("planned")) {
             makeActiveButton.setVisibility(View.VISIBLE);
-            saveButton.setVisibility(View.VISIBLE);
-        } else if (trip.getStatus().equalsIgnoreCase("active")) {
-            saveButton.setVisibility(View.VISIBLE);
-            leaveButton.setVisibility(View.GONE);
+            tripPictureView.setVisibility(View.VISIBLE);
+        } else if (item.getStatus().equalsIgnoreCase("active")) {
             makeActiveButton.setText(R.string.complete);
             makeActiveButton.setVisibility(View.VISIBLE);
-            leaveButton.setVisibility(View.GONE);
-        } else {
-            displayComplete();
+            tripPictureView.setVisibility(View.VISIBLE);
         }
-
-        // execute following code if trip is in editing phase. else it is a new trip being created so placeholders should be used. If new trip
-        // dates in calendar picker automated to null otherwise come from the database values.
-        Date initialiseStartDate = null;
-        Date initialiseFinishDate = null;
-        if (trip != null) {
-            initialiseStartDate=trip.getStartDate();
-            initialiseFinishDate=trip.getEndDate();
-            loadDetails();
-        } else {
-            tripAttendeesView.setVisibility(View.GONE);
-            tripAddAttendeesView.setVisibility(View.GONE);
-            leaveButton.setVisibility(View.GONE);
-            tripPictureView.setVisibility(View.GONE);
-        }
-
-        startDate.setOnClickListener(new EditTextDateClicker(getContext(), startDate, initialiseStartDate));
-        finishDate.setOnClickListener(new EditTextDateClicker(getContext(), finishDate, initialiseFinishDate));
 
         tripPicture.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                startActivityForResult(Intent.createChooser(ImageUtility.setIntent(), "Select Picture"), ImageUtility.IMG_REQUEST_ID);
+                startActivityForResult(Intent.createChooser(ImageUtility.setIntent(), "Select Picture"), ICON_REQUEST_CODE);
             }
         });
     }
@@ -118,37 +83,13 @@ public class TripDetailsFragment extends TripEntryFragment {
 
     @Override
     public void loadDetails() {
-       tripName.setText(trip.getEntryName());
-       completeTripName.setText(trip.getEntryName());
-       if (trip.getStartDate() != null) {
-           startDate.setText(DateTime.formatDate(trip.getStartDate()));
-           completeDateStart.setText(DateTime.formatDate(trip.getStartDate()));
-       }
-       if (trip.getEndDate() != null) {
-           finishDate.setText(DateTime.formatDate(trip.getEndDate()));
-           completeDateFinish.setText(DateTime.formatDate(trip.getEndDate()));
-       }
-       if (trip.getDescription() != null) {
-           description.setText(trip.getDescription());
-           completeDescription.setText(trip.getDescription());
-       }
+        super.loadDetails();
+
        if (trip.getTripPicture() != null) {
            tripPicture.setText(R.string.trip_picture_change);
            setMainImageString(trip.getTripPicture());
        }
-       if (trip.getLocation() !=null) {
-           location.setText(trip.getLocation().getName());
-           location.setTag(trip.getLocation().getId());
-           completeTripLocation.setText(trip.getLocation().getName());
-       }
-       if (trip.getReview() != null) {
-           review.setText(trip.getReview());
-           completeReview.setText(trip.getReview());
-       }
 
-        // add users to a string to add to attendees text view.
-        attendees.setText(addUsers(trip.getUserList().values()));
-        completeAttendees.setText(addUsers(trip.getUserList().values()));
         addAttendeesSetUp(((MainMenuActivity)getActivity()).getUserAccount().getFriendsList());
 
         makeActiveButton.setOnClickListener(new View.OnClickListener() {
@@ -173,7 +114,7 @@ public class TripDetailsFragment extends TripEntryFragment {
 
 
     /**
-     * Activity result for when profile picture is clicked. Chosen image is saved as bitmap and saved to firebase.
+     * Activity result for when change icon is clicked. Chosen image is saved as bitmap and saved to firebase.
      * @param requestCode
      * @param resultCode
      * @param data
@@ -182,7 +123,7 @@ public class TripDetailsFragment extends TripEntryFragment {
     public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         try {
-            if (requestCode == ImageUtility.IMG_REQUEST_ID && resultCode == Activity.RESULT_OK && data != null && data.getData() != null) {
+            if (requestCode == ICON_REQUEST_CODE && resultCode == Activity.RESULT_OK && data != null && data.getData() != null) {
                 ImageUtility.storeImageAsBitmap(requestCode, resultCode, data, getContext(), this);
                 tripPicture.setText(R.string.trip_picture_change);
                 setPictureChanged(true);
@@ -224,49 +165,6 @@ public class TripDetailsFragment extends TripEntryFragment {
     }
 
     @Override
-    protected void sendAttendeeData() {
-        // Check to make sure not already in trip - checking the id captured in suggestions box
-        for (int userId : trip.getUserList().keySet()) {
-            if ((Integer)addAttendees.getTag() == userId) {
-                Toast.makeText(getActivity().getApplicationContext(), R.string.error_friend_already_added, Toast.LENGTH_SHORT).show();
-                return;
-            }
-        }
-        // If not on trip then send data to database
-        saveAttendee();
-        jsonFetcher = new JsonFetcher(addAttendeeCallback, getContext());
-        jsonFetcher.addParam("user", addAttendees.getTag().toString());
-        jsonFetcher.addParam("type", "trip");
-        jsonFetcher.addParam("time", String.valueOf(DateTime.dateToSQL(Calendar.getInstance().getTime())));
-        jsonFetcher.postDataVolley(routes.addUserToTrip(trip.getEntryId()));
-    }
-
-    protected void saveAttendee() {
-        addAttendeeCallback = new NetworkResultCallback() {
-            @Override
-            public void notifySuccess(JSONObject response) {
-                // Update the phone display to reflect new attendee in attendees list
-                trip.getUserList().put((Integer)addAttendees.getTag(), addAttendees.getText().toString());
-                attendees.setText(addUsers(trip.getUserList().values()));
-            }
-
-            @Override
-            public void notifyError(VolleyError error) {
-                Toast.makeText(getActivity().getApplicationContext(), R.string.error_attendee, Toast.LENGTH_SHORT).show();
-            }
-        };
-    }
-
-    @Override
-    protected void sendLeaveRequest() {
-        leave();
-        jsonFetcher = new JsonFetcher(leaveTripCallback, getContext());
-        jsonFetcher.deleteData(routes.leaveTrip(((MainMenuActivity)getActivity()).getUserAccount().getUserId(), trip.getEntryId(), "trip"));
-    }
-
-
-
-    @Override
     protected void saveTripData() {
         saveEntryCallback = new NetworkResultCallback() {
             @Override
@@ -287,6 +185,7 @@ public class TripDetailsFragment extends TripEntryFragment {
                         tripAttendeesView.setVisibility(View.VISIBLE);
                         tripAddAttendeesView.setVisibility(View.VISIBLE);
                         tripPictureView.setVisibility(View.VISIBLE);
+                        setItem(trip);
                         loadDetails();
                         // Load the trip into the other fragments.
                         TripFragment tripFragment = (TripFragment) getParentFragment();
@@ -370,6 +269,8 @@ public class TripDetailsFragment extends TripEntryFragment {
                     message = getResources().getString(R.string.active_trip);
                     trip.setStatus("active");
                     makeActiveButton.setText(R.string.complete);
+                    addGalleryImageButton.setVisibility(View.VISIBLE);
+                    galleryButton.setVisibility(View.VISIBLE);
                 } else {
                     message = getResources().getString(R.string.trip_completed);
                     trip.setStatus("complete");
@@ -384,4 +285,5 @@ public class TripDetailsFragment extends TripEntryFragment {
             }
         };
     }
+
 }

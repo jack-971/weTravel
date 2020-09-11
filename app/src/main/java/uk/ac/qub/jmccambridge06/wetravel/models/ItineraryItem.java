@@ -2,10 +2,13 @@ package uk.ac.qub.jmccambridge06.wetravel.models;
 
 import android.util.Log;
 
+import com.google.gson.JsonObject;
+
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 
@@ -28,6 +31,8 @@ public abstract class ItineraryItem {
     protected HashMap<Integer, String> userList;
     private Profile profile;
     protected String status;
+
+    protected ArrayList<String> gallery;
 
     public ItineraryItem() {
 
@@ -149,4 +154,32 @@ public abstract class ItineraryItem {
     public void setStatus(String status) {
         this.status = status;
     }
+
+    public ArrayList<String> getGallery() {
+        return gallery;
+    }
+
+    public boolean setGallery(JSONObject response) {
+        this.gallery = new ArrayList<String>();
+        try {
+            if (response.getString("status").equals("true")) {
+                 JSONArray array = response.getJSONArray("images");
+                 for (int loop = 0; loop<array.length(); loop++) {
+                     JSONObject image = array.getJSONObject(loop);
+                     this.gallery.add(image.getString("Url"));
+                 }
+                 return true;
+            } else {
+                return false;
+            }
+        } catch (JSONException e) {
+            e.printStackTrace();
+            return false;
+        }
+    }
+
+    public void addImage(String url) {
+        gallery.add(url);
+    }
+
 }
