@@ -732,6 +732,34 @@
         android:textColor="@color/button_text"
         android:visibility="gone"/>
 
+        <Button
+            android:id="@+id/trip_post_button"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textSize="@dimen/major_text"
+            android:layout_below="@id/trip_active_button"
+            android:text="@string/post"
+            android:textAllCaps="false"
+            android:background="@drawable/button"
+            android:layout_marginTop="@dimen/_4sdp"
+            android:layout_marginBottom="@dimen/_4sdp"
+            android:textColor="@color/button_text"
+            android:visibility="gone"/>
+
+        <Button
+            android:id="@+id/trip_wishlist_button"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textSize="@dimen/major_text"
+            android:layout_below="@id/trip_post_button"
+            android:text="@string/wishlist"
+            android:textAllCaps="false"
+            android:background="@drawable/button"
+            android:layout_marginTop="@dimen/_4sdp"
+            android:layout_marginBottom="@dimen/_4sdp"
+            android:textColor="@color/button_text"
+            android:visibility="gone"/>
+
     </RelativeLayout>
 
 

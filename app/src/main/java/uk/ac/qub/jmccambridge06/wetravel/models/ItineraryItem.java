@@ -15,7 +15,7 @@ import java.util.HashMap;
 import uk.ac.qub.jmccambridge06.wetravel.utilities.DateTime;
 
 
-public abstract class ItineraryItem {
+public class ItineraryItem {
 
     protected String logtag;
     private int entryId;
@@ -34,6 +34,8 @@ public abstract class ItineraryItem {
 
     protected ArrayList<String> gallery;
 
+    private Long postTime;
+
     public ItineraryItem() {
 
     }
@@ -41,7 +43,6 @@ public abstract class ItineraryItem {
     public ItineraryItem(JSONObject item, Profile profile){
         logtag = "item";
         Log.d("tag", "in item create");
-        // Load the location from Google Places API if there is a location key
         try {
             this.setEntryId(Integer.parseInt(item.getString("ID")));
             this.setEntryName(item.getString("Name"));
@@ -51,6 +52,7 @@ public abstract class ItineraryItem {
             this.setReview((item.getString("Review").equals("null")) ? null : item.getString("Review"));
             this.setLocation((item.getString("LocationID").equals("null")) ? null : item.getString("LocationID"),
                     (item.getString("LocationDetail").equals("null")) ? null : item.getString("LocationDetail"));
+
             userList = new HashMap<>();
             this.profile = profile;
         } catch (Exception e) {
@@ -160,7 +162,7 @@ public abstract class ItineraryItem {
     }
 
     public boolean setGallery(JSONObject response) {
-        this.gallery = new ArrayList<String>();
+        setGallery();
         try {
             if (response.getString("status").equals("true")) {
                  JSONArray array = response.getJSONArray("images");
@@ -178,8 +180,19 @@ public abstract class ItineraryItem {
         }
     }
 
+    public void setGallery() {
+        this.gallery = new ArrayList<String>();
+    }
+
     public void addImage(String url) {
         gallery.add(url);
     }
 
+    public Long getPostTime() {
+        return postTime;
+    }
+
+    public void setPostTime(Long postTime) {
+        this.postTime = postTime;
+    }
 }

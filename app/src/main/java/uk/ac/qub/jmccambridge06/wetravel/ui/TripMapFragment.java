@@ -43,7 +43,7 @@ public class TripMapFragment extends Fragment implements OnMapReadyCallback, Goo
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        MainMenuActivity.removeNavBar();
+        ((MainMenuActivity)getActivity()).removeNavBar();
         View view = inflater.inflate(R.layout.fragment_trip_map, container, false);
 
         autocompleteSupportFragment = (AutocompleteSupportFragment) getChildFragmentManager().findFragmentById(R.id.autocomplete_fragment);

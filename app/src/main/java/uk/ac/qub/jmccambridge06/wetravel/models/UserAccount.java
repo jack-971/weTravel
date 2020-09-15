@@ -1,11 +1,14 @@
 package uk.ac.qub.jmccambridge06.wetravel.models;
 
+import android.util.Log;
+
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.TreeMap;
 
 import uk.ac.qub.jmccambridge06.wetravel.network.RelationshipTypesDb;
 import uk.ac.qub.jmccambridge06.wetravel.utilities.ProfileTypes;
@@ -17,6 +20,7 @@ public class UserAccount {
     private ArrayList<Profile> friendsList;
     private HashMap<String, Boolean> settings;
     private NotificationCentre notificationCentre;
+    private TreeMap<Long, ItineraryItem> newsfeed;
 
 /*
 
@@ -166,5 +170,43 @@ public class UserAccount {
 
     public void setNotificationCentre(NotificationCentre notificationCentre) {
         this.notificationCentre = notificationCentre;
+    }
+
+    public TreeMap<Long, ItineraryItem> getNewsfeed() {
+        return newsfeed;
+    }
+
+    public void setNewsfeed(JSONArray data) {
+        this.newsfeed = new TreeMap<>();
+
+        for (int outerLoop = 0; outerLoop<data.length(); outerLoop++) {
+            try {
+                //Log.d("tagger", data.get(outerLoop).toString());
+                //String test = data.get(outerLoop).toString();
+
+                JSONArray array = data.getJSONArray(outerLoop);
+                for (int innerLoop = 0; innerLoop<array.length(); innerLoop++) {
+                    Log.d("tagger", array.get(innerLoop).toString());
+                    JSONObject post = array.getJSONObject(innerLoop);
+                    if (!newsfeed.containsKey(post.getLong("Time"))) {
+                        ItineraryItem item = new ItineraryItem(post, getFriendsProfile(post.getInt("UserID")));
+                        item.setGallery();
+                        item.setPostTime(post.getLong("Time"));
+                        item.setStatus("complete");
+                        if (!post.getString("Url").equalsIgnoreCase("null")) {
+                            item.addImage(post.getString("Url"));
+                        }
+                        newsfeed.put(post.getLong("Time"), item);
+                    } else {
+                        ItineraryItem item = newsfeed.get(post.getLong("Time"));
+                        item.addImage(post.getString("Url"));
+
+                        //newsfeed.get(post.getLong("Time")).addImage(post.getString("Url"));
+                    }
+                }
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+        }
     }
 }

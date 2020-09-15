@@ -51,7 +51,7 @@ public class TripDetailsFragment extends TripEntryFragment {
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        MainMenuActivity.removeNavBar();
+        ((MainMenuActivity)getActivity()).removeNavBar();
         return inflater.inflate(R.layout.fragment_trip_details, container, false);
     }
 
@@ -271,6 +271,7 @@ public class TripDetailsFragment extends TripEntryFragment {
                     makeActiveButton.setText(R.string.complete);
                     addGalleryImageButton.setVisibility(View.VISIBLE);
                     galleryButton.setVisibility(View.VISIBLE);
+                    postButton.setVisibility(View.VISIBLE);
                 } else {
                     message = getResources().getString(R.string.trip_completed);
                     trip.setStatus("complete");

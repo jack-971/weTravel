@@ -116,12 +116,16 @@ public abstract class TripEntryFragment extends DisplayFragment {
     @BindView(R.id.trip_save_button) Button saveButton;
     @BindView(R.id.trip_leave_button) Button leaveButton;
     @BindView(R.id.trip_add_attendee_button) Button addAttendeeButton;
-    @BindView(R.id.trip_gallery_button) Button galleryButton;
+    @BindView(R.id.trip_gallery_button)
+    protected Button galleryButton;
     @BindView(R.id.trip_add_picture_button) Button addGalleryImageButton;
+    @BindView(R.id.trip_post_button) Button postButton;
+    @BindView(R.id.trip_wishlist_button) Button wishlistButton;
 
     @BindView(R.id.checkbox_attendees) CheckBox addAllCheckBox;
 
-    @BindView(R.id.gallery_container) FrameLayout galleryContainer;
+    @BindView(R.id.gallery_container)
+    protected FrameLayout galleryContainer;
 
     protected Trip trip;
 
@@ -131,6 +135,7 @@ public abstract class TripEntryFragment extends DisplayFragment {
     FirebaseCallback newImageCallback;
     FirebaseCallback tripImageCallback;
     NetworkResultCallback loadImagesCallback;
+    NetworkResultCallback postCallback;
 
     JsonFetcher jsonFetcher;
     String logtag;
@@ -153,7 +158,7 @@ public abstract class TripEntryFragment extends DisplayFragment {
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        MainMenuActivity.removeNavBar();
+        ((MainMenuActivity)getActivity()).removeNavBar();
         return inflater.inflate(R.layout.fragment_trip_details, container, false);
     }
 
@@ -181,6 +186,7 @@ public abstract class TripEntryFragment extends DisplayFragment {
             } else {
                 tripReviewView.setVisibility(View.VISIBLE);
                 leaveButton.setVisibility(View.VISIBLE);
+                postButton.setVisibility(View.VISIBLE);
             }
         } else {
             tripAttendeesView.setVisibility(View.GONE);
@@ -251,6 +257,18 @@ public abstract class TripEntryFragment extends DisplayFragment {
             }
         });
 
+        postButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                createPost();
+                JsonFetcher jsonFetcher = new JsonFetcher(postCallback, getContext());
+                jsonFetcher.addParam("user", String.valueOf(((MainMenuActivity)getActivity()).getUserAccount().getUserId()));
+                jsonFetcher.addParam("type", type);
+                jsonFetcher.addParam("time", String.valueOf(DateTime.dateToSQL(Calendar.getInstance().getTime())));
+                jsonFetcher.patchData(routes.patchPostStatus(item.getEntryId()));
+            }
+        });
+
     }
 
     /**
@@ -293,6 +311,11 @@ public abstract class TripEntryFragment extends DisplayFragment {
         leaveButton.setVisibility(View.GONE);
         saveButton.setVisibility(View.GONE);
         makeActiveButton.setVisibility(View.GONE);
+
+        // if not admin profile then give add to wishlist option
+        if (((MainMenuActivity)getActivity()).getUserAccount().getProfile().getUserId() != item.getProfile().getUserId()) {
+            wishlistButton.setVisibility(View.VISIBLE);
+        }
     }
 
     protected abstract void sendData();
@@ -327,6 +350,22 @@ public abstract class TripEntryFragment extends DisplayFragment {
         completeAttendees.setText(addUsers(item.getUserList().values()));
         getGalleryData();
     };
+
+    private void createPost() {
+        postCallback  = new NetworkResultCallback() {
+            @Override
+            public void notifySuccess(JSONObject response) {
+                Toast.makeText(getActivity().getApplicationContext(), R.string.successful_post, Toast.LENGTH_SHORT).show();
+                postButton.setVisibility(View.GONE);
+            }
+
+            @Override
+            public void notifyError(VolleyError error) {
+                Toast.makeText(getActivity().getApplicationContext(), R.string.post_error, Toast.LENGTH_SHORT).show();
+
+            }
+        };
+    }
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {

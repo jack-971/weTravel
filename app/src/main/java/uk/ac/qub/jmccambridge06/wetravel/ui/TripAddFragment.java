@@ -16,7 +16,7 @@ public class TripAddFragment extends Fragment {
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        MainMenuActivity.removeNavBar();
+        ((MainMenuActivity)getActivity()).removeNavBar();
         return inflater.inflate(R.layout.fragment_trip_add, container, false);
     }
 }

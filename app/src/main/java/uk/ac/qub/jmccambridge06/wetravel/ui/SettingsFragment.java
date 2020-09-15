@@ -45,7 +45,7 @@ public class SettingsFragment extends PreferenceFragmentCompat implements Prefer
 
     @Override
     public void onCreatePreferences(Bundle savedInstanceState, String rootKey) {
-        MainMenuActivity.removeNavBar();
+        ((MainMenuActivity)getActivity()).removeNavBar();
         setPreferencesFromResource(R.xml.preferences, rootKey);
 
     }

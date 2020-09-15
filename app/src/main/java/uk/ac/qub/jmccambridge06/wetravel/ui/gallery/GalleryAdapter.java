@@ -28,6 +28,10 @@ import uk.ac.qub.jmccambridge06.wetravel.ui.MainMenuActivity;
 
 public class GalleryAdapter extends RecyclerView.Adapter<GalleryAdapter.ImageViewHolder> {
 
+    public GalleryAdapter() {
+
+    }
+
     class ImageViewHolder extends RecyclerView.ViewHolder{
 
         @BindView (R.id.image_view) RoundedImageView imageView;
@@ -40,7 +44,7 @@ public class GalleryAdapter extends RecyclerView.Adapter<GalleryAdapter.ImageVie
         void setImage(String url) {
             Glide.with(MyApplication.getContext())
                     .applyDefaultRequestOptions(new RequestOptions()
-                            .error(R.drawable.profile_placeholder_icon))
+                            .error(R.drawable.ic_trip_placeholder_24dp))
                     .load(url)
                     .into(imageView);
         }

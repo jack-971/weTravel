@@ -85,7 +85,7 @@ public class ProfileFragment extends DisplayFragment {
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         Log.i(logTag, "creating profile view");
-        MainMenuActivity.removeNavBar();
+        ((MainMenuActivity)getActivity()).removeNavBar();
         View view = inflater.inflate(R.layout.fragment_profile, container, false);
         return view;
     }

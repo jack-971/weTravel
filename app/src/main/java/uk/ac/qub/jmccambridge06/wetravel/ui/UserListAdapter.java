@@ -32,7 +32,6 @@ public class UserListAdapter extends RecyclerView.Adapter<UserListAdapter.UserLi
         @BindView(R.id.user_card_home) TextView home;
         @BindView(R.id.user_card) View userCard;
         @BindView(R.id.card_friends_tag) Button friendsTag;
-        Profile profile;
 
         public UserListViewHolder(@NonNull View itemView) {
             super(itemView);

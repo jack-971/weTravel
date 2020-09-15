@@ -127,4 +127,8 @@ public final class routes {
     public static String getImage(int postId, int userId, String type) {
         return mainUrl + secure + image + postId+"?user="+userId+"&type="+type;
     }
+
+    public static String patchPostStatus(int postId) {
+        return mainUrl + secure + trips + "post/"+postId;
+    }
 }

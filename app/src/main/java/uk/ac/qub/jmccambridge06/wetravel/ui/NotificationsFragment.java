@@ -18,7 +18,7 @@ public class NotificationsFragment extends Fragment {
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        MainMenuActivity.showNavBar();
+        ((MainMenuActivity)getActivity()).showNavBar();
         return inflater.inflate(R.layout.fragment_notifications, container, false);
     }
 

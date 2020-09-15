@@ -70,7 +70,7 @@ public class TripFragment extends Fragment {
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        MainMenuActivity.removeNavBar();
+        ((MainMenuActivity)getActivity()).removeNavBar();
         View v = inflater.inflate(R.layout.trip_fragment, container, false);
         return v;
     }

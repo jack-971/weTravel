@@ -35,6 +35,8 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.util.ArrayList;
+
 import de.hdodenhof.circleimageview.CircleImageView;
 import uk.ac.qub.jmccambridge06.wetravel.models.NotificationCentre;
 import uk.ac.qub.jmccambridge06.wetravel.models.Profile;
@@ -45,6 +47,7 @@ import uk.ac.qub.jmccambridge06.wetravel.ui.login.LoginActivity;
 import uk.ac.qub.jmccambridge06.wetravel.network.NetworkResultCallback;
 import uk.ac.qub.jmccambridge06.wetravel.network.JsonFetcher;
 import uk.ac.qub.jmccambridge06.wetravel.network.routes;
+import uk.ac.qub.jmccambridge06.wetravel.ui.newsfeed.NewsfeedFragment;
 import uk.ac.qub.jmccambridge06.wetravel.utilities.TokenOperator;
 
 /**
@@ -306,14 +309,14 @@ public class MainMenuActivity extends AppCompatActivity implements NavigationVie
     /**
      * Removes the navbar.
      */
-    public static void removeNavBar() {
+    public void removeNavBar() {
         bottomNav.setVisibility(View.GONE);
     }
 
     /**
      * Shows the navbar
      */
-    public static void showNavBar() {
+    public void showNavBar() {
         bottomNav.setVisibility(View.VISIBLE);
     }
 
@@ -345,6 +348,11 @@ public class MainMenuActivity extends AppCompatActivity implements NavigationVie
                     JSONArray friendArray = response.getJSONArray("friendsList");
                     Log.i(logTag, friendArray.toString());
                     userAccount.setFriendsList(friendArray);
+
+                    //create newsfeed
+                    JSONArray postsArray = response.getJSONArray("posts");
+                    userAccount.setNewsfeed(postsArray);
+                    newsfeedFragment.updateFeed(userAccount.getNewsfeed());
 
                     // get notifications - if unread then highlight notifications tab
                     JSONArray notificationArray = response.getJSONArray("notifications");

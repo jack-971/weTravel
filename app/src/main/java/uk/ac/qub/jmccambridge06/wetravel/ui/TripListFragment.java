@@ -30,7 +30,7 @@ public class TripListFragment extends ListFragment {
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        MainMenuActivity.removeNavBar();
+        ((MainMenuActivity)getActivity()).removeNavBar();
         return inflater.inflate(R.layout.fragment_list, container, false);
     }
 

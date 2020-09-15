@@ -1,0 +1,114 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    app:cardCornerRadius="@dimen/card_corner_rad"
+    android:layout_marginBottom="@dimen/_5sdp"
+    android:id="@+id/newsfeed_card">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/post_user_details"
+        android:layout_margin="@dimen/_8sdp">
+
+        <de.hdodenhof.circleimageview.CircleImageView
+            android:layout_width="@dimen/_56sdp"
+            android:layout_height="@dimen/_56sdp"
+            android:padding="0dp"
+            android:layout_margin="0dp"
+            android:id="@+id/post_user_image"
+            android:layout_centerVertical="true"
+            android:src="@drawable/ic_profile_placeholder"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_toRightOf="@id/post_user_image"
+            android:textSize="@dimen/card_major_text"
+            android:layout_marginLeft="@dimen/_10sdp"
+            android:id="@+id/post_card_text"
+            android:textColor="@color/card_major_text"
+            android:layout_marginTop="@dimen/_8sdp" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/post_card_text"
+            android:layout_toRightOf="@id/post_user_image"
+            android:textSize="@dimen/card_major_text"
+            android:layout_marginLeft="@dimen/_10sdp"
+            android:id="@+id/post_card_time"
+            android:textColor="@color/card_minor_text"
+            android:layout_marginTop="@dimen/_2sdp" />
+
+    </RelativeLayout>
+
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/entry_card"
+        android:layout_margin="@dimen/_4sdp"
+        android:layout_below="@id/post_user_details"
+        >
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="@dimen/card_major_text"
+            android:layout_marginLeft="@dimen/_10sdp"
+            android:id="@+id/post_card_description"
+            android:textColor="@color/card_major_text"
+            android:layout_marginTop="@dimen/_2sdp"
+            android:layout_marginBottom="@dimen/_4sdp"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="@dimen/card_major_text"
+            android:layout_marginLeft="@dimen/_10sdp"
+            android:layout_below="@id/post_card_description"
+            android:id="@+id/post_card_review"
+            android:textColor="@color/card_major_text"
+            android:textStyle="italic"
+            android:layout_marginBottom="@dimen/_4sdp"
+            />
+
+        <androidx.viewpager2.widget.ViewPager2
+            android:id="@+id/post_view_pager"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/_100sdp"
+            android:layout_below="@id/post_card_review"
+            android:paddingStart="@dimen/_80sdp"
+            android:paddingEnd="@dimen/_80sdp"
+            android:visibility="gone"
+            android:layout_marginBottom="@dimen/_4sdp"
+            />
+
+        <Button
+            android:id="@+id/trip_wishlist_button"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textSize="@dimen/major_text"
+            android:layout_below="@id/post_view_pager"
+            android:text="@string/wishlist"
+            android:textAllCaps="false"
+            android:background="@drawable/button"
+            android:layout_marginTop="@dimen/_4sdp"
+            android:layout_marginBottom="@dimen/_4sdp"
+            android:textColor="@color/button_text"
+            android:visibility="visible"/>
+
+        </RelativeLayout>
+
+
+
+    </RelativeLayout>
+
+</androidx.cardview.widget.CardView>

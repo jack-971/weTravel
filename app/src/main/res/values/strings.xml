@@ -94,6 +94,9 @@
     <string name="trip_completed">Trip Completed</string>
     <string name="view_gallery">View Gallery</string>
     <string name="add_picture">Add Picture</string>
+    <string name="post">Post</string>
+    <string name="successful_post">Entry posted!</string>
+
     <!--Errors-->
     <string name="error_select_friend_dropdown">Please select friend from dropdown list to add</string>
     <string name="error_friend_already_added">Friend already added!</string>
@@ -107,6 +110,7 @@
     <string name="error">Error - please try again!</string>;
     <string name="no_gps">Location services must be switched on for quick add!</string>
     <string name="no_gallery">There are no images to view!</string>
+    <string name="post_error">Error posting - please try again!</string>
     <!--Success-->
     <string name="entry_saved">Entry Saved</string>
 
@@ -147,5 +151,10 @@
     <string name="added_trip_notification">You have been added to a trip!</string>
     <string name="no_notifications">No notifications to display!</string>
     <string name="notification_title">New Notification</string>
+
+    <!--Posts-->
+    <string name="wishlist">Wishlist</string>
+    <string name="has_posted">posted</string>
+    <string name="from">from</string>
 
 </resources>
