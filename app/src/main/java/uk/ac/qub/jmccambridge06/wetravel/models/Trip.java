@@ -6,6 +6,7 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.util.ArrayList;
 import java.util.LinkedHashMap;
 
 public class Trip extends ItineraryItem {
@@ -133,6 +134,22 @@ public class Trip extends ItineraryItem {
                 e.printStackTrace();
             }
         }
+    }
+
+    /**
+     * Returns a list of all locations visited as part of the trip (including legs and their activities). Ensures unique location values.
+     * @return
+     */
+    public ArrayList<String> getLocations() {
+        ArrayList<String> locationIds = new ArrayList<>();
+        if (this.getLocation().getId() != null) locationIds.add(this.getLocation().getId());
+        for (Leg leg : this.getLegs().values()) {
+            if (leg.getLocation().getId() != null && !locationIds.contains(leg.getLocation().getId())) locationIds.add(leg.getLocation().getId());
+            for (Activity activity : leg.getActivities().values()) {
+                if (activity.getLocation().getId() != null && !locationIds.contains(activity.getLocation().getId())) locationIds.add(activity.getLocation().getId());
+            }
+        }
+        return locationIds;
     }
 
 

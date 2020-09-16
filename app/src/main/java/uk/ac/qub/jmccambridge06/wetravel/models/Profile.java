@@ -21,6 +21,7 @@ public class Profile {
     private int userId;
     private int profileType;
     private boolean privateProfile;
+    private long dateJoined;
 
     /**
      * Constructor taking JSON data and adding to a profile to be used for account admin
@@ -36,6 +37,7 @@ public class Profile {
                 user.getString("Description"),
                 user.getString("UserID"),
                 user.getString("Private"),
+                user.getLong("DateJoined"),
                 profileType);
     }
 
@@ -56,7 +58,7 @@ public class Profile {
      * @param description
      */
     private Profile(String name, String username, long dob, String homeLocation, String profilePicture,
-                    String description, String userId, String privateProfile, int profileType) {
+                    String description, String userId, String privateProfile, long dateJoined, int profileType) {
         this.name = name;
         this.username = username;
         this.setAge(dob);
@@ -64,6 +66,7 @@ public class Profile {
         this.profilePicture = profilePicture;
         this.description = ((description.equals("null")) ? null : description);
         this.userId = Integer.parseInt(userId);
+        this.dateJoined = dateJoined;
         this.profileType = profileType;
         if (Integer.parseInt(privateProfile) == 1) {
             this.privateProfile = true;
@@ -158,5 +161,13 @@ public class Profile {
 
     public void setPrivateProfile(boolean privateProfile) {
         this.privateProfile = privateProfile;
+    }
+
+    public long getDateJoined() {
+        return dateJoined;
+    }
+
+    public void setDateJoined(long dateJoined) {
+        this.dateJoined = dateJoined;
     }
 }

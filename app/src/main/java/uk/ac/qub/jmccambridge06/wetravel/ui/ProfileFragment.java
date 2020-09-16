@@ -2,6 +2,8 @@ package uk.ac.qub.jmccambridge06.wetravel.ui;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.drawable.BitmapDrawable;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -18,11 +20,21 @@ import androidx.annotation.Nullable;
 import com.android.volley.VolleyError;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
+import com.google.android.gms.common.api.Status;
+import com.google.android.libraries.places.api.Places;
+import com.google.android.libraries.places.api.model.Place;
+import com.google.android.libraries.places.api.net.PlacesClient;
+import com.google.android.libraries.places.widget.Autocomplete;
+import com.google.android.libraries.places.widget.AutocompleteActivity;
+import com.google.android.libraries.places.widget.model.AutocompleteActivityMode;
 
 import org.json.JSONObject;
 
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.util.Arrays;
 import java.util.Calendar;
+import java.util.List;
 import java.util.UUID;
 
 import butterknife.BindView;
@@ -30,6 +42,7 @@ import butterknife.ButterKnife;
 import de.hdodenhof.circleimageview.CircleImageView;
 import uk.ac.qub.jmccambridge06.wetravel.models.Profile;
 import uk.ac.qub.jmccambridge06.wetravel.utilities.DateTime;
+import uk.ac.qub.jmccambridge06.wetravel.utilities.Locations;
 import uk.ac.qub.jmccambridge06.wetravel.utilities.ProfileTypes;
 import uk.ac.qub.jmccambridge06.wetravel.network.FirebaseCallback;
 import uk.ac.qub.jmccambridge06.wetravel.network.FirebaseLink;
@@ -54,8 +67,8 @@ public class ProfileFragment extends DisplayFragment {
     @BindView(R.id.profile_username) TextView profileUsername;
     @BindView(R.id.profile_age) TextView profileAge;
     @BindView(R.id.profile_home_location) TextView profileHomeLocation;
-    @BindView((R.id.profile_edit_home_location)) EditText profileHomeLocationEdit;
-    @BindView(R.id.profile_current_trip) TextView profileCurrentTrip;
+    @BindView((R.id.profile_edit_home_location)) TextView profileHomeLocationEdit;
+    @BindView(R.id.profile_date_joined) TextView dateJoined;
     @BindView((R.id.profile_description)) TextView profileDescription;
     @BindView((R.id.profile_description_edit)) EditText profileDescriptionEdit;
     @BindView(R.id.profile_save) Button saveButton;
@@ -68,7 +81,10 @@ public class ProfileFragment extends DisplayFragment {
     @BindView(R.id.profile_body) View profileBody;
     @BindView(R.id.profile_private) View profilePrivateText;
     @BindView(R.id.profile_trips_button) Button tripsButton;
+    @BindView(R.id.profile_map_button) Button mapButton;
     private Profile profile;
+
+    final int AUTOCOMPLETE_REQUEST_CODE = 01;
 
     // Arrays containing views to be shown or hidden in display or edit phase.
     private View[] savedViews;
@@ -153,7 +169,7 @@ public class ProfileFragment extends DisplayFragment {
                 public void onClick(View v) {
                     profilePictureChanged = false;
                     for (int loop = 0; loop<savedViews.length; loop++) {
-                        savedViews[loop].setVisibility(View.GONE);
+                        savedViews[loop].setVisibility(View.INVISIBLE);
                         editViews[loop].setVisibility(View.VISIBLE);
                     }
                     profileImage.setOnClickListener(new View.OnClickListener() { // may look at refactoring if used more than once.
@@ -170,25 +186,30 @@ public class ProfileFragment extends DisplayFragment {
             saveButton.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    profile.setName(profileNameEdit.getText().toString());
-                    profile.setHomeLocation(profileHomeLocationEdit.getText().toString());
-                    profile.setDescription(profileDescriptionEdit.getText().toString());
-                    if (profilePictureChanged == true) {
-                        updateImageCallback();
-                        String path = FirebaseLink.profilePicturePath+ FirebaseLink.profilePicturePrefix + UUID.randomUUID().toString();
-                        FirebaseLink.saveInFirebase(getImageUri(), getContext(), uploadProfilePictureCallback, path);
-                        profilePictureChanged = false;
+                    if (profileNameEdit.getText().toString().equals("")) {
+                        Toast.makeText(getActivity().getApplicationContext(), "Name cannot be blank!", Toast.LENGTH_SHORT).show();
                     } else {
-                        updateData(profile.getProfilePicture());
-                        loadViews(); // reload views incase of changes.
+                        profile.setName(profileNameEdit.getText().toString());
+                        profile.setHomeLocation(profileHomeLocationEdit.getText().toString());
+                        profile.setDescription(profileDescriptionEdit.getText().toString());
+                        if (profilePictureChanged == true) {
+                            updateImageCallback();
+                            String path = FirebaseLink.profilePicturePath+ FirebaseLink.profilePicturePrefix + UUID.randomUUID().toString();
+                            FirebaseLink.saveInFirebase(getImageUri(), getContext(), uploadProfilePictureCallback, path);
+                            profilePictureChanged = false;
+                        } else {
+                            updateData(profile.getProfilePicture());
+                            loadViews(); // reload views incase of changes.
+                        }
+
+                        // upload text and profile image to database and save prof pic to user profile.
+                        for (int loop = 0; loop<savedViews.length; loop++) {
+                            editViews[loop].setVisibility(View.GONE);
+                            savedViews[loop].setVisibility(View.VISIBLE);
+                            profileImage.setClickable(false);
+                        }
                     }
 
-                    // upload text and profile image to database and save prof pic to user profile.
-                    for (int loop = 0; loop<savedViews.length; loop++) {
-                        editViews[loop].setVisibility(View.GONE);
-                        savedViews[loop].setVisibility(View.VISIBLE);
-                        profileImage.setClickable(false);
-                    }
                 }
             });
 
@@ -221,6 +242,26 @@ public class ProfileFragment extends DisplayFragment {
             }
         });
 
+        mapButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                ((MainMenuActivity) getActivity()).setFragment(new ProfileMapFragment(profile), "user_profile_map_fragment", true);
+            }
+        });
+
+        // Set the locations up
+        Places.initialize(getContext(), Locations.key);
+        PlacesClient placesClient = Places.createClient(getContext());
+        List<Place.Field> fields = Arrays.asList(Place.Field.ID, Place.Field.NAME, Place.Field.ADDRESS, Place.Field.ADDRESS_COMPONENTS);
+        // Start the autocomplete intent.
+        profileHomeLocationEdit.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Autocomplete.IntentBuilder(AutocompleteActivityMode.FULLSCREEN, fields).build(getContext());
+                startActivityForResult(intent, AUTOCOMPLETE_REQUEST_CODE);
+            }
+        });
+
         loadViews();
         checkPrivate();
 
@@ -228,7 +269,7 @@ public class ProfileFragment extends DisplayFragment {
     }
 
     /**
-     * Activity result for when profile picture is clicked. Chosen image is saved as bitmap and saved to firebase.
+     * Activity result for profile image clicks or location setters.
      * @param requestCode
      * @param resultCode
      * @param data
@@ -240,7 +281,17 @@ public class ProfileFragment extends DisplayFragment {
             if (requestCode == ImageUtility.IMG_REQUEST_ID && resultCode == Activity.RESULT_OK && data != null && data.getData() != null) {
                 ImageUtility.storeImageAsBitmap(requestCode, resultCode, data, getContext(), this);
                 profilePictureChanged = true;
-                profileImage.setImageBitmap(getMainImage());
+                Glide.with(this)
+                        .load(new BitmapDrawable(getResources(), getMainImage()))
+                        .into(profileImage);
+            } else if (requestCode == AUTOCOMPLETE_REQUEST_CODE) {
+                if (resultCode == AutocompleteActivity.RESULT_OK) {
+                    Place place = Autocomplete.getPlaceFromIntent(data);
+                    profileHomeLocationEdit.setText(place.getAddress());
+                } else if (resultCode == AutocompleteActivity.RESULT_ERROR) {
+                    Status status = Autocomplete.getStatusFromIntent(data);
+                    Log.i("entry", status.getStatusMessage());
+                }
             }
         } catch (IOException e) {
             e.printStackTrace();
@@ -257,7 +308,7 @@ public class ProfileFragment extends DisplayFragment {
         profileUsername.setText(profile.getUsername());
         profileNameEdit.setText(profile.getName());
         profileAge.setText(String.valueOf(profile.getAge()) +" " + getContext().getResources().getString(R.string.years_old));
-        profileCurrentTrip.setText("Vietnam Tour - Hanoi, Vietnam");
+        dateJoined.setText("Joined "+DateTime.formatDate(DateTime.sqlToDate(profile.getDateJoined())));
         if (profile.getHomeLocation() == null) {
             profileHomeLocation.setText(R.string.unknown_location);
             profileHomeLocationEdit.setText(R.string.unknown_location);
@@ -265,7 +316,7 @@ public class ProfileFragment extends DisplayFragment {
             profileHomeLocation.setText(profile.getHomeLocation());
             profileHomeLocationEdit.setText(profile.getHomeLocation());
         }
-        if (profile.getDescription() == null) {
+        if (profile.getDescription() == null || profile.getDescription().equals("")) {
             profileDescription.setText(R.string.no_description);
             profileDescriptionEdit.setText(profile.getDescription());
         } else {

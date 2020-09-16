@@ -32,7 +32,7 @@ import uk.ac.qub.jmccambridge06.wetravel.network.NetworkResultCallback;
  */
 public abstract class ListFragment extends Fragment {
 
-    @BindView(R.id.list_no_data) TextView noDataText;
+    @BindView(R.id.list_no_data) protected TextView noDataText;
 
     public String logtag;
     public ArrayList list;

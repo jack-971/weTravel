@@ -3,6 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="vertical"
     android:weightSum="1">
 
@@ -13,10 +14,133 @@
         android:name="com.google.android.libraries.places.widget.AutocompleteSupportFragment"
         />
 
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content">
 
     <com.google.android.gms.maps.MapView
         android:id="@+id/map"
         android:layout_width="match_parent"
         android:layout_height="match_parent" />
+
+    <RelativeLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/map_filters"
+        app:layout_constraintTop_toTopOf="@id/map"
+        app:layout_constraintLeft_toLeftOf="@id/map"
+        >
+
+        <RelativeLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="@dimen/_8sdp"
+            android:layout_marginTop="@dimen/_8sdp"
+            android:id="@+id/wishlist_filter"
+            android:visibility="gone">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/wishlist"
+                android:textSize="@dimen/major_text"
+                android:id="@+id/wishlist_filter_text"
+                android:layout_centerVertical="true"/>
+
+            <CheckBox
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentTop="true"
+                android:id="@+id/wishlist_filter_checkbox"
+                android:layout_alignTop="@id/wishlist_filter_text"
+                android:layout_toRightOf="@id/wishlist_filter_text"
+                app:buttonTint="@color/map_wishlist"
+                android:checked="true"/>
+
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="@dimen/_8sdp"
+            android:layout_marginTop="@dimen/_8sdp"
+            android:id="@+id/visited_filter"
+            android:layout_below="@id/wishlist_filter"
+            android:visibility="gone">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/visited"
+                android:textSize="@dimen/major_text"
+                android:id="@+id/visited_filter_text"
+                android:layout_centerVertical="true"/>
+
+            <CheckBox
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentTop="true"
+                android:id="@+id/visited_filter_checkbox"
+                android:checked="true"
+                android:layout_alignTop="@id/visited_filter_text"
+                android:padding="0dp"
+                android:layout_toRightOf="@id/visited_filter_text"
+                app:buttonTint="@color/map_visited"/>
+
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="@dimen/_8sdp"
+            android:layout_marginTop="@dimen/_8sdp"
+            android:id="@+id/location_filter"
+            android:layout_below="@id/wishlist_filter"
+            android:visibility="gone">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/locations"
+                android:textSize="@dimen/major_text"
+                android:id="@+id/location_filter_text"
+                android:layout_centerVertical="true"/>
+
+            <CheckBox
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentTop="true"
+                android:id="@+id/location_filter_checkbox"
+                android:layout_alignTop="@id/location_filter_text"
+                android:checked="true"
+                android:padding="0dp"
+                android:layout_toRightOf="@id/location_filter_text"
+                app:buttonTint="@color/map_locations"/>
+
+        </RelativeLayout>
+
+    </RelativeLayout>
+
+        <RelativeLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/map_remove"
+            app:layout_constraintTop_toTopOf="@id/map"
+            app:layout_constraintRight_toRightOf="@id/map">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/remove"
+                android:textSize="@dimen/major_text"
+                android:id="@+id/wishlist_remove"
+                android:layout_centerVertical="true"
+                android:layout_marginRight="@dimen/_8sdp"
+                android:layout_marginTop="@dimen/_8sdp"
+                android:visibility="gone"/>
+
+        </RelativeLayout>
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
 
 </LinearLayout>

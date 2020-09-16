@@ -4,9 +4,11 @@ import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.FrameLayout;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.FragmentManager;
@@ -52,10 +54,10 @@ public class NewsfeedAdapter extends RecyclerView.Adapter<NewsfeedAdapter.Newsfe
         @BindView(R.id.post_card_text) TextView userText;
         @BindView(R.id.post_card_time) TextView time;
         @BindView(R.id.newsfeed_card) View newsfeedCard;
-        @BindView(R.id.post_view_pager)
-        ViewPager2 viewPager;
+        @BindView(R.id.post_view_pager) ViewPager2 viewPager;
         @BindView(R.id.post_card_description) TextView description;
         @BindView(R.id.post_card_review) TextView review;
+        @BindView(R.id.trip_wishlist_button) Button wishlistButton;
 
         public NewsfeedViewHolder(@NonNull View itemView) {
             super(itemView);
@@ -138,25 +140,33 @@ public class NewsfeedAdapter extends RecyclerView.Adapter<NewsfeedAdapter.Newsfe
             }
         });
 
+        holder.wishlistButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (current.getLocation().getId() != null) {
+                    updateWishlist();
+                    jsonFetcher = new JsonFetcher(wishlist, context);
+                    jsonFetcher.addParam("location", current.getLocation().getId());
+                    jsonFetcher.postDataVolley(routes.wishlistRoute(((MainMenuActivity)context).getUserAccount().getUserId()));
+                } else {
+                    Toast.makeText(context, R.string.no_location_data, Toast.LENGTH_SHORT).show();
+                }
+
+            }
+        });
+
     }
 
     private void updateWishlist() {
-        /*notification.setRead(true);
-        ((MainMenuActivity)context).getUserAccount().getNotificationCentre().decrementUnread();
-        JsonFetcher jsonFetcher = new JsonFetcher(null,context);
-        jsonFetcher.patchData(routes.patchNotification(notification.getId()));*/
-    }
-
-    private void loadProfileRequest() {
         wishlist = new NetworkResultCallback() {
             @Override
             public void notifySuccess(JSONObject response) {
-
+                Toast.makeText(context, R.string.location_added, Toast.LENGTH_SHORT).show();
             }
 
             @Override
             public void notifyError(VolleyError error) {
-
+                Toast.makeText(context, R.string.error_save, Toast.LENGTH_SHORT).show();
             }
         };
     }

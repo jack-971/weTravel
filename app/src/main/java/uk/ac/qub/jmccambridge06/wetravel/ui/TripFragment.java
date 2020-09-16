@@ -94,7 +94,6 @@ public class TripFragment extends Fragment {
             jsonFetcher.getData(routes.getTrip(trip.getProfile().getUserId(), trip.getEntryId(), trip.getStatus()));
             if (trip.getStatus().equals("active")) {
                 FloatingActionButton quickAdd = ((MainMenuActivity)getActivity()).findViewById(R.id.floating_action_button);
-                //quickAdd.setVisibility(View.VISIBLE);
                 quickAdd.show();
                 quickAdd.setOnClickListener(new View.OnClickListener() {
                     @Override
@@ -107,37 +106,12 @@ public class TripFragment extends Fragment {
                                         if (location != null) {
                                             double latitude = location.getLatitude();
                                             double longditude =  location.getLongitude();
-                                            Toast.makeText(getContext(), "location changed, latitude: "+latitude+" longditude: "+longditude, Toast.LENGTH_SHORT).show();
                                             quickAdd();
                                             JsonFetcher jsonFetcher = new JsonFetcher(getLocationCallback, getContext());
                                             jsonFetcher.getData(routes.getPlacesNearby(latitude, longditude));
                                         }
                                     }
                                 });
-                        // check locations are enabled on app.
-                        ////if (((MainMenuActivity)getActivity()).getUserAccount().getSettings().get("location") == true) {
-                            // check locations enabled in device
-
-                            ////Locater locater = new Locater(getContext());
-                            // load callback method
-                            //get location
-                            ////quickAdd();
-                            /////locater.getLocation(getLocationCallback);
-                            // once callback activated filter results and display in dialog - clickable to create new activity
-
-                            //LocationManager locationManager = (LocationManager) getContext().getSystemService(Context.LOCATION_SERVICE);
-                            //locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 0, this);
-                            // check gps is on.
-                            // get location coordinates (last known location)?
-                            // geocoder check to see if coorindates match anything and retrieve top 5 within certain range
-                            // show results to user and ask to pick one in dialog.
-                            // once user picks one then edit activity opens and autopopulates. user can then save.
-                            //Snackbar.make(view, "Add new event", Snackbar.LENGTH_LONG)
-                                    //.setAction("Action", null).show();
-                        //} else {
-                            // toast
-                        //}
-
                     }
                 });
             }
@@ -146,7 +120,7 @@ public class TripFragment extends Fragment {
             tripItineraryFragment = new TripItineraryFragment();
             tripAddFragment = new TripAddFragment();
             tripNotesFragment = new TripNotesFragment();
-            tripMapFragment = new TripMapFragment();
+            tripMapFragment = new TripMapFragment(trip);
             sectionsPagerAdapter = new SectionsPagerAdapter(getContext(), (getChildFragmentManager()));
             viewPager = getView().findViewById(R.id.view_pager);
             viewPager.setAdapter(sectionsPagerAdapter);
@@ -223,7 +197,7 @@ public class TripFragment extends Fragment {
                     tripItineraryFragment = new TripItineraryFragment(trip);
                     tripAddFragment = new TripAddFragment();
                     tripNotesFragment = new TripNotesFragment();
-                    tripMapFragment = new TripMapFragment();
+                    tripMapFragment = new TripMapFragment(getTrip());
                     sectionsPagerAdapter = new SectionsPagerAdapter(getContext(), (getChildFragmentManager()));
                     viewPager = getView().findViewById(R.id.view_pager);
                     viewPager.setAdapter(sectionsPagerAdapter);

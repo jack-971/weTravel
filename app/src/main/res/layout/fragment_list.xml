@@ -9,7 +9,7 @@
         android:layout_height="match_parent"
         android:padding="@dimen/_4sdp"
         android:scrollbars="vertical"
-        android:background="@android:color/darker_gray">
+        android:background="#e0e0e0">
 
     </androidx.recyclerview.widget.RecyclerView>
 
@@ -20,6 +20,9 @@
         android:layout_centerInParent="true"
         android:textSize="@dimen/_30sdp"
         android:visibility="gone"
-        android:textColor="@android:color/white"/>
+        android:layout_centerVertical="true"
+        android:layout_centerHorizontal="true"
+        android:gravity="center"
+        android:textColor="@android:color/black"/>
     
 </RelativeLayout>

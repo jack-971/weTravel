@@ -35,4 +35,11 @@
     <!--Notifications-->
     <color name="card_unread">#e0e0e0</color>
     <color name="card_read">@android:color/white</color>
+
+    <!--Map-->
+    <color name="map_wishlist">#E29316</color>
+    <color name="map_visited">#43a047</color>
+    <color name="map_locations">@color/colorPrimary</color>
+    <color name="map_location_added">#f44336</color>
+
 </resources>

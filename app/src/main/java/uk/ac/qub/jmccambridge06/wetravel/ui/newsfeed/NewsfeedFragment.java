@@ -50,11 +50,23 @@ public class NewsfeedFragment extends ListFragment {
     }
 
     public void updateFeed(TreeMap<Long, ItineraryItem> mapItems) {
-        for (ItineraryItem item : mapItems.values()) {
-            list.add(item);
+        if (mapItems.size() == 0) {
+            noData();
+        } else {
+            for (ItineraryItem item : mapItems.values()) {
+                list.add(item);
+            }
+            Collections.reverse(list);
+            updateList();
         }
-        Collections.reverse(list);
-        updateList();
+
+    }
+
+    @Override
+    protected void noData() {
+        super.noData();
+        noDataText.setText("No items to view - add friends to view their latest posts!" +
+                "\n\nSearch for friends using the search bar in the top corner.");
     }
 
 }

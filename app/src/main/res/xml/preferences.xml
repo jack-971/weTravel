@@ -8,7 +8,6 @@
         app:title="@string/set_private"
         android:persistent="true"
         android:defaultValue="false"
-        android:summaryOn="slkhdkjsdh"
         />
 
     <SwitchPreferenceCompat
@@ -18,12 +17,6 @@
     <SwitchPreferenceCompat
         app:key="notifications"
         app:title="@string/allow_notifications"/>
-
-    <Preference
-        app:key="password"
-        app:title="@string/change_password"
-        android:id="@+id/change_password"
-        />
 
 </PreferenceCategory>
 

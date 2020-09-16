@@ -5,12 +5,16 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.CheckBox;
+import android.widget.CompoundButton;
+import android.widget.RelativeLayout;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
+import com.android.volley.VolleyError;
 import com.google.android.gms.common.api.Status;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -24,69 +28,68 @@ import com.google.android.libraries.places.api.model.Place;
 import com.google.android.libraries.places.widget.AutocompleteSupportFragment;
 import com.google.android.libraries.places.widget.listener.PlaceSelectionListener;
 
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashMap;
 
+import butterknife.BindView;
 import uk.ac.qub.jmccambridge06.wetravel.R;
 import uk.ac.qub.jmccambridge06.wetravel.models.Trip;
 import uk.ac.qub.jmccambridge06.wetravel.models.TripLocation;
+import uk.ac.qub.jmccambridge06.wetravel.network.JsonFetcher;
+import uk.ac.qub.jmccambridge06.wetravel.network.NetworkResultCallback;
+import uk.ac.qub.jmccambridge06.wetravel.network.routes;
+import uk.ac.qub.jmccambridge06.wetravel.utilities.ProfileTypes;
 
-public class TripMapFragment extends Fragment implements OnMapReadyCallback, GoogleMap.OnMarkerClickListener {
+public class TripMapFragment extends MapFragment {
 
     private Trip trip;
-    private GoogleMap Map;
-    MapView mapView;
-    AutocompleteSupportFragment autocompleteSupportFragment;
-    private Marker currentMarker;
-    private Place currentPlace;
+    private NetworkResultCallback locationsPlacesCallback;
+    private HashMap<Marker, TripLocation> locations;
+
+    public TripMapFragment(Trip trip) {
+        this.trip = trip;
+    }
 
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        ((MainMenuActivity)getActivity()).removeNavBar();
-        View view = inflater.inflate(R.layout.fragment_trip_map, container, false);
-
-        autocompleteSupportFragment = (AutocompleteSupportFragment) getChildFragmentManager().findFragmentById(R.id.autocomplete_fragment);
-        autocompleteSupportFragment.setPlaceFields(Arrays.asList(Place.Field.ID, Place.Field.NAME, Place.Field.ADDRESS, Place.Field.LAT_LNG));
-        autocompleteSupportFragment.setOnPlaceSelectedListener(new PlaceSelectionListener() {
-            @Override
-            public void onPlaceSelected(Place place) {
-                place.getLatLng();
-                Log.d("Maps", "Place selected: " + place.getName());
-                currentMarker = Map.addMarker(new MarkerOptions().position(place.getLatLng()).title("Marker in "+place.getName()));
-                currentPlace = place;
-                float zoomLevel = 12.0f;
-                Map.moveCamera(CameraUpdateFactory.newLatLngZoom(place.getLatLng(), zoomLevel));
-            }
-
-            @Override
-            public void onError(Status status) {
-                Log.d("Maps", "An error occurred: " + status);
-            }
-        });
-
-
-        mapView = (MapView) view.findViewById(R.id.map);
-        mapView.onCreate(savedInstanceState);
-
-        mapView.onResume(); // needed to get the map to display immediately
-
-        try {
-            MapsInitializer.initialize(getActivity().getApplicationContext());
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-
-        /*SupportMapFragment mapFragment = (SupportMapFragment) getActivity().getSupportFragmentManager()
-                .findFragmentById(R.id.map);*/
-        mapView.getMapAsync(this);
-
-        return view;
+        return super.onCreateView(inflater, container, savedInstanceState);
     }
 
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+
+        locationFilterView.setVisibility(View.VISIBLE);
+
+        if (trip != null) {
+            if (!trip.getStatus().equalsIgnoreCase("complete")) {
+                jsonFetcher.getData(routes.wishlistRoute(trip.getProfile().getUserId())+"?type=planned");
+                wishlistFilterView.setVisibility(View.VISIBLE);
+                if (trip.getProfile().getProfileType() == ProfileTypes.PROFILE_ADMIN) wishlistRemove.setVisibility(View.VISIBLE);
+            } else {
+                autocompleteSupportFragment.getView().setVisibility(View.GONE);
+            }
+        }
+
+        processLocations(trip.getLocations());
+
+        locationCheckbox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                if (isChecked) {
+                    showMarkers(locations);
+                } else {
+                    hideMarkers(locations);
+                }
+            }
+        });
+
     }
 
     public void setTrip(Trip trip) {
@@ -94,49 +97,65 @@ public class TripMapFragment extends Fragment implements OnMapReadyCallback, Goo
     }
 
     @Override
-    public void onMapReady(GoogleMap googleMap) {
-        Map = googleMap;
-        googleMap.setOnMarkerClickListener(this::onMarkerClick);
-        // Add a marker in Sydney and move the camera
-        LatLng sydney = new LatLng(-34, 151);
-        Map.addMarker(new MarkerOptions().position(sydney).title("Marker in Sydney"));
-        Map.moveCamera(CameraUpdateFactory.newLatLng(sydney));
-    }
-
-    @Override
     public boolean onMarkerClick(Marker marker) {
-        // get reference to the trip fragment from the fragment manager.
-        ArrayList<TripLocation> locations = new ArrayList<>();
-        TripLocation tripLocation = new TripLocation(currentPlace.getId(), currentPlace.getName(), currentPlace.getAddress());
-        locations.add(tripLocation);
-        TripFragment tripFragment = (TripFragment) ((MainMenuActivity)getActivity()).getSupportFragmentManager().findFragmentByTag("user_trip_fragment");
-        tripFragment.showQuickAddDialog(locations);
-        Toast.makeText(getContext(), "location changed", Toast.LENGTH_SHORT).show();
+        super.onMarkerClick(marker);
+        if (wishlist != null) {
+            if (marker.getSnippet() != null || wishlist.containsKey(marker)) { // confirm it is a new add marker, not an existing one
+                // get reference to the trip fragment from the fragment manager.
+                ArrayList<TripLocation> locations = new ArrayList<>();
+                TripLocation tripLocation;
+                if (marker.getSnippet() != null) tripLocation = new TripLocation(currentPlace.getId(), currentPlace.getName(), currentPlace.getAddress());
+                else tripLocation = wishlist.get(marker);
+                locations.add(tripLocation);
+                TripFragment tripFragment = (TripFragment) ((MainMenuActivity)getActivity()).getSupportFragmentManager().findFragmentByTag("user_trip_fragment");
+                tripFragment.showQuickAddDialog(locations);
+            }
+        }
         return false;
     }
 
-    @Override
-    public void onResume() {
-        super.onResume();
-        mapView.onResume();
+    protected void loadMapData() {
+        loadMapDataCallback = new NetworkResultCallback() {
+            @Override
+            public void notifySuccess(JSONObject response) {
+                processWishlist(response);
+
+            }
+
+            @Override
+            public void notifyError(VolleyError error) {
+                error.printStackTrace();
+            }
+        };
     }
 
-    @Override
-    public void onPause() {
-        super.onPause();
-        mapView.onPause();
+    protected void processLocations(ArrayList<String> locationIds) {
+            addLocationsFromGooglePlaces();
+            locations = new HashMap<>();
+            for (int loop = 0; loop<locationIds.size(); loop++) {
+                String locationKeyString = locationIds.get(loop);
+                jsonFetcher = new JsonFetcher(locationsPlacesCallback, getContext());
+                jsonFetcher.getData(routes.getPlacesAPI(locationKeyString));
+            }
     }
 
-    @Override
-    public void onDestroy() {
-        super.onDestroy();
-        mapView.onDestroy();
-    }
+    protected void addLocationsFromGooglePlaces() {
+        locationsPlacesCallback = new NetworkResultCallback() {
+            @Override
+            public void notifySuccess(JSONObject response) {
+                try {
+                    TripLocation tripLocation = parsePlacesJSON(response);
+                    locations.put(addMarker(tripLocation, R.drawable.location_planned), tripLocation);
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+            }
 
-    @Override
-    public void onLowMemory() {
-        super.onLowMemory();
-        mapView.onLowMemory();
+            @Override
+            public void notifyError(VolleyError error) {
+                error.printStackTrace();
+            }
+        };
     }
 
 

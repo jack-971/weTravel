@@ -138,6 +138,7 @@ public class ActivityDetailsFragment extends TripEntryFragment {
                                     new ActivityDetailsFragment(activity)).addToBackStack(null).commit();
                         } else {
                             Toast.makeText(getActivity().getApplicationContext(), R.string.entry_saved, Toast.LENGTH_SHORT).show();
+                            item = activity;
                             tripAttendeesView.setVisibility(View.VISIBLE);
                             tripAddAttendeesView.setVisibility(View.VISIBLE);
                             leaveButton.setVisibility(View.VISIBLE);
@@ -178,9 +179,9 @@ public class ActivityDetailsFragment extends TripEntryFragment {
         leaveTripCallback = new NetworkResultCallback() {
             @Override
             public void notifySuccess(JSONObject response) {
-                leg.getActivities().remove(activity.getEntryId());
+                leg.getActivities().remove(item.getEntryId());
                 ((MainMenuActivity)getActivity()).getSupportFragmentManager().popBackStack();
-                Toast.makeText(getActivity().getApplicationContext(), "You have left "+activity.getEntryName(), Toast.LENGTH_SHORT).show();
+                Toast.makeText(getActivity().getApplicationContext(), "You have left "+item.getEntryName(), Toast.LENGTH_SHORT).show();
             }
 
             @Override

@@ -40,6 +40,11 @@
     to this user if you would like view thier profile!</string>
     <string name="unknown_location">Unknown Location</string>
     <string name="no_description">No description Added</string>
+    <string name="location_added">Location added to wishlist!</string>
+    <string name="visited">Visited</string>
+    <string name="locations">Locations</string>
+    <string name="remove">Remove</string>
+    <string name="wishlist_remove">Location removed from wishlist!</string>
 
 
     <!--Trips-->
@@ -111,6 +116,7 @@
     <string name="no_gps">Location services must be switched on for quick add!</string>
     <string name="no_gallery">There are no images to view!</string>
     <string name="post_error">Error posting - please try again!</string>
+    <string name="no_location_data">No location data to save!</string>
     <!--Success-->
     <string name="entry_saved">Entry Saved</string>
 

@@ -23,6 +23,7 @@ public final class routes {
     private static String status = "status/";
     private static String notification = "notification/";
     private static String image = "image/";
+    private static String wishlist = "wishlist/";
 
     private static String placesAPI = "https://maps.googleapis.com/maps/api/geocode/json?place_id=";
     private static String locationsAPI = "https://maps.googleapis.com/maps/api/place/nearbysearch/json?";
@@ -92,7 +93,7 @@ public final class routes {
     }
 
     public static String getPlacesAPI(String placeKey) {
-        return placesAPI+placeKey+"&key="+ Locations.key;
+        return placesAPI+placeKey+"&fields=name,geometry,formatted_address,place_id&key="+ Locations.key;
     }
 
     public static String getPlacesNearby(double latitude, double longditude) {
@@ -130,5 +131,9 @@ public final class routes {
 
     public static String patchPostStatus(int postId) {
         return mainUrl + secure + trips + "post/"+postId;
+    }
+
+    public static String wishlistRoute(int userId) {
+        return mainUrl + secure + wishlist + userId;
     }
 }
