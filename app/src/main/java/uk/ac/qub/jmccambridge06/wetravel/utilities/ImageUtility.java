@@ -11,6 +11,9 @@ import java.io.IOException;
 
 import uk.ac.qub.jmccambridge06.wetravel.ui.DisplayFragment;
 
+/**
+ * Utility class containing functions for choosing and saving images
+ */
 public class ImageUtility {
 
     public static final int IMG_REQUEST_ID = 10;

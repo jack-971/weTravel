@@ -2,29 +2,21 @@ package uk.ac.qub.jmccambridge06.wetravel.network;
 
 import android.app.ProgressDialog;
 import android.content.Context;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.net.Uri;
-import android.util.Log;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
-import androidx.fragment.app.Fragment;
 
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
-import com.google.firebase.storage.FileDownloadTask;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.OnProgressListener;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 
-import java.io.File;
-import java.io.IOException;
-import java.util.UUID;
-
-import uk.ac.qub.jmccambridge06.wetravel.ui.ProfileFragment;
-
+/**
+ * Provides a connection to firebase for saving images
+ */
 public class FirebaseLink {
 
 
@@ -35,15 +27,12 @@ public class FirebaseLink {
     public static String postPath = "post/";
     public static String postPrefix = "post_";
 
-    private static StorageReference TripPictureFolder;
-
     /**
-     * For a given image, saves the file into firebase storage.
+     * For a given image upload and save in Firebase. Also sends the download URL as part of the callback
      * @param imageUri
      * @param context
      */
     public static void saveInFirebase(Uri imageUri, final Context context, FirebaseCallback callback, String path) {
-
         if (imageUri != null) {
             final ProgressDialog progressDialog = new ProgressDialog(context);
             progressDialog.setTitle("Please wait...");
@@ -54,6 +43,7 @@ public class FirebaseLink {
                     @Override
                     public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
                         progressDialog.dismiss();
+                        // retrieve the download url so it can be saved to the databse from firebase callback
                         reference.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
                             @Override
                             public void onSuccess(Uri uri) {
@@ -78,6 +68,7 @@ public class FirebaseLink {
                 }).addOnProgressListener(new OnProgressListener<UploadTask.TaskSnapshot>() {
                     @Override
                     public void onProgress(@NonNull UploadTask.TaskSnapshot taskSnapshot) {
+                        // add loading indicator
                         double progress = (100.0 * taskSnapshot.getBytesTransferred() / taskSnapshot.getBytesTransferred());
                         progressDialog.setMessage("Saved" + (int) progress + "%");
                     }

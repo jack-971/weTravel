@@ -9,13 +9,15 @@ import java.util.Date;
 
 import uk.ac.qub.jmccambridge06.wetravel.utilities.DateTime;
 
+/**
+ * Represents a user profile - containing information for the profile
+ */
 public class Profile {
 
     private String name;
     private String username;
     private int age;
     private String homeLocation;
-    private String currentLocation;
     private String profilePicture;
     private String description;
     private int userId;
@@ -41,6 +43,12 @@ public class Profile {
                 profileType);
     }
 
+    /**
+     * Constructor to create profile only adding minimum details - used for friend admin friends list
+     * @param id
+     * @param name
+     * @param profileType
+     */
     public Profile(int id, String name, int profileType) {
         this.setUserId(id);
         this.setName(name);
@@ -103,7 +111,6 @@ public class Profile {
      */
     public void setAge(long dob) {
         Date date = DateTime.sqlToDate(dob);
-        //String dateString = DateTime.formatDate(date);
         this.age = DateTime.getAge(date);
     }
 
@@ -113,14 +120,6 @@ public class Profile {
 
     public void setHomeLocation(String homeLocation) {
         this.homeLocation = homeLocation;
-    }
-
-    public String getCurrentLocation() {
-        return currentLocation;
-    }
-
-    public void setCurrentLocation(String currentLocation) {
-        this.currentLocation = currentLocation;
     }
 
     public String getProfilePicture() {
@@ -159,15 +158,7 @@ public class Profile {
         return privateProfile;
     }
 
-    public void setPrivateProfile(boolean privateProfile) {
-        this.privateProfile = privateProfile;
-    }
-
     public long getDateJoined() {
         return dateJoined;
-    }
-
-    public void setDateJoined(long dateJoined) {
-        this.dateJoined = dateJoined;
     }
 }

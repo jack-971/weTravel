@@ -26,21 +26,31 @@ import uk.ac.qub.jmccambridge06.wetravel.R;
 import uk.ac.qub.jmccambridge06.wetravel.models.MyApplication;
 import uk.ac.qub.jmccambridge06.wetravel.ui.MainMenuActivity;
 
+/**
+ * Adapter for a View Pager of images
+ */
 public class GalleryAdapter extends RecyclerView.Adapter<GalleryAdapter.ImageViewHolder> {
 
-    public GalleryAdapter() {
-
-    }
-
+    /**
+     * View holder for each image
+     */
     class ImageViewHolder extends RecyclerView.ViewHolder{
 
         @BindView (R.id.image_view) RoundedImageView imageView;
 
+        /**
+         * Constructor for each view
+         * @param itemView
+         */
         public ImageViewHolder(@NonNull View itemView) {
             super(itemView);
             ButterKnife.bind(this, itemView);
         }
 
+        /**
+         * Sets the image from Firebase using the Glide library
+         * @param url
+         */
         void setImage(String url) {
             Glide.with(MyApplication.getContext())
                     .applyDefaultRequestOptions(new RequestOptions()
@@ -53,8 +63,13 @@ public class GalleryAdapter extends RecyclerView.Adapter<GalleryAdapter.ImageVie
     private ArrayList<String> urls;
     private ViewPager2 viewPager;
     Context context;
-    boolean enlarged;
 
+    /**
+     * Constructor with args - sets the viewpager and list of image download links
+     * @param urls
+     * @param viewPager
+     * @param context
+     */
     public GalleryAdapter(ArrayList<String> urls, ViewPager2 viewPager, Context context) {
         this.urls = urls;
         this.viewPager = viewPager;

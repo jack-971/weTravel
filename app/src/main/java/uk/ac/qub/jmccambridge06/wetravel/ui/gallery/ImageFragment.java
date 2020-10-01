@@ -20,33 +20,35 @@ import uk.ac.qub.jmccambridge06.wetravel.R;
 import uk.ac.qub.jmccambridge06.wetravel.models.MyApplication;
 import uk.ac.qub.jmccambridge06.wetravel.ui.MainMenuActivity;
 
+/**
+ * Contains full screen image
+ */
 public class ImageFragment extends Fragment {
 
     @BindView(R.id.image_view)
     RoundedImageView image;
     String url;
 
+    /**
+     * Constructor with image download url
+     * @param imageView
+     */
     public ImageFragment(String imageView) {
         url = imageView;
     }
-
-
 
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.image_slider, container, false);
         ButterKnife.bind(this, view);
+        // set fullscreen
         View decorView = ((MainMenuActivity)getActivity()).getWindow().getDecorView();
         decorView.setSystemUiVisibility(
                         View.SYSTEM_UI_FLAG_IMMERSIVE
-                        // Set the content to appear under the system bars so that the
-                        // content doesn't resize when the system bars hide and show.
                         | View.SYSTEM_UI_FLAG_LAYOUT_STABLE
-                        //| View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION
                         | View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
                         // Hide the nav bar and status bar
-                        //| View.SYSTEM_UI_FLAG_HIDE_NAVIGATION
                         | View.SYSTEM_UI_FLAG_FULLSCREEN);
         return view;
     }
@@ -54,6 +56,7 @@ public class ImageFragment extends Fragment {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+        // load image
         Glide.with(MyApplication.getContext())
                 .applyDefaultRequestOptions(new RequestOptions()
                         .error(R.drawable.profile_placeholder_icon))

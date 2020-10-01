@@ -5,7 +5,6 @@ import uk.ac.qub.jmccambridge06.wetravel.utilities.Locations;
 public final class routes {
 
     private static String mainUrl = "http://10.0.2.2:8080/";
-    //private static String mainUrl = "https://travel-with-4cd49.web.app/";
     //private static String mainUrl = "https://us-central1-travel-with-4cd49.cloudfunctions.net/app/";
 
     private static String secure = "secure/";
@@ -16,8 +15,6 @@ public final class routes {
     private static String settings = "settings/";
     private static String trips = "trips/";
     private static String trip = "trip/";
-    private static String leg = "leg/";
-    private static String activity = "activity/";
     private static String addUserToTrip = "user/";
     private static String leaveTrip = "leave/";
     private static String status = "status/";
@@ -28,6 +25,11 @@ public final class routes {
     private static String placesAPI = "https://maps.googleapis.com/maps/api/geocode/json?place_id=";
     private static String locationsAPI = "https://maps.googleapis.com/maps/api/place/nearbysearch/json?";
 
+    /**
+     * Returns the route for the logged in users details
+     * @param userId
+     * @return
+     */
     public static String getAdminAccountData(int userId) {
         return mainUrl+secure+userAccount+admin+userId;
     }
@@ -41,10 +43,20 @@ public final class routes {
         return mainUrl+secure+userAccount+userId;
     }
 
+    /**
+     * Returns the route for an accounts friends
+     * @param userId
+     * @return
+     */
     public static String getUsersRoute(int userId) {
         return mainUrl +secure  + users + userId;
     }
 
+    /**
+     * Returns the route for a user search
+     * @param query
+     * @return
+     */
     public static String getUserSearchList(String query) {
         return mainUrl + secure + userSearchList + query;
     }
@@ -58,6 +70,12 @@ public final class routes {
         return mainUrl+secure+settings+userId;
     }
 
+    /**
+     * Returns the route to get a users trips - must specify trip status
+     * @param userId
+     * @param status
+     * @return
+     */
     public static String getTrips(int userId, String status) {
         return mainUrl +secure+ trips + userId+"?status="+status;
     }
@@ -72,7 +90,14 @@ public final class routes {
         return mainUrl +secure+ trips + trip + userId+"?trip="+tripId+"&status="+status;
     }
 
-    public static String leaveTrip(int userId, int id, String type) {
+    /**
+     * Returns the route for a user to leave an entry - must specify type of entry
+     * @param userId
+     * @param id
+     * @param type
+     * @return
+     */
+    public static String leaveEntry(int userId, int id, String type) {
         return mainUrl + secure + trips + leaveTrip + userId+"?id="+id+"&type="+type;
     }
 
@@ -92,47 +117,103 @@ public final class routes {
         return mainUrl+secure+trips+trip+addUserToTrip+tripId;
     }
 
+    /**
+     * Returns the URL to get details from Google Places API
+     * @param placeKey
+     * @return
+     */
     public static String getPlacesAPI(String placeKey) {
         return placesAPI+placeKey+"&fields=name,geometry,formatted_address,place_id&key="+ Locations.key;
     }
 
+    /**
+     * Returns the url to get a list of locations nearby a set of coordinates from Google Places API
+     * @param latitude
+     * @param longditude
+     * @return
+     */
     public static String getPlacesNearby(double latitude, double longditude) {
         return locationsAPI+"location="+latitude+","+longditude+"&radius=20&key="+Locations.key;
     }
 
 
+    /**
+     * Returns route to change the status of a trip
+     * @param userId
+     * @return
+     */
     public static String patchTripStatus(int userId) {
         return mainUrl+secure + trips + status + userId;
     }
 
+    /**
+     * Returns the route to create a new user
+     * @return
+     */
     public static String registerUser() {
         return mainUrl + "register";
     }
 
+    /**
+     * Returns the route to check a users login credentials
+     * @return
+     */
     public static String loginUser() {
         return mainUrl + "login";
     }
 
+    /**
+     * Returns the route to add a new notification key
+     * @param userId
+     * @return
+     */
     public static String postNotificationKey(int userId) {
         return mainUrl + secure + notification + userId;
     }
 
+    /**
+     * Returns the route to change a notification key
+     * @param notificationId
+     * @return
+     */
     public static String patchNotification(int notificationId) {
         return mainUrl+secure+notification+"read/"+notificationId;
     }
 
+    /**
+     * Returns the route to post an image
+     * @param postId
+     * @return
+     */
     public static String postImage(int postId) {
         return mainUrl + secure + image + postId;
     }
 
+    /**
+     * Returns the route to get an image
+     * @param postId
+     * @param userId
+     * @param type
+     * @return
+     */
     public static String getImage(int postId, int userId, String type) {
         return mainUrl + secure + image + postId+"?user="+userId+"&type="+type;
     }
 
+    /**
+     * Returns the route to update a post to posted
+     * @param postId
+     * @return
+     */
     public static String patchPostStatus(int postId) {
         return mainUrl + secure + trips + "post/"+postId;
     }
 
+    /**
+     * Returns the route for a users wishlist
+     * @param userId
+     * @return
+     */
     public static String wishlistRoute(int userId) {
         return mainUrl + secure + wishlist + userId;
     }

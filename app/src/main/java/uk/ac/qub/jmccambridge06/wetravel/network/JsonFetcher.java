@@ -20,7 +20,11 @@ import java.util.Map;
 
 import uk.ac.qub.jmccambridge06.wetravel.utilities.TokenOperator;
 
-
+/**
+ * Class used to send HTTP requests via the Android Volley library. Send json data within the requests.
+ * Each request generates headers and can have parameters added manually. Every request links back to a callback
+ * with response.
+ */
 public class JsonFetcher {
 
     NetworkResultCallback networkResultCallback = null;
@@ -28,6 +32,11 @@ public class JsonFetcher {
     private Map<String, String> header;
     private Map<String, Object> params;
 
+    /**
+     * Constructor with args - requries callback for HTTP response
+     * @param resultCallback
+     * @param context
+     */
     public JsonFetcher(NetworkResultCallback resultCallback, Context context){
         networkResultCallback = resultCallback;
         this.context = context;
@@ -35,14 +44,19 @@ public class JsonFetcher {
         params = new HashMap<>();
     }
 
-    public void addHeader(String key, String value) {
-        header.put(key, value);
-    }
-
+    /**
+     * Add a new parameter to the request body
+     * @param key
+     * @param value
+     */
     public void addParam(String key, String value) {
         params.put(key, value);
     }
 
+    /**
+     * Send a patch request via Volley
+     * @param url
+     */
     public void patchData(String url){
         try {
             RequestQueue queue = Volley.newRequestQueue(context);
@@ -62,20 +76,18 @@ public class JsonFetcher {
             }){
                 @Override
                 public Map<String, String> getHeaders() throws AuthFailureError {
-                    HashMap<String, String> headers = new HashMap<String, String>();
-                    headers.put("X-HTTP-Method-Override","PATCH");
-                    headers.put("Content-Type", "application/json; charset=utf-8");
-                    headers.put("authorization", TokenOperator.getToken(context));
-                    return headers;
+                    return addHeaders();
                 }};
-
             queue.add(jsonObj);
-
         }catch(Exception e){
             e.printStackTrace();
         }
     }
 
+    /**
+     * Send a post request via volley
+     * @param url
+     */
     public void postDataVolley(String url){
         try {
             RequestQueue queue = Volley.newRequestQueue(context);
@@ -95,22 +107,20 @@ public class JsonFetcher {
             }){
                 @Override
                 public Map<String, String> getHeaders() throws AuthFailureError {
-                    HashMap<String, String> headers = new HashMap<String, String>();
-                    headers.put("X-HTTP-Method-Override","POST");
-                    headers.put("Content-Type", "application/json; charset=utf-8");
-                    //headers.put("x-api-key", "YOUR API KEY");
-                    headers.put("authorization", TokenOperator.getToken(context));
-
-                    return headers;
+                    return addHeaders();
                 }};
 
             queue.add(jsonObj);
 
         }catch(Exception e){
-
+            e.printStackTrace();
         }
     }
 
+    /**
+     * Send a get request via volley
+     * @param url
+     */
     public void getData(String url){
         try {
             RequestQueue queue = Volley.newRequestQueue(context);
@@ -131,12 +141,7 @@ public class JsonFetcher {
             }){
                 @Override
                 public Map<String, String> getHeaders() throws AuthFailureError {
-                    HashMap<String, String> headers = new HashMap<String, String>();
-                    headers.put("X-HTTP-Method-Override","GET");
-                    headers.put("Content-Type", "application/json; charset=utf-8");
-                    //headers.put("x-api-key", "YOUR API KEY");
-                    headers.put("authorization", TokenOperator.getToken(context));
-                    return headers;
+                    return addHeaders();
                 }};
 
             queue.add(jsonObject);
@@ -146,6 +151,10 @@ public class JsonFetcher {
         }
     }
 
+    /**
+     * Send a delete request via volley
+     * @param url
+     */
     public void deleteData(String url){
         try {
             RequestQueue queue = Volley.newRequestQueue(context);
@@ -165,12 +174,7 @@ public class JsonFetcher {
             }){
                 @Override
                 public Map<String, String> getHeaders() throws AuthFailureError {
-                    HashMap<String, String> headers = new HashMap<String, String>();
-                    headers.put("X-HTTP-Method-Override","GET");
-                    headers.put("Content-Type", "application/json; charset=utf-8");
-                    //headers.put("x-api-key", "YOUR API KEY");
-                    headers.put("authorization", TokenOperator.getToken(context));
-                    return headers;
+                    return addHeaders();
                 }};
 
             queue.add(jsonObject);
@@ -178,6 +182,19 @@ public class JsonFetcher {
         }catch(Exception e){
 
         }
+    }
+
+    /**
+     * Adds the headers to a volley HTTP request
+     * @return
+     */
+    private Map<String, String> addHeaders() {
+        HashMap<String, String> headers = new HashMap<String, String>();
+        headers.put("X-HTTP-Method-Override","GET");
+        headers.put("Content-Type", "application/json; charset=utf-8");
+        // put authorization token in req header
+        headers.put("authorization", TokenOperator.getToken(context));
+        return headers;
     }
 
 

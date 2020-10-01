@@ -8,20 +8,22 @@ import android.view.ViewGroup;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
-import org.json.JSONArray;
-import org.json.JSONException;
-
-import java.util.ArrayList;
 import java.util.Collections;
 import java.util.TreeMap;
 
 import uk.ac.qub.jmccambridge06.wetravel.R;
 import uk.ac.qub.jmccambridge06.wetravel.models.ItineraryItem;
-import uk.ac.qub.jmccambridge06.wetravel.ui.ListFragment;
+import uk.ac.qub.jmccambridge06.wetravel.ui.lists.ListFragment;
 import uk.ac.qub.jmccambridge06.wetravel.ui.MainMenuActivity;
 
+/**
+ * Contains controller logic for newsfeed list page
+ */
 public class NewsfeedFragment extends ListFragment {
 
+    /**
+     * Default constructor
+     */
     public NewsfeedFragment() {
 
     }
@@ -37,6 +39,7 @@ public class NewsfeedFragment extends ListFragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         logtag = "NotificationListFragment";
         super.onViewCreated(view, savedInstanceState);
+        // if there is a newsfeed update it
         if (((MainMenuActivity)getActivity()).getUserAccount().getNewsfeed() != null) {
             updateFeed(((MainMenuActivity)getActivity()).getUserAccount().getNewsfeed());
         }
@@ -49,6 +52,11 @@ public class NewsfeedFragment extends ListFragment {
         adapter = new NewsfeedAdapter(list, getContext());
     }
 
+    /**
+     * Takes a newsfeed sorted by time and adds them to an array list before reversing
+     * to get the most recent posts first
+     * @param mapItems
+     */
     public void updateFeed(TreeMap<Long, ItineraryItem> mapItems) {
         if (mapItems.size() == 0) {
             noData();

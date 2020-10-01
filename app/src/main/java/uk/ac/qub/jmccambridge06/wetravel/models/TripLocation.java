@@ -1,5 +1,8 @@
 package uk.ac.qub.jmccambridge06.wetravel.models;
 
+/**
+ * A location for an itinerary item
+ */
 public class TripLocation {
 
     private String name;
@@ -8,22 +11,37 @@ public class TripLocation {
     private Double latitude;
     private Double longidtude;
 
+    /**
+     * Constructor for standard entry locations requires name for display and id for saving
+     * @param id
+     * @param name
+     */
     public TripLocation(String id, String name) {
-
         this.id = id;
         this.name = name;
     }
 
+    /**
+     * Constructor for quick add entries - contains vicinity as well
+     * @param id
+     * @param name
+     * @param vicinity
+     */
     public TripLocation(String id, String name, String vicinity) {
-
-        this.id = id;
-        this.name = name;
+        this(id, name);
         this.vicinity = vicinity;
     }
 
+    /**
+     * Constructor for map entries - contains location coordinates
+     * @param name
+     * @param id
+     * @param vicinity
+     * @param latitude
+     * @param longidtude
+     */
     public TripLocation(String name, String id, String vicinity, Double latitude, Double longidtude) {
-        this.name = name;
-        this.id = id;
+        this(id, name);
         this.vicinity = vicinity;
         this.latitude = latitude;
         this.longidtude = longidtude;
@@ -49,23 +67,12 @@ public class TripLocation {
         return vicinity;
     }
 
-    public void setVicinity(String vicinity) {
-        this.vicinity = vicinity;
-    }
-
     public Double getLatitude() {
         return latitude;
-    }
-
-    public void setLatitude(Double latitude) {
-        this.latitude = latitude;
     }
 
     public Double getLongidtude() {
         return longidtude;
     }
 
-    public void setLongidtude(Double longidtude) {
-        this.longidtude = longidtude;
-    }
 }

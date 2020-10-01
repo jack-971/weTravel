@@ -1,5 +1,8 @@
 package uk.ac.qub.jmccambridge06.wetravel.network;
 
+/**
+ * Holds the various relationship types as held in the database
+ */
 public class RelationshipTypesDb {
 
 

@@ -262,7 +262,7 @@
                     android:padding="5dp"
                     android:textColor="@color/card_major_text"
                     android:textSize="@dimen/major_text"
-                    android:visibility="gone"
+                    android:visibility="invisible"
                     app:layout_constraintLeft_toLeftOf="parent"
                     tools:text="Home Location" />
 
@@ -270,7 +270,7 @@
                     android:id="@+id/profile_date_joined"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_below="@id/profile_home_location"
+                    android:layout_below="@id/profile_edit_home_location"
                     android:layout_alignParentLeft="true"
                     android:layout_marginTop="@dimen/_6sdp"
                     android:textColor="@color/minor_text"

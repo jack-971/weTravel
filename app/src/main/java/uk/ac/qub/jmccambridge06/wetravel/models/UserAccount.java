@@ -13,28 +13,33 @@ import java.util.TreeMap;
 import uk.ac.qub.jmccambridge06.wetravel.network.RelationshipTypesDb;
 import uk.ac.qub.jmccambridge06.wetravel.utilities.ProfileTypes;
 
+/**
+ * Represents a users account - used for the signed in user to the app
+ */
 public class UserAccount {
 
     private int userId;
     private Profile profile;
     private ArrayList<Profile> friendsList;
+
+    /**
+     * Contains the setting type and whether it is on or off
+     */
     private HashMap<String, Boolean> settings;
+
     private NotificationCentre notificationCentre;
+
+    /**
+     * Contains the time of post and the item associated with the post
+     */
     private TreeMap<Long, ItineraryItem> newsfeed;
 
-/*
-
-    private TripsList tripsList;
-    private Map map;
-    private Wishlist wishlist;
-    private PrivacySetting privacySettings;
-    private MessageCentre inbox;
-    private NotificationCentre notificationCentre;*/
-
+    /**
+     * Constructor to assign logged in user
+     * @param userId
+     */
     public UserAccount(int userId) {
         this.userId = userId;
-        //this.profile = profile;
-
     }
 
     public int getUserId() {
@@ -65,7 +70,7 @@ public class UserAccount {
      * @throws JSONException
      */
     public void setFriendsList(JSONArray friendsList) throws JSONException {
-        this.friendsList = new ArrayList<Profile>();
+        this.friendsList = new ArrayList<>();
         for (int loop = 0; loop<friendsList.length(); loop++) {
             JSONObject friend = friendsList.getJSONObject(loop);
             int profileType = 1;
@@ -85,16 +90,25 @@ public class UserAccount {
         }
     }
 
+    /**
+     * Checks for a user id within the profile array and returns it. If not found returns null
+     * @param id
+     * @return
+     */
     public Profile getFriendsProfile(int id) {
         for (int loop = 0; loop<friendsList.size(); loop++) {
             if (friendsList.get(loop).getUserId() == id) {
                 return friendsList.get(loop);
             }
         }
-        //int index = friendsList.indexOf(profile.getUserId() == id);
         return null;
     }
 
+    /**
+     * Determines whether a friend list contains a profile
+     * @param id
+     * @return
+     */
     public boolean checkFriendsProfile(int id) {
         if (friendsList.contains(profile.getUserId() == id)) {
             return true;
@@ -108,23 +122,6 @@ public class UserAccount {
      */
     public void addFriend(Profile profile) {
         this.friendsList.add(profile);
-    }
-
-    /**
-     * Checks if a profile is contained within the friends list. If in there the profile type saved in the friends list is returned,
-     * otherwise the user profile type is returned.
-     * @return
-     */
-    public int checkRelationship(int userId) {
-        for (Profile friend : friendsList) {
-            if (friend.getUserId() == userId) {
-                return friend.getProfileType();
-            } else if (userId == getUserId()) {
-                return ProfileTypes.PROFILE_ADMIN;
-            }
-        }
-        return ProfileTypes.PROFILE_USER;
-
     }
 
     /**
@@ -149,6 +146,10 @@ public class UserAccount {
         return settings;
     }
 
+    /**
+     * Creates the settings for the user account
+     * @param data
+     */
     public void createSettings(JSONObject data) {
         try {
             settings = new HashMap<String, Boolean>();
@@ -176,17 +177,18 @@ public class UserAccount {
         return newsfeed;
     }
 
+    /**
+     * Assigns the newsfeed based on json data. loops three arrays (trips, legs, activities), then loops each one to get
+     * each entry.
+     * @param data
+     */
     public void setNewsfeed(JSONArray data) {
         this.newsfeed = new TreeMap<>();
 
         for (int outerLoop = 0; outerLoop<data.length(); outerLoop++) {
             try {
-                //Log.d("tagger", data.get(outerLoop).toString());
-                //String test = data.get(outerLoop).toString();
-
                 JSONArray array = data.getJSONArray(outerLoop);
                 for (int innerLoop = 0; innerLoop<array.length(); innerLoop++) {
-                    Log.d("tagger", array.get(innerLoop).toString());
                     JSONObject post = array.getJSONObject(innerLoop);
                     if (!newsfeed.containsKey(post.getLong("Time"))) {
                         ItineraryItem item = new ItineraryItem(post, getFriendsProfile(post.getInt("UserID")));
@@ -200,8 +202,6 @@ public class UserAccount {
                     } else {
                         ItineraryItem item = newsfeed.get(post.getLong("Time"));
                         item.addImage(post.getString("Url"));
-
-                        //newsfeed.get(post.getLong("Time")).addImage(post.getString("Url"));
                     }
                 }
             } catch (JSONException e) {

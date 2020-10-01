@@ -4,9 +4,21 @@ import com.android.volley.VolleyError;
 
 import org.json.JSONObject;
 
+/**
+ * Callback interface for Firebase requests
+ */
 public interface FirebaseCallback {
 
-    public void notifySuccess(String url);
-    public void notifyError(Exception error);
+    /**
+     * On successful request to firebase this method is triggered with an uploads URL location
+     * @param url
+     */
+    void notifySuccess(String url);
+
+    /**
+     * On unsuccessful request to Firebase this method is triggered with an error
+     * @param error
+     */
+    void notifyError(Exception error);
 
 }

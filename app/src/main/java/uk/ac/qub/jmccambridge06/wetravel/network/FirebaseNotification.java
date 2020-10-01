@@ -22,6 +22,9 @@ import uk.ac.qub.jmccambridge06.wetravel.R;
 import uk.ac.qub.jmccambridge06.wetravel.ui.MainMenuActivity;
 import uk.ac.qub.jmccambridge06.wetravel.ui.login.LoginActivity;
 
+/**
+ *
+ */
 public class FirebaseNotification extends FirebaseMessagingService {
 
     private static final String CHANNEL_ID = "default";
@@ -34,19 +37,20 @@ public class FirebaseNotification extends FirebaseMessagingService {
         sendNotification(remoteMessage);
     }
 
+    /**
+     * Operates a push notification sent by Firebase. Retrieves the contents and launches the activity
+     * @param remoteMessage
+     */
     private void sendNotification(RemoteMessage remoteMessage) {
+        // create the intent to boot up the app/activity
         Intent intent = new Intent(this, LoginActivity.class);
         intent.putExtra("notification", true);
-
-        // retrieve notification data body and insert into intent
-        /*intent.putExtra("type", remoteMessage.getData().get("type"));
-        intent.putExtra("id", remoteMessage.getData().get("id"));*/
-
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
         PendingIntent pendingIntent = PendingIntent.getActivity(this, 0 /* Request code */, intent,
                 PendingIntent.FLAG_ONE_SHOT);
 
         Uri defaultSoundUri = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
+        // Add the notification conent
         NotificationCompat.Builder notificationBuilder =
                 new NotificationCompat.Builder(this, CHANNEL_ID)
                         .setSmallIcon(R.drawable.ic_notifications_none_black_24dp)

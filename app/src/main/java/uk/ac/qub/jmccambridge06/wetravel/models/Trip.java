@@ -9,29 +9,39 @@ import org.json.JSONObject;
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
 
+/**
+ * Class represents a trip entry. Extends itinerary item
+ */
 public class Trip extends ItineraryItem {
 
 
     private String tripPicture;
+
+    /**
+     * A collection of legs. Integer value represents the leg id for quick look up
+     */
     private LinkedHashMap<Integer, Leg> legs;
 
-    public Trip(int tripId, String tripName) {
-        this.setEntryId(tripId);
-        this.setEntryName(tripName);
-    }
-
+    /**
+     * Constructor to define trip attributes.
+     * @param trip
+     * @param profile
+     */
     public Trip(JSONObject trip, Profile profile) {
         super(trip, profile);
         logtag = "Trip";
-        Log.d(logtag, "in trip create");
-        // Parse trip details
         try {
             this.setTripPicture((trip.getString("Picture").equals("null")) ? null : trip.getString("Picture"));
             this.status = trip.getString("TripStatus");
-
         } catch (Exception e) {
             e.printStackTrace();
         }
+    }
+
+    /**
+     * Default constructor - used for testing purposes
+     */
+    public Trip(){
 
     }
 
@@ -55,6 +65,10 @@ public class Trip extends ItineraryItem {
         return legs;
     }
 
+    /**
+     * Adds the legs contained in json array into the leg list for the trip. Sorts into legs with their users.
+     * @param array
+     */
     public void setLegs(JSONArray array) {
         this.legs = new LinkedHashMap<>();
         for (int loop=0; loop<array.length(); loop++) {
@@ -63,6 +77,7 @@ public class Trip extends ItineraryItem {
                 // Check does the leg already exist - if so need to add the new user for this entry (but not add new leg) so add the user
                 // to the leg user list. Otherwise, create a new leg.
                 int legId;
+                // accomodate different names in database
                 if (legJson.has("LegID")) {
                     legId = Integer.parseInt(legJson.getString("LegID"));
                 } else {
@@ -70,6 +85,7 @@ public class Trip extends ItineraryItem {
                 }
                 int userId = Integer.parseInt(legJson.getString("UserID"));
 
+                // check if next leg is a new leg or just a new user for that leg
                 if (legs.containsKey(legId)) {
                     legs.get(legId).getUserList().put(userId, this.getUserList().get(userId));
                 } else {
@@ -77,14 +93,12 @@ public class Trip extends ItineraryItem {
                     leg.status = this.status;
                     this.legs.put(legId, leg);
                     legs.get(legId).getUserList().put(userId, this.getUserList().get(userId));
-                    Log.d("tag", "test");
                 }
             } catch (JSONException e) {
                 e.printStackTrace();
             } catch (Exception e) {
                 e.printStackTrace();
             }
-
         }
     }
 
@@ -110,12 +124,16 @@ public class Trip extends ItineraryItem {
             }
             legs = newLegs;
         }
-
     }
 
+    /**
+     * Adds a json array of activities to their appropriate legs chronologcially by date
+     * @param activitiesArray
+     */
     public void addActivities(JSONArray activitiesArray) {
         for (int loop=0; loop<activitiesArray.length(); loop++) {
             try {
+                // parse json
                 JSONObject activityJson = activitiesArray.getJSONObject(loop);
                 Integer legId = Integer.parseInt(activityJson.getString("LegID"));
                 Integer userId = Integer.parseInt(activityJson.getString("ActivityUserID"));
@@ -142,10 +160,10 @@ public class Trip extends ItineraryItem {
      */
     public ArrayList<String> getLocations() {
         ArrayList<String> locationIds = new ArrayList<>();
-        if (this.getLocation().getId() != null) locationIds.add(this.getLocation().getId());
-        for (Leg leg : this.getLegs().values()) {
+        if (this.getLocation().getId() != null) locationIds.add(this.getLocation().getId()); // trip location
+        for (Leg leg : this.getLegs().values()) { //leg locations
             if (leg.getLocation().getId() != null && !locationIds.contains(leg.getLocation().getId())) locationIds.add(leg.getLocation().getId());
-            for (Activity activity : leg.getActivities().values()) {
+            for (Activity activity : leg.getActivities().values()) { // activity locations
                 if (activity.getLocation().getId() != null && !locationIds.contains(activity.getLocation().getId())) locationIds.add(activity.getLocation().getId());
             }
         }

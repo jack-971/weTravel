@@ -5,13 +5,10 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
-import android.widget.FrameLayout;
-import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
-import androidx.fragment.app.FragmentManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.viewpager2.widget.CompositePageTransformer;
 import androidx.viewpager2.widget.MarginPageTransformer;
@@ -21,33 +18,31 @@ import com.android.volley.VolleyError;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
 
-import org.json.JSONArray;
-import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
-import java.util.TreeMap;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import de.hdodenhof.circleimageview.CircleImageView;
 import uk.ac.qub.jmccambridge06.wetravel.R;
 import uk.ac.qub.jmccambridge06.wetravel.models.ItineraryItem;
-import uk.ac.qub.jmccambridge06.wetravel.models.Notification;
-import uk.ac.qub.jmccambridge06.wetravel.models.Profile;
-import uk.ac.qub.jmccambridge06.wetravel.models.Trip;
 import uk.ac.qub.jmccambridge06.wetravel.network.JsonFetcher;
 import uk.ac.qub.jmccambridge06.wetravel.network.NetworkResultCallback;
 import uk.ac.qub.jmccambridge06.wetravel.network.routes;
 import uk.ac.qub.jmccambridge06.wetravel.ui.MainMenuActivity;
-import uk.ac.qub.jmccambridge06.wetravel.ui.ProfileFragment;
-import uk.ac.qub.jmccambridge06.wetravel.ui.TripFragment;
 import uk.ac.qub.jmccambridge06.wetravel.ui.gallery.GalleryAdapter;
 import uk.ac.qub.jmccambridge06.wetravel.ui.gallery.GalleryFragment;
 import uk.ac.qub.jmccambridge06.wetravel.utilities.DateTime;
 
+/**
+ * Adapter for newsfeed post list
+ */
 public class NewsfeedAdapter extends RecyclerView.Adapter<NewsfeedAdapter.NewsfeedViewHolder> {
 
+    /**
+     * Viewholder for newsfeed posts
+     */
     public static class NewsfeedViewHolder extends RecyclerView.ViewHolder {
 
         @BindView(R.id.post_user_image) CircleImageView userImage;
@@ -59,12 +54,14 @@ public class NewsfeedAdapter extends RecyclerView.Adapter<NewsfeedAdapter.Newsfe
         @BindView(R.id.post_card_review) TextView review;
         @BindView(R.id.trip_wishlist_button) Button wishlistButton;
 
+        /**
+         * Constructor for view
+         * @param itemView
+         */
         public NewsfeedViewHolder(@NonNull View itemView) {
             super(itemView);
             ButterKnife.bind(this, itemView);
         }
-
-
     }
 
     private ArrayList<ItineraryItem> items;
@@ -72,6 +69,11 @@ public class NewsfeedAdapter extends RecyclerView.Adapter<NewsfeedAdapter.Newsfe
     private JsonFetcher jsonFetcher;
     NetworkResultCallback wishlist;
 
+    /**
+     * Constructor with args - sets the list of items in the newsfeed
+     * @param items
+     * @param context
+     */
     public NewsfeedAdapter(ArrayList items, Context context) {
         this.items = items;
         this.context = context;
@@ -85,37 +87,34 @@ public class NewsfeedAdapter extends RecyclerView.Adapter<NewsfeedAdapter.Newsfe
         return holder;
     }
 
-
-
     @Override
     public void onBindViewHolder(@NonNull NewsfeedViewHolder holder, int position) {
         ItineraryItem current = items.get(position);
+        // load user image
         Glide.with(holder.itemView)
                 .applyDefaultRequestOptions(new RequestOptions()
                         .placeholder(R.drawable.ic_profile_placeholder))
                 .load(current.getProfile().getProfilePicture())
                 .into(holder.userImage);
         String locationText = "";
+
         if (current.getLocation().getName() != null)
             locationText = context.getResources().getString(R.string.from) +" "+ current.getLocation().getName();
-
+        // concatenate string with users name and location if it exists
         holder.userText.setText(current.getProfile().getName() +" " + context.getResources().getString(R.string.has_posted) + " " +
                 current.getEntryName() + " " + locationText);
         holder.time.setText(DateTime.formatTime(DateTime.sqlToDate(current.getPostTime()))+ " "
                 + DateTime.formatDate(DateTime.sqlToDate(current.getPostTime())));
-        if (current.getDescription()!= null)
-            holder.description.setText(current.getDescription());
-        else
-            holder.description.setVisibility(View.GONE);
-        if (current.getReview() !=null)
-            holder.review.setText(current.getReview());
+        // load texts if they exist
+        if (current.getDescription()!= null) holder.description.setText(current.getDescription());
+        else holder.description.setVisibility(View.GONE);
 
-        else
-            holder.review.setVisibility(View.GONE);
-        if (current.getGallery().size() > 0)
-            holder.viewPager.setVisibility(View.VISIBLE);
+        if (current.getReview() !=null) holder.review.setText(current.getReview());
+        else holder.review.setVisibility(View.GONE);
 
-        //holder.viewPager = holder.findViewById(R.id.gallery_view_pager);
+        if (current.getGallery().size() > 0) holder.viewPager.setVisibility(View.VISIBLE);
+
+        //add view pager to the holder
         holder.viewPager.setAdapter(new GalleryAdapter(current.getGallery(), holder.viewPager, context));
         holder.viewPager.setClipToPadding(false);
         holder.viewPager.setClipChildren(false);
@@ -157,6 +156,9 @@ public class NewsfeedAdapter extends RecyclerView.Adapter<NewsfeedAdapter.Newsfe
 
     }
 
+    /**
+     * Callback method for adding location to wishlist
+     */
     private void updateWishlist() {
         wishlist = new NetworkResultCallback() {
             @Override

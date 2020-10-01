@@ -5,6 +5,10 @@ import android.net.Uri;
 
 import androidx.fragment.app.Fragment;
 
+/**
+ * Contains controller logic for a fragment displaying pictures
+ * Holds picture information while it is being uploaded to firebase and then displays it on screen
+ */
 public class DisplayFragment extends Fragment {
 
     private Uri imageUri;

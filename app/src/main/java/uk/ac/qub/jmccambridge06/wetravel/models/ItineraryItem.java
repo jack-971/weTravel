@@ -14,7 +14,9 @@ import java.util.HashMap;
 
 import uk.ac.qub.jmccambridge06.wetravel.utilities.DateTime;
 
-
+/**
+ * Generalised class represents an item that can be added to an itinerary. Contains common attributes and methods
+ */
 public class ItineraryItem {
 
     protected String logtag;
@@ -28,6 +30,9 @@ public class ItineraryItem {
     private String description;
     private TripLocation location;
 
+    /**
+     * Contains user id and user name
+     */
     protected HashMap<Integer, String> userList;
     private Profile profile;
     protected String status;
@@ -36,10 +41,18 @@ public class ItineraryItem {
 
     private Long postTime;
 
+    /**
+     * Default constructor
+     */
     public ItineraryItem() {
 
     }
 
+    /**
+     * Constructor from json data. Sets attributes and associated profile of whos entry is being viewed
+     * @param item
+     * @param profile
+     */
     public ItineraryItem(JSONObject item, Profile profile){
         logtag = "item";
         Log.d("tag", "in item create");
@@ -52,7 +65,6 @@ public class ItineraryItem {
             this.setReview((item.getString("Review").equals("null")) ? null : item.getString("Review"));
             this.setLocation((item.getString("LocationID").equals("null")) ? null : item.getString("LocationID"),
                     (item.getString("LocationDetail").equals("null")) ? null : item.getString("LocationDetail"));
-
             userList = new HashMap<>();
             this.profile = profile;
         } catch (Exception e) {
@@ -79,6 +91,10 @@ public class ItineraryItem {
         return userList;
     }
 
+    /**
+     * Populates the user list from json data.
+     * @param jsonUsers
+     */
     public void setUserList(JSONArray jsonUsers) {
         HashMap<Integer, String> list = new HashMap<>();
         for (int loop=0; loop<jsonUsers.length(); loop++) {
@@ -95,6 +111,11 @@ public class ItineraryItem {
         this.userList = list;
     }
 
+    /**
+     * Populates userlist with the user account - used when a new entry is being created and the only the creator
+     * needs to be added
+     * @param userAccount
+     */
     public void setUserList(UserAccount userAccount) {
         HashMap<Integer, String> list = new HashMap<>();
         list.put(userAccount.getUserId(), userAccount.getProfile().getName());
@@ -161,6 +182,12 @@ public class ItineraryItem {
         return gallery;
     }
 
+    /**
+     * Populates an entries gallery from json data. Checks if there is data and if so adds the image url is added to
+     * the gallery array
+     * @param response
+     * @return
+     */
     public boolean setGallery(JSONObject response) {
         setGallery();
         try {
@@ -181,7 +208,7 @@ public class ItineraryItem {
     }
 
     public void setGallery() {
-        this.gallery = new ArrayList<String>();
+        this.gallery = new ArrayList<>();
     }
 
     public void addImage(String url) {

@@ -10,8 +10,6 @@ import java.lang.annotation.RetentionPolicy;
  */
 public abstract class ProfileTypes {
 
-    // Define the list of accepted constants and declare the NavigationMode annotation
-
     @IntDef({PROFILE_ADMIN, PROFILE_FRIEND, PROFILE_USER, PROFILE_REQUEST_SENT, PROFILE_REQUEST_RECEIVED})
     @Retention(RetentionPolicy.SOURCE)
     public @interface ProfileType {}
@@ -21,19 +19,10 @@ public abstract class ProfileTypes {
         public static final int PROFILE_USER = 2;
         public static final int PROFILE_REQUEST_SENT = 3;
         public static final int PROFILE_REQUEST_RECEIVED = 4;
-    public static final int PROFILE_UNDEFINED = 5;
-
+        public static final int PROFILE_UNDEFINED = 5;
 
     @ProfileType
     private int type;
 
-    @ProfileType
-    public int getCarType(){
-        return type;
-    };
-
-    public void setCarType(@ProfileType int type){
-        this.type = type;
-    }
 
 }

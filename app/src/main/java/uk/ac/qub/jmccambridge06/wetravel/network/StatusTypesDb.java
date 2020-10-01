@@ -1,5 +1,8 @@
 package uk.ac.qub.jmccambridge06.wetravel.network;
 
+/**
+ * Holds the status types for a trip as held in the database
+ */
 public class StatusTypesDb {
 
 

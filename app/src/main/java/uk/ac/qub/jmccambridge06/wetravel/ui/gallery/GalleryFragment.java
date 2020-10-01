@@ -17,6 +17,9 @@ import java.util.ArrayList;
 import uk.ac.qub.jmccambridge06.wetravel.R;
 import uk.ac.qub.jmccambridge06.wetravel.ui.MainMenuActivity;
 
+/**
+ * Contains controller logic for the gallery. Loads images into a viewpager
+ */
 public class GalleryFragment extends Fragment {
 
     private ViewPager2 viewPager;
@@ -41,6 +44,7 @@ public class GalleryFragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
+        // set up viewpager
         viewPager = view.findViewById(R.id.gallery_view_pager);
         viewPager.setAdapter(new GalleryAdapter(imageUrls, viewPager, getContext()));
         viewPager.setClipToPadding(false);

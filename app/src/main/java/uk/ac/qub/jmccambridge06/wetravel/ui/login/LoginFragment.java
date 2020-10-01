@@ -30,6 +30,9 @@ import uk.ac.qub.jmccambridge06.wetravel.network.JsonFetcher;
 import uk.ac.qub.jmccambridge06.wetravel.network.NetworkResultCallback;
 import uk.ac.qub.jmccambridge06.wetravel.network.routes;
 
+/**
+ * Holds controller logic for the login page
+ */
 public class LoginFragment extends Fragment {
 
     @BindView(R.id.login_register) TextView registerButton;
@@ -62,14 +65,25 @@ public class LoginFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 login();
-                JsonFetcher jsonFetcher = new JsonFetcher(loginCallback, getContext());
-                jsonFetcher.addParam("username", username.getText().toString());
-                jsonFetcher.addParam("password", password.getText().toString());
-                jsonFetcher.postDataVolley(routes.loginUser());
+                checkLogin();
             }
         });
     }
 
+    /**
+     * Method sends login detailsfor checking to server.
+     */
+    private void checkLogin() {
+        JsonFetcher jsonFetcher = new JsonFetcher(loginCallback, getContext());
+        jsonFetcher.addParam("username", username.getText().toString());
+        jsonFetcher.addParam("password", password.getText().toString());
+        jsonFetcher.postDataVolley(routes.loginUser());
+    }
+
+    /**
+     * Callback method for a user login - either launches the main menu or asks user to try again if error
+     * Also captures a notification token for the device and saves to db (so device can recieve push notifications)
+     */
     private void login() {
         loginCallback = new NetworkResultCallback() {
             @Override

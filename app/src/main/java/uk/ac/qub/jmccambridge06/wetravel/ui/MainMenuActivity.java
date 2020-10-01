@@ -35,23 +35,28 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.util.ArrayList;
-
 import de.hdodenhof.circleimageview.CircleImageView;
 import uk.ac.qub.jmccambridge06.wetravel.models.NotificationCentre;
 import uk.ac.qub.jmccambridge06.wetravel.models.Profile;
 import uk.ac.qub.jmccambridge06.wetravel.R;
 import uk.ac.qub.jmccambridge06.wetravel.models.Trip;
 import uk.ac.qub.jmccambridge06.wetravel.models.UserAccount;
+import uk.ac.qub.jmccambridge06.wetravel.ui.Itinerary.TripFragment;
+import uk.ac.qub.jmccambridge06.wetravel.ui.Itinerary.TripsFragment;
+import uk.ac.qub.jmccambridge06.wetravel.ui.lists.NotificationListFragment;
+import uk.ac.qub.jmccambridge06.wetravel.ui.lists.TripListFragment;
+import uk.ac.qub.jmccambridge06.wetravel.ui.lists.UserListFragment;
 import uk.ac.qub.jmccambridge06.wetravel.ui.login.LoginActivity;
 import uk.ac.qub.jmccambridge06.wetravel.network.NetworkResultCallback;
 import uk.ac.qub.jmccambridge06.wetravel.network.JsonFetcher;
 import uk.ac.qub.jmccambridge06.wetravel.network.routes;
 import uk.ac.qub.jmccambridge06.wetravel.ui.newsfeed.NewsfeedFragment;
+import uk.ac.qub.jmccambridge06.wetravel.ui.users.ProfileFragment;
+import uk.ac.qub.jmccambridge06.wetravel.ui.users.SettingsFragment;
 import uk.ac.qub.jmccambridge06.wetravel.utilities.TokenOperator;
 
 /**
- * Class contains all UI activity for the main menu.
+ * Contains controller logic for a logged in user.
  */
 public class MainMenuActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener{
 
@@ -63,8 +68,6 @@ public class MainMenuActivity extends AppCompatActivity implements NavigationVie
     NetworkResultCallback getFriendsCallback = null;
 
     JsonFetcher jsonFetcher;
-
-    private Trip displayedTrip;
 
     /**
      * Reference to the bottom navigation bar on the menu
@@ -110,13 +113,10 @@ public class MainMenuActivity extends AppCompatActivity implements NavigationVie
             ));
         }
 
-        // load the user profile
+        // load the user profile and data
         loadProfileCallback(); // loads the callback so when volley request completes this method is executed.
         jsonFetcher = new JsonFetcher(getProfileCallback,this); // create volley request to get profile data
         jsonFetcher.getData(routes.getAdminAccountData(getUserAccount().getUserId())); // send volley request
-        /*loadFriendsCallback();
-        jsonFetcher = new JsonFetcher(getFriendsCallback,getApplicationContext());
-        jsonFetcher.getData(routes.getUsersRoute(getUserAccount().getUserId()));*/
 
         // Load the custom toolbar
         Toolbar toolbar = findViewById(R.id.toolbar);
@@ -144,6 +144,7 @@ public class MainMenuActivity extends AppCompatActivity implements NavigationVie
         bagdeText = notificationBadge.findViewById(R.id.badge_text_view);
         removeNotificationBadge();
 
+        // set up the display fragments
         if (savedInstanceState == null) {
             newsfeedFragment = new NewsfeedFragment();
             tripsFragment = new TripsFragment();
@@ -185,9 +186,12 @@ public class MainMenuActivity extends AppCompatActivity implements NavigationVie
         super.onNewIntent(intent);
         setIntent(intent);
         handleIntent(intent);
-        Toast.makeText(getApplicationContext(), "about to handle the intent", Toast.LENGTH_SHORT).show();
     }
 
+    /**
+     * Method determines whether activity was launched by a push notification, in which case displasy the
+     * notifications fragment
+     */
     private void onNewNotification() {
         boolean notification = getIntent().getBooleanExtra("notification", false);
         if (notification) {
@@ -199,10 +203,13 @@ public class MainMenuActivity extends AppCompatActivity implements NavigationVie
         }
     }
 
+    /**
+     * Captures a search query from search activity
+     * @param intent
+     */
     private void handleIntent(Intent intent) {
         if (Intent.ACTION_SEARCH.equals(intent.getAction())) {
             String query = intent.getStringExtra(SearchManager.QUERY);
-            Log.i("searching", "have received the search: "+query);
             searchFragment.setQuery(query);
             setFragment(searchFragment, "search", true);
         }
@@ -228,8 +235,8 @@ public class MainMenuActivity extends AppCompatActivity implements NavigationVie
                 setFragment(settingsFragment, "settings", true);
                 break;
             case R.id.logout:
-                // remove notification key
-                /*JsonFetcher jsonFetcher = new JsonFetcher(new NetworkResultCallback() {
+                // remove notification key as user no longer logged into device
+                JsonFetcher jsonFetcher = new JsonFetcher(new NetworkResultCallback() {
                     @Override
                     public void notifySuccess(JSONObject response) {
                         logout();
@@ -243,8 +250,7 @@ public class MainMenuActivity extends AppCompatActivity implements NavigationVie
                 }, getApplicationContext());
                 jsonFetcher.addParam("key", null);
                 jsonFetcher.addParam("status", "logout");
-                jsonFetcher.patchData(routes.postNotificationKey(getUserAccount().getUserId()));*/
-                logout();
+                jsonFetcher.patchData(routes.postNotificationKey(getUserAccount().getUserId()));
                 break;
         }
 
@@ -252,6 +258,9 @@ public class MainMenuActivity extends AppCompatActivity implements NavigationVie
         return true;
     }
 
+    /**
+     * Launches the login activity, resets the authorization token and finishes the current activity.
+     */
     private void logout() {
         // remove authorization token and end activity
         Intent intent = new Intent(getApplicationContext(), LoginActivity.class);
@@ -320,6 +329,12 @@ public class MainMenuActivity extends AppCompatActivity implements NavigationVie
         bottomNav.setVisibility(View.VISIBLE);
     }
 
+    /**
+     * Sets a fragmnet on the screen with optional add to backstack boolean
+     * @param fragment
+     * @param tag
+     * @param backstack
+     */
     public void setFragment(Fragment fragment, String tag, boolean backstack) {
         if (backstack == true) {
             fragmentManager.beginTransaction().replace(R.id.main_screen_container,
@@ -337,7 +352,6 @@ public class MainMenuActivity extends AppCompatActivity implements NavigationVie
         getProfileCallback = new NetworkResultCallback() { //network result callback is an interface passed into the volley object
             @Override
             public void notifySuccess(JSONObject response) {
-                Log.i(logTag, "Successful JSON profile request:" + response);
                 try {
                     JSONArray jsonArray = response.getJSONArray("data");
                     JSONObject user = jsonArray.getJSONObject(0);
@@ -346,9 +360,7 @@ public class MainMenuActivity extends AppCompatActivity implements NavigationVie
                     userAccount.createSettings(user);
 
                     JSONArray friendArray = response.getJSONArray("friendsList");
-                    Log.i(logTag, friendArray.toString());
                     userAccount.setFriendsList(friendArray);
-
                     //create newsfeed
                     JSONArray postsArray = response.getJSONArray("posts");
                     userAccount.setNewsfeed(postsArray);
@@ -358,14 +370,12 @@ public class MainMenuActivity extends AppCompatActivity implements NavigationVie
                     JSONArray notificationArray = response.getJSONArray("notifications");
                     getUserAccount().setNotificationCentre(new NotificationCentre(notificationArray));
                     notificationListFragment = new NotificationListFragment();
-                    fragmentManager.beginTransaction().add(R.id.main_screen_container, notificationListFragment, "notifications").hide(notificationListFragment).commit();
+                    fragmentManager.beginTransaction().add(R.id.main_screen_container, notificationListFragment,
+                            "notifications").hide(notificationListFragment).commit();
                     updateNotificationBadge();
-
-                    // If launched by a notification then display this page.
+                    // If launched by a notification then display the notification page.
                     onNewNotification();
-
                     loadDrawer();
-                    Log.i(logTag, "Loaded the drawer");
                     plannedTrips.setProfile(userAccount.getProfile());
                     completedTrips.setProfile(userAccount.getProfile());
                 } catch (JSONException e) {
@@ -400,30 +410,6 @@ public class MainMenuActivity extends AppCompatActivity implements NavigationVie
      */
     public void removeNotificationBadge() {
         notificationItem.removeView(notificationBadge);
-    }
-
-    /**
-     * Callbacks for loading user profile and mapping to a user class and then the drawer views.
-     */
-    void loadFriendsCallback(){
-        getFriendsCallback = new NetworkResultCallback() {
-            @Override
-            public void notifySuccess(JSONObject response) {
-                Log.i(logTag, "Successful JSON Friend request:" + response);
-                try {
-                    JSONArray jsonArray = response.getJSONArray("data");
-                    Log.i(logTag, jsonArray.toString());
-                    userAccount.setFriendsList(jsonArray);
-                } catch (JSONException e) {
-                    e.printStackTrace();
-                }
-            }
-            @Override
-            public void notifyError(VolleyError error) {
-                Log.d(logTag, "Error on JSON callback for Friends");
-                error.printStackTrace();
-            }
-        };
     }
 
     /**

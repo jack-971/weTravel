@@ -29,6 +29,9 @@ import uk.ac.qub.jmccambridge06.wetravel.network.routes;
 import uk.ac.qub.jmccambridge06.wetravel.utilities.DateTime;
 import uk.ac.qub.jmccambridge06.wetravel.utilities.EditTextDateClicker;
 
+/**
+ * Contains controller logic for the user registration page
+ */
 public class RegisterFragment extends Fragment {
 
     @BindView(R.id.register_login) TextView loginButton;
@@ -86,7 +89,7 @@ public class RegisterFragment extends Fragment {
                 jsonFetcher.postDataVolley(routes.registerUser());
             }
         });
-
+        // add text watcher to check for changes in the password boxes - to highlight if wrong format or not matching
         TextWatcher textWatcher = new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
@@ -106,6 +109,7 @@ public class RegisterFragment extends Fragment {
                     } else {
                         matchPasswords.setVisibility(View.GONE);
                     }
+                    // add regular expression for password format
                     if (password.getText().toString().matches("^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9]).{8,}$")) {
                         passwordFormat.setVisibility(View.GONE);
                     } else {
@@ -119,6 +123,9 @@ public class RegisterFragment extends Fragment {
         passwordConfirm.addTextChangedListener(textWatcher);
     }
 
+    /**
+     * Callback method for a user registration
+     */
     private void register(){
         registerCallback = new NetworkResultCallback() {
             @Override

@@ -1,5 +1,8 @@
 package uk.ac.qub.jmccambridge06.wetravel.models;
 
+/**
+ * Represents a Notification item.
+ */
 public class Notification {
 
     private int id;
@@ -9,6 +12,15 @@ public class Notification {
     private String notificationType;
     private boolean read;
 
+    /**
+     * Constructor with args.
+     * @param id
+     * @param time
+     * @param senderId
+     * @param tripId
+     * @param notificationType
+     * @param read
+     */
     public Notification(int id, long time, Integer senderId, Integer tripId, String notificationType, boolean read) {
         this.id = id;
         this.time = time;
@@ -30,32 +42,16 @@ public class Notification {
         return time;
     }
 
-    public void setTime(long time) {
-        this.time = time;
-    }
-
     public Integer getSenderId() {
         return senderId;
-    }
-
-    public void setSenderId(Integer senderId) {
-        this.senderId = senderId;
     }
 
     public Integer getTripId() {
         return tripId;
     }
 
-    public void setTripId(Integer tripId) {
-        this.tripId = tripId;
-    }
-
     public String getNotificationType() {
         return notificationType;
-    }
-
-    public void setNotificationType(String notificationType) {
-        this.notificationType = notificationType;
     }
 
     public boolean isRead() {
